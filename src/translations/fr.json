@@ -21,4 +21,7 @@
   "already_have_account": "Vous avez déjà un compte ?",
   "last_validation": "Une dernière validation est requise!",
   "account_create_success": "Votre compte a été créé avec succès",
+  "dont_have_account": "Vous n'avez pas de compte?",
+  "welcome_login": "Bienvenue! Pour Accéder à votre compte, merci de vous identifier",
+  "label_grm": "GRM"
 }
