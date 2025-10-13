@@ -2,6 +2,7 @@ import { Dimensions } from 'react-native';
 import { colors } from '../../utils/colors';
 
 const { width  } = Dimensions.get("screen");
+const ada = 1
 
 export default {
   containerView: {
@@ -11,7 +12,7 @@ export default {
   },
   loginScreenContainer: {
     flex: 1,
-    justifyContent: "space-between",
+    justifyContent: "space-between"
   },
   errorText: {
     marginTop: 5,
