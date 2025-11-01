@@ -15,18 +15,22 @@ function storeSessionData(sessionObject) {
   storeEncryptedData(config.USER_SESSION_KEY, JSON.stringify(sessionObject));
 }
 
+export async function getSessionData() {
+  const sessionData = await getEncryptedData(config.USER_SESSION_KEY);
+  return sessionData ? JSON.parse(sessionData) : null;
+}
+
+
 function addTokenToHttpClient(sessionObject) {
   client.defaults.headers.common["Authorization"] = `Token ${sessionObject.token}`;
+  console.log(client.defaults.headers.common["Authorization"])
 }
 export const { signUp, login } = createActions({
   LOGIN: (session) => {
-    console.log('session', session)
 
     addTokenToHttpClient(session)
-        console.log('session', session)
 
     storeSessionData(session);
-        console.log('session', session)
 
     return {
       session
