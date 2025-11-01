@@ -15,8 +15,8 @@ import { ActivityIndicator, Button, Provider, TextInput } from 'react-native-pap
 import { useDispatch } from 'react-redux';
 import { default as BigCheck } from '../../../../assets/big-check.svg';
 import { default as SuccessLogo } from '../../../../assets/success_logo.svg';
-import { register } from '../../../services/authService';
-import { signUp } from '../../../store/ducks/authentication.duck';
+import {fetchAuthCredentials, register} from '../../../services/authService';
+import {login, signUp} from '../../../store/ducks/authentication.duck';
 import { i18n } from "../../../translations/i18n";
 import { colors } from '../../../utils/colors';
 import MESSAGES from '../../../utils/formErrorMessages';
@@ -48,7 +48,7 @@ function SignUp({ route }) {
       last_name: '',
       username: '',
       email: '',
-      phoneNumber: '',
+      phone_number: '',
       password: '',
       confirmPassword: '',
     },
@@ -61,6 +61,7 @@ function SignUp({ route }) {
 
   const onSignUp = async (data) => {
     setLoading(true);
+
     // handle code with backend, check if valid
     const response = await register({ ...data });
     if (response.errors) {
@@ -73,13 +74,19 @@ function SignUp({ route }) {
         setLoading(false);
         return;
     }
-    setLoading(false);
-    setSuccessModal(true);
-    setTimeout(() => {
-      setSuccessModal(false)
-    }, 3000);
 
-    dispatch(signUp(response.data, credentials));
+    setLoading(false);
+
+    setSuccessModal(true);
+
+    const responseLogin = await fetchAuthCredentials({
+        username: response.data.username,
+        password: data.password
+    });
+
+    setLoading(false);
+    dispatch(login(responseLogin));
+
   };
 
   return (
@@ -132,13 +139,12 @@ function SignUp({ route }) {
         style={{
           backgroundColor: '#f8fafc',
           flex: 1,
-          paddingBottom: 30,
+          paddingBottom: 60,
           paddingHorizontal: 30,
         }}
         contentContainerStyle={{ flexGrow: 1, paddingTop: 20, paddingBottom: 20 }}
         keyboardShouldPersistTaps="handled"
       >
-        
             <View style={styles.loginScreenContainer}>
               <View style={styles.formContainer}>
                 <View style={{ borderRadius: 10 }}>
@@ -277,7 +283,10 @@ function SignUp({ route }) {
                     formState={formState}
                     render={({ field: { onChange, onBlur, value } }) => (
                       <View style={{ marginBottom: 16 }}>
-                        <Text style={styles.inputLabel}>{i18n.t('email')} ({i18n.t('optional')})</Text>
+                        <View style={styles.inputLabel}>
+                            <Text style={{fontSize: 16,color: colors.darkGrey, marginBottom: 8, fontWeight: 'bold'}}>{i18n.t('email')}</Text>
+                            <Text style={{ margin: '10', color: colors.secondary }}>{i18n.t('optional')}</Text>
+                        </View>
                         <TextInput
                           theme={{
                             roundness: 10,
@@ -346,7 +355,7 @@ function SignUp({ route }) {
                         {formState.errors.phoneNumber && <Text style={styles.errorText}>{formState.errors.phoneNumber.message}</Text>}
                       </View>
                     )}
-                    name="phoneNumber"
+                    name="phone_number"
                     rules={{
                       required: {
                         value: true,
@@ -479,7 +488,8 @@ function SignUp({ route }) {
                   <Text style={styles.textHint}>{i18n.t('password_hint')}</Text>
                 </View>
               </View>
-              {/* Move login button inside the scroll view and ensure it's not cut off */}              <CustomButton
+              {/* Move login button inside the scroll view and ensure it's not cut off */}
+                <CustomButton
                  backgroundColor="#24c38b"
                  textColor="white"
                  color="white"
@@ -492,12 +502,12 @@ function SignUp({ route }) {
           <View style={styles.loginLinkContainer}>
             <Text style={styles.loginText}>
               {i18n.t('already_have_account')}
-              <Text
+            </Text>
+            <Text
                 style={styles.loginLink}
                 onPress={() => navigation.navigate('LoginStack')}
-              >
+            >
                 {i18n.t('login')}
-              </Text>
             </Text>
           </View>
       </ScrollView>

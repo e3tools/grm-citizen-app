@@ -23,7 +23,6 @@ export async function getSessionData() {
 
 function addTokenToHttpClient(sessionObject) {
   client.defaults.headers.common["Authorization"] = `Token ${sessionObject.token}`;
-  console.log(client.defaults.headers.common["Authorization"])
 }
 export const { signUp, login } = createActions({
   LOGIN: (session) => {
@@ -36,11 +35,7 @@ export const { signUp, login } = createActions({
       session
     };
   },
-  SIGN_UP: (session, userCredentials) => {
-    addTokenToHttpClient(session)
-    storeSessionData(session);
-    return { session, password: userCredentials.password, username: userCredentials.email };
-  }
+  SIGN_UP: () => {}
 });
 
 const authentication = handleActions(
@@ -50,11 +45,7 @@ const authentication = handleActions(
         state.set("session", session);
       });
     },
-    [signUp]: (draft, { payload: { session, username, password } }) => {
-      return draft.withMutations((state) => {
-        state.set("session", session);
-      });
-    }
+    [signUp]: () => {}
   },
   defaultState
 );
