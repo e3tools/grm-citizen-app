@@ -5,7 +5,12 @@ import { ActivityIndicator, ScrollView, Text, View } from 'react-native';
 import { Provider } from 'react-native-paper';
 import CustomButton from '../../../components/CustomButton';
 import Dropdown from '../../../components/Dropdown';
-import { fetchCitizenAgeGroups, fetchCitizenGroups, updateUserProfile } from '../../../services/profileService';
+import {
+  fetchCitizenAgeGroups,
+  fetchCitizenGroups,
+  fetchUserProfile,
+  updateUserProfile
+} from '../../../services/profileService';
 import { i18n } from '../../../translations/i18n';
 import { colors } from '../../../utils/colors';
 import styles from './CompleteProfile.style';
@@ -47,10 +52,18 @@ function CompleteProfile() {
       setLoading(true);
       
       // Fetch age groups and citizen groups in parallel
-      const [ageGroupsData, citizenGroupsData] = await Promise.all([
+      const [profile, ageGroupsData, citizenGroupsData] = await Promise.all([
+        fetchUserProfile(),
         fetchCitizenAgeGroups(),
         fetchCitizenGroups(),
       ]);
+
+      if (profile && profile.group?.id) {
+          navigation.reset({
+            index: 0,
+            routes: [{ name: 'Main' }],
+          });
+      }
 
       setAgeGroups(ageGroupsData.results || ageGroupsData || []);
 
