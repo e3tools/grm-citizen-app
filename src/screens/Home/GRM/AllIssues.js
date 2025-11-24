@@ -21,7 +21,7 @@ const iconConfig = {
 
 const AnimatedFeatherIcon = posed(Feather)(iconConfig);
 
-const Home = () => {
+const AllIssues = () => {
   const {issues, loadingIssues, loadingMore, hasNextPage, loadMoreIssues} = useIssue();
   const navigation = useNavigation();
 
@@ -70,22 +70,7 @@ const Home = () => {
             :
             (
                 <View style={{flex: 1}}>
-                  <Text style={{marginTop: 10, paddingHorizontal: 16, fontSize: 24, fontWeight: 'bold', marginLeft: 15, marginRight: 15}}>{i18n.t("welcome")}</Text>
-                  <Button
-                      backgroundColor="#24c38b"
-                      textColor="white"
-                      color="white"
-                      label={i18n.t("report_new_grievance")}
-                      iconName="plus-circle"
-                  />
                   <View style={{flex: 1, marginTop: 30, paddingHorizontal: 16}}>
-                    <View style={{ marginLeft: 15, marginRight: 15, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16}}>
-                      <Text style={{fontSize: 18, fontWeight: 'bold', color: '#1f2937'}}>{i18n.t("my_recent_grievance")}</Text>
-                      <Text style={{ marginLeft: 'auto', fontSize: 14, color: colors.primary}} onPress={() => navigation.reset({
-                        index: 0,
-                        routes: [{ name: 'All issues' }],
-                      })}>{i18n.t("view_all")}</Text>
-                    </View>
                     <IssueList
                         loadingMore={loadingMore}
                         issues={issues}
@@ -102,4 +87,4 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default AllIssues;
