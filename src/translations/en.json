@@ -1,0 +1,23 @@
+{
+  "sign_up": "Register",
+  "create_account": "Create Account",
+  "optional": "Optional",
+  "first_name": "First Name",
+  "last_name": "Last Name",
+  "username": "Username",
+  "email": "Email",
+  "password": "Password",
+  "enter_your_full_name": "Enter your full name",
+  "enter_your_last_name": "Enter your last name",
+  "enter_your_username": "Enter your username",
+  "enter_your_email": "Enter your email",
+  "phone_number": "Phone Number",
+  "enter_your_phone_number": "Enter your phone number",
+  "enter_your_password": "Enter your password",
+  "confirm_password": "Confirm Password",
+  "confirm_your_password": "Confirm your password",
+  "password_hint": "Your password must be at least 8 characters long, including uppercase, lowercase, numbers, and symbols.",
+  "account_create_success": "Your account has been successfully created",
+  "already_have_account": "Already have an account?",
+  "login": "Login"
+}
