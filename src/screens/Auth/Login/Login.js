@@ -1,23 +1,24 @@
 import { useNavigation } from '@react-navigation/native';
-import EADLLogo from '../../../../assets/eadl-logo.svg';
 import React, { useState } from 'react';
-import { login } from '../../../store/ducks/authentication.duck';
 import { Controller, useForm } from 'react-hook-form';
 import {
-  Modal,
-  ScrollView,
-  Text,
-  View
+    Modal,
+    ScrollView,
+    Text,
+    View
 } from 'react-native';
 import {
-  useBlurOnFulfill,
-  useClearByFocusCell
+    useBlurOnFulfill,
+    useClearByFocusCell
 } from 'react-native-confirmation-code-field';
-import { ActivityIndicator, Button, Provider, TextInput } from 'react-native-paper';
+import { ActivityIndicator, Provider, TextInput } from 'react-native-paper';
 import { useDispatch } from 'react-redux';
 import { default as BigCheck } from '../../../../assets/big-check.svg';
+import EADLLogo from '../../../../assets/eadl-logo.svg';
 import { default as SuccessLogo } from '../../../../assets/success_logo.svg';
-import {fetchAuthCredentials } from '../../../services/authService';
+import CustomButton from "../../../components/CustomButton";
+import { fetchAuthCredentials } from '../../../services/authService';
+import { login } from '../../../store/ducks/authentication.duck';
 import { i18n } from "../../../translations/i18n";
 import { colors } from '../../../utils/colors';
 import MESSAGES from '../../../utils/formErrorMessages';
@@ -58,7 +59,6 @@ function Login({ route }) {
     setLoading(true);
     // handle code with backend, check if valid
     const response = await fetchAuthCredentials({ ...data });
-    console.log(response)
     if (response.error) {
         setError('password', {
                 type: "custom",
@@ -258,14 +258,13 @@ function Login({ route }) {
 
               </View>
               {/* Move login button inside the scroll view and ensure it's not cut off */}
-              <Button
-                style={styles.loginButton}
-                onPress={handleSubmit(onLogin)}
-                color="white"
-                labelStyle={{ color: 'white' }}
-              >
-                {i18n.t('login')}
-              </Button>
+              <CustomButton
+                 backgroundColor="#24c38b"
+                 textColor="white"
+                 color="white"
+                 label={i18n.t('login')}
+                 onPress={handleSubmit(onLogin)}
+              />
             </View>
           {/* Moved loginLinkContainer outside KeyboardAvoidingView to avoid absolute positioning conflicts */}
           <View style={styles.loginLinkContainer}>

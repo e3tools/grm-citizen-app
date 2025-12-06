@@ -39,17 +39,6 @@ export default {
     fontWeight: 'bold',
     borderColor: colors.darkGrey,
   },
-  loginButton: {
-    alignSelf: "center",
-    width: width - 60,
-    height: 47,
-    borderWidth: 0,
-    borderRadius: 10,
-    backgroundColor: "#24c38b",
-    fontSize: 16,
-    fontFamily: 'Poppins_500Medium',
-    marginTop: 20,
-  },
   textHint: {
     fontFamily: "Poppins_400Regular",
     fontSize: 9,

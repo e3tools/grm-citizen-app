@@ -22,6 +22,7 @@ import { colors } from '../../../utils/colors';
 import MESSAGES from '../../../utils/formErrorMessages';
 import { emailRegex, passwordRegex } from '../../../utils/formUtils';
 import styles from './SignUp.style';
+import CustomButton from "../../../components/CustomButton";
 
 const CELL_COUNT = 6;
 
@@ -478,15 +479,14 @@ function SignUp({ route }) {
                   <Text style={styles.textHint}>{i18n.t('password_hint')}</Text>
                 </View>
               </View>
-              {/* Move login button inside the scroll view and ensure it's not cut off */}
-              <Button
-                style={styles.loginButton}
-                onPress={handleSubmit(onSignUp)}
-                color="white"
-                labelStyle={{ color: 'white' }}
-              >
-                {i18n.t('create_account')}
-              </Button>
+              {/* Move login button inside the scroll view and ensure it's not cut off */}              <CustomButton
+                 backgroundColor="#24c38b"
+                 textColor="white"
+                 color="white"
+                 label={i18n.t('create_account')}
+                 iconName="plus-circle"
+                 onPress={handleSubmit(onSignUp)}
+              />
             </View>
           {/* Moved loginLinkContainer outside KeyboardAvoidingView to avoid absolute positioning conflicts */}
           <View style={styles.loginLinkContainer}>
@@ -496,7 +496,7 @@ function SignUp({ route }) {
                 style={styles.loginLink}
                 onPress={() => navigation.navigate('LoginStack')}
               >
-                {` ${i18n.t('login')}`}
+                {i18n.t('login')}
               </Text>
             </Text>
           </View>

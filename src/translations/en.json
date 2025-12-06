@@ -23,5 +23,19 @@
   "dont_have_account": "Don't have an account?",
   "welcome_login": "Welcome! To access your account, please log in",
   "last_validation": "One last validation is required!",
-  "label_grm": "GRM"
+  "label_grm": "GRM",
+  "report_grievance": "Report your first grievance",
+  "no_grievances": "You haven't reported any grievances. Let's get started",
+  "no_grievances_yet": "No grievances yet",
+  "report_new_grievance": "Report a New Grievance",
+  "load_more": "Loading more...",
+  "no_grievances_to_load": "No more grievances to load",
+  "submitted": "Submitted",
+  "in_progress": "In progress",
+  "resolved": "Resolved",
+  "grievance": "Grievance",
+  "feedback": "Feedback",
+  "question": "Question",
+  "my_grievances": "My grievances",
+  "welcome": "Welcome"
 }

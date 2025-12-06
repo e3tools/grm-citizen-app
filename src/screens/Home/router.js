@@ -9,7 +9,7 @@ import posed from 'react-native-pose';
 import { version } from '../../../package.json';
 import { i18n } from "../../translations/i18n";
 import { colors } from '../../utils/colors';
-import GRM from './GRM/GRM';
+import Home from './GRM/Home';
 
 
 
@@ -85,8 +85,8 @@ function DashboardStackScreen() {
         name="GRM"
         component={HomeRouter}
         options={({ navigation, route }) => ({
-          ...customHeaderOptions(i18n.t('label_grm')),
-          ...customHeaderRightIcon({navigation, route})
+          ...customHeaderOptions(i18n.t('my_grievances')),
+          ...customHeaderRightIcon({navigation, route}),
         })}
       />
     </HomeStack.Navigator>
@@ -95,7 +95,7 @@ function DashboardStackScreen() {
 
 
 
-function HomeRouter() {
+function HomeRouter() {a
   return (
     <Tab.Navigator
       tabBarOptions={{
@@ -104,8 +104,9 @@ function HomeRouter() {
       }}
     >
       <Tab.Screen
-        name="Dashboard"
+        name="Home"
         options={{
+          headerShown: false,
           tabBarIcon: ({ focused, color, size }) => (
             <AnimatedFeatherIcon
               pose={focused ? 'focused' : 'unfocused'}
@@ -115,7 +116,7 @@ function HomeRouter() {
             />
           ),
         }}
-        component={GRM}
+        component={Home}
       />
     </Tab.Navigator>
   );

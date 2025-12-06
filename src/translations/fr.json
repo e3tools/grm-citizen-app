@@ -23,5 +23,19 @@
   "account_create_success": "Votre compte a été créé avec succès",
   "dont_have_account": "Vous n'avez pas de compte?",
   "welcome_login": "Bienvenue! Pour Accéder à votre compte, merci de vous identifier",
-  "label_grm": "GRM"
+  "label_grm": "GRM",
+  "report_grievance": "Signalez votre première réclamation",
+  "no_grievances": "Vous n'avez signalé aucune réclamation. Commençons",
+  "no_grievances_yet": "Aucune réclamation pour le moment",
+  "report_new_grievance": "Signaler une nouvelle réclamation",
+  "load_more": "Chargement en cours...",
+  "no_grievances_to_load": "Plus aucune réclamation à charger",
+  "submitted": "Soumis",
+  "in_progress": "En cours",
+  "resolved": "Résolu",
+  "grievance" : "Grievance",
+  "feedback" : "Feedback",
+  "question" : "Question",
+  "my_grievances": "Mes griefs",
+  "welcome": "Bienvenue"
 }
