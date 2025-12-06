@@ -134,7 +134,7 @@ function SignUp({ route }) {
           paddingBottom: 30,
           paddingHorizontal: 30,
         }}
-        contentContainerStyle={{ flexGrow: 1, paddingTop: 20 }}
+        contentContainerStyle={{ flexGrow: 1, paddingTop: 20, paddingBottom: 20 }}
         keyboardShouldPersistTaps="handled"
       >
         
@@ -494,7 +494,7 @@ function SignUp({ route }) {
               {i18n.t('already_have_account')}
               <Text
                 style={styles.loginLink}
-                onPress={() => navigation.navigate('Login')}
+                onPress={() => navigation.navigate('LoginStack')}
               >
                 {` ${i18n.t('login')}`}
               </Text>

@@ -19,5 +19,9 @@
   "password_hint": "Your password must be at least 8 characters long, including uppercase, lowercase, numbers, and symbols.",
   "account_create_success": "Your account has been successfully created",
   "already_have_account": "Already have an account?",
-  "login": "Login"
+  "login": "Login",
+  "dont_have_account": "Don't have an account?",
+  "welcome_login": "Welcome! To access your account, please log in",
+  "last_validation": "One last validation is required!",
+  "label_grm": "GRM"
 }

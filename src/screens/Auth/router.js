@@ -1,7 +1,7 @@
 import { createStackNavigator } from "@react-navigation/stack";
 import React from "react";
-import { i18n } from "../translations/i18n";
-import SignUp from "./Auth/SignUp";
+import { i18n } from "../../translations/i18n";
+import SignUp from "./SignUp";
 const Stack = createStackNavigator();
 
 const AuthStack = () => {

@@ -1,14 +1,14 @@
 import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
-import AuthStack from "../screens";
-import Onboarding from "../screens/Auth/Onboarding";
+import AuthStack from "../screens/Auth";
+import Login from "../screens/Auth/Login";
 const Stack = createStackNavigator();
 const PublicRoutes = () => {
   return (
     <Stack.Navigator>
       <Stack.Screen
-        name="OnboardingStack"
-        component={Onboarding}
+        name="LoginStack"
+        component={Login}
         options={{ headerShown: false }}
       />
       <Stack.Screen

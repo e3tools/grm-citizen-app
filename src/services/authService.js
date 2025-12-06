@@ -27,7 +27,6 @@ export async function register(data) {
                 })
             })
             .catch(error => {
-                console.log('aq',error)
                 throw(error);
             });
 
@@ -41,12 +40,14 @@ export async function fetchAuthCredentials(data) {
       headers: myHeaders,
       body: JSON.stringify(data),
     };
-    try {
-      const response = await fetch(`${baseURL}/authentication/login/`, requestOptions)
-      const result = handleErrors(response)      
-      return await result.json();
-    } catch (_error) {
-      return { error: 'Failed to fetch authentication credentials' };
-    }
+    return await fetch(`${baseURL}/authentication/login/`, requestOptions)
+    .then(response => {
+               return response.json().then(res => {
+                    return res;
+                })
+            })
+            .catch(error => {
+                throw(error);
+            });
   }
 
