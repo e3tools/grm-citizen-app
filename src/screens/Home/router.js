@@ -11,6 +11,7 @@ import { i18n } from "../../translations/i18n";
 import { colors } from '../../utils/colors';
 import Home from './GRM/Home';
 import Profile from "./Profile";
+import AllIssues from "./GRM/AllIssues";
 
 
 
@@ -60,6 +61,24 @@ const customHeaderRightIcon = ({ navigation }) => ({
   )
 });
 
+const customHeaderLeftIcon = ({ navigation, pageToNavigate }) => ({
+  headerLeft: () => (
+      <View style={styles.iconContainer}>
+        <Pressable
+          onPress={() => {
+              navigation.reset({
+                  index: 0,
+                  routes: [{name: pageToNavigate}],
+              });
+          }}>
+          <Icon type="ionicon" color={colors.primary} size={35}
+                style={{ marginLeft: 25 }}
+                name="arrow-back-outline" />
+        </Pressable>
+      </View>
+  )
+});
+
 const styles = StyleSheet.create({
   container: {
     flex: 1
@@ -88,6 +107,14 @@ function DashboardStackScreen() {
         options={({ navigation, route }) => ({
           ...customHeaderOptions(i18n.t('my_grievances')),
           ...customHeaderRightIcon({navigation, route}),
+        })}
+      />
+      <HomeStack.Screen
+        name="All issues"
+        component={AllIssues}
+        options={({ navigation, route }) => ({
+          ...customHeaderOptions(i18n.t('all_cases')),
+          ...customHeaderLeftIcon({navigation, route, pageToNavigate: 'GRM'}),
         })}
       />
     </HomeStack.Navigator>

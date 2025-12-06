@@ -53,5 +53,8 @@
   "saving": "Saving...",
   "loading": "Loading...",
   "group_id": "Citizen Type 1",
-  "group_2_id": "Citizen Type 2"
+  "group_2_id": "Citizen Type 2",
+  "my_recent_grievance": "My Recent Grievances",
+  "view_all": "View all",
+  "all_cases": "All cases"
 }

@@ -53,5 +53,8 @@
   "saving": "Enregistrement...",
   "loading": "Chargement...",
   "group_id": "Citoyen de type 1",
-  "group_2_id": "Citoyen de type 2"
+  "group_2_id": "Citoyen de type 2",
+  "my_recent_grievance": "Mes griefs récents",
+  "view_all": "Tout afficher",
+  "all_cases": "Tous les cas"
 }
