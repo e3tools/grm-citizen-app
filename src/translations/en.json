@@ -37,5 +37,21 @@
   "feedback": "Feedback",
   "question": "Question",
   "my_grievances": "My grievances",
-  "welcome": "Welcome"
+  "welcome": "Welcome",
+  "complete_profile": "Complete Your Profile",
+  "complete_profile_subtitle": "Providing this information helps us understand our community better",
+  "age_group": "Age Group",
+  "gender": "Gender",
+  "male": "Male",
+  "female": "Female",
+  "other": "Other",
+  "select_age_group": "Select age group",
+  "select_gender": "Select gender",
+  "select_option": "Select an option",
+  "skip": "Skip",
+  "save_and_continue": "Save and Continue",
+  "saving": "Saving...",
+  "loading": "Loading...",
+  "group_id": "Citizen Type 1",
+  "group_2_id": "Citizen Type 2"
 }

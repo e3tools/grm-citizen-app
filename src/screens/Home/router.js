@@ -10,6 +10,7 @@ import { version } from '../../../package.json';
 import { i18n } from "../../translations/i18n";
 import { colors } from '../../utils/colors';
 import Home from './GRM/Home';
+import Profile from "./Profile";
 
 
 
@@ -117,6 +118,21 @@ function HomeRouter() {a
           ),
         }}
         component={Home}
+      />
+      <Tab.Screen
+        name="Profile"
+        options={{
+          headerShown: false,
+          tabBarIcon: ({ focused, color, size }) => (
+            <AnimatedFeatherIcon
+              pose={focused ? 'focused' : 'unfocused'}
+              name="user"
+              size={size}
+              color={color}
+            />
+          ),
+        }}
+        component={Profile}
       />
     </Tab.Navigator>
   );

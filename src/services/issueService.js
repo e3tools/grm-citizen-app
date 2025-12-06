@@ -1,5 +1,6 @@
 import config from "../../config";
 import request, { client } from "../utils/request";
+import {addTokenToHttpClient, getSessionData} from "@/src/store/ducks/authentication.duck";
 
 export const baseURL = config.API_AUTH_BASE_URL;
 
@@ -22,6 +23,8 @@ export async function fetchIssueList(page = 1) {
   }
 }
 export async function getIssues(page = 1) {
+    const session = await getSessionData();
+    addTokenToHttpClient(session);
     const url = `${baseURL}/issues/reporter/`;
     const requestOptions = {
       url,

@@ -1,6 +1,7 @@
 import { Map } from "immutable";
 import { createActions, handleActions } from "redux-actions";
 import {
+  getEncryptedData,
   storeEncryptedData,
 } from "../../utils/storageManager";
 import { client } from "../../utils/request";
@@ -21,26 +22,18 @@ export async function getSessionData() {
 }
 
 
-function addTokenToHttpClient(sessionObject) {
+export function addTokenToHttpClient(sessionObject) {
   client.defaults.headers.common["Authorization"] = `Token ${sessionObject.token}`;
-  console.log(client.defaults.headers.common["Authorization"])
 }
 export const { signUp, login } = createActions({
   LOGIN: (session) => {
-
     addTokenToHttpClient(session)
-
     storeSessionData(session);
-
     return {
       session
     };
   },
-  SIGN_UP: (session, userCredentials) => {
-    addTokenToHttpClient(session)
-    storeSessionData(session);
-    return { session, password: userCredentials.password, username: userCredentials.email };
-  }
+  SIGN_UP: () => {}
 });
 
 const authentication = handleActions(
@@ -50,11 +43,7 @@ const authentication = handleActions(
         state.set("session", session);
       });
     },
-    [signUp]: (draft, { payload: { session, username, password } }) => {
-      return draft.withMutations((state) => {
-        state.set("session", session);
-      });
-    }
+    [signUp]: () => {}
   },
   defaultState
 );

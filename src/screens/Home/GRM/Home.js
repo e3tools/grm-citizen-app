@@ -61,7 +61,7 @@ const Home = () => {
                     color={'#9da3ae'}
                 />
               </View>
-              <Text style={{marginTop: 10, fontSize: 20, fontWeight: 'bold'}}>{ i18n.t("no_grievances_yet<")}</Text>
+              <Text style={{marginTop: 10, fontSize: 20, fontWeight: 'bold'}}>{ i18n.t("no_grievances_yet")}</Text>
               <Text style={{marginTop: 10, fontSize: 16, color: '#747985', textAlign: 'center'}}>
                 {i18n.t("no_grievances")}
               </Text>
