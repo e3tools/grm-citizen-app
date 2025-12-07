@@ -67,5 +67,8 @@
   "case_timeline": "Case timeline",
   "no_comments": "You haven't reported any comments. Let's get started",
   "no_comments_yet": "No comments yet",
-  "no_comments_to_load": "No more comments to load"
+  "no_comments_to_load": "No more comments to load",
+  "no_attachments": "You haven't reported any attachments. Let's get started",
+  "no_attachments_yet": "No attachments yet",
+  "no_attachments_to_load": "No more attachments to load"
 }
