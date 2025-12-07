@@ -1,48 +1,30 @@
 import { Feather } from '@expo/vector-icons';
+import { useNavigation } from "@react-navigation/native";
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { i18n } from "../translations/i18n";
 import { colors } from '../utils/colors';
-import {i18n} from "../translations/i18n";
+import { formatDate } from "../utils/date";
+import { getStatusInfo } from "../utils/issue";
 
 const GrievanceCard = ({ issue }) => {
-  // Map status to colors and display text
-  const getStatusInfo = (status) => {
-    const statusMap = {
-      'submitted': { color: '#dee9fc', textColor: '#314aad', text: i18n.t('submitted') },
-      'in_progress': { color: '#fdf9c9', textColor: '#875d2c', text: i18n.t('in_progress') },
-      'resolved': { color: '#e2fbe8', textColor: '#4ca055', text: i18n.t('resolved') },
-    };
-    
-    return statusMap[status?.name?.toLowerCase()] || statusMap['submitted'];
-  };
-
-  // Map category to icons and colors
   const getCategoryInfo = (category) => {
     const categoryMap = {
       'grievance': { icon: 'alert-octagon', color: '#f9e3e2', textColor: '#ca3a31' },
       'feedback': { icon: 'message-circle', color: '#dee9fc', textColor: '#3662e2' },
       'question': { icon: 'help-circle', color: '#e2fbe8', textColor: '#4ca055' }
     };
+
     
     return categoryMap[category] || categoryMap['grievance'];
   };
 
-  // Format date for display
-  const formatDate = (dateString) => {
-    if (!dateString) return '';
-    const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', { 
-      month: 'short', 
-      day: 'numeric',
-      year: 'numeric'
-    });
-  };
-
   const statusInfo = getStatusInfo(issue.status);
   const categoryInfo = getCategoryInfo((issue.issue_type.name).toLowerCase());
+  const navigation = useNavigation();
 
   return (
-    <View style={styles.card}>
+    <TouchableOpacity onPress={() => { navigation.navigate('Issue detail', {id: issue.id})}} style={styles.card}>
       <View style={styles.cardContent}>
         <View style={styles.leftSection}>
           <View style={[styles.iconContainer, { backgroundColor: categoryInfo.color }]}>
@@ -72,7 +54,7 @@ const GrievanceCard = ({ issue }) => {
           </View>
         </View>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 };
 

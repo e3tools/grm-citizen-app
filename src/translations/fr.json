@@ -56,5 +56,16 @@
   "group_2_id": "Citoyen de type 2",
   "my_recent_grievance": "Mes griefs récents",
   "view_all": "Tout afficher",
-  "all_cases": "Tous les cas"
+  "all_cases": "Tous les cas",
+  "date_submission": "Date de soumission",
+  "issue_date": "Date du dossier",
+  "issue_type": "Type de dossier",
+  "status": "Statut",
+  "description": "Description",
+  "case_detail": "Détails de l'affaire",
+  "attachments": "Pièces jointes",
+  "case_timeline": "Chronologie de l'affaire",
+  "no_comments": "Vous n'avez signalé aucun commentaire. Commençons.",
+  "no_comments_yet": "Aucun commentaire pour l'instant.",
+  "no_comments_to_load": "Plus aucun commentaire à charger"
 }

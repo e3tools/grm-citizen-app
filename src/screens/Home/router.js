@@ -9,9 +9,11 @@ import posed from 'react-native-pose';
 import { version } from '../../../package.json';
 import { i18n } from "../../translations/i18n";
 import { colors } from '../../utils/colors';
-import Home from './GRM/Home';
+import Home from './GRM/screens/Home';
 import Profile from "./Profile";
-import AllIssues from "./GRM/AllIssues";
+import AllIssues from "./GRM/screens/AllIssues";
+import IssueDetail from "./GRM/screens/IssueDetail";
+import AllIssueAttachments from "./GRM/screens/AllIssueAttachments";
 
 
 
@@ -69,7 +71,7 @@ const customHeaderLeftIcon = ({ navigation, pageToNavigate }) => ({
               navigation.reset({
                   index: 0,
                   routes: [{name: pageToNavigate}],
-              });
+                });
           }}>
           <Icon type="ionicon" color={colors.primary} size={35}
                 style={{ marginLeft: 25 }}
@@ -115,6 +117,22 @@ function DashboardStackScreen() {
         options={({ navigation, route }) => ({
           ...customHeaderOptions(i18n.t('all_cases')),
           ...customHeaderLeftIcon({navigation, route, pageToNavigate: 'GRM'}),
+        })}
+      />
+      <HomeStack.Screen
+        name="Issue detail"
+        component={IssueDetail}
+        options={({ navigation, route }) => ({
+          ...customHeaderOptions(i18n.t('case_detail')),
+          ...customHeaderLeftIcon({navigation, route, pageToNavigate: 'All issues'}),
+        })}
+      />
+      <HomeStack.Screen
+        name="All issue attachments"
+        component={AllIssueAttachments}
+        options={({ navigation, route }) => ({
+          ...customHeaderOptions(i18n.t('attachments')),
+          ...customHeaderLeftIcon({navigation, route, pageToNavigate: 'All issues'}),
         })}
       />
     </HomeStack.Navigator>

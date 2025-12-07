@@ -56,5 +56,16 @@
   "group_2_id": "Citizen Type 2",
   "my_recent_grievance": "My Recent Grievances",
   "view_all": "View all",
-  "all_cases": "All cases"
+  "all_cases": "All cases",
+  "date_submission": "Date of submission",
+  "issue_date": "Date of case",
+  "issue_type": "Case type",
+  "status": "Status",
+  "description": "Description",
+  "case_detail": "Case detail",
+  "attachments": "Attachments",
+  "case_timeline": "Case timeline",
+  "no_comments": "You haven't reported any comments. Let's get started",
+  "no_comments_yet": "No comments yet",
+  "no_comments_to_load": "No more comments to load"
 }
