@@ -1,9 +1,9 @@
-let config;
+let config
 
 if (__DEV__) {
-  config = require('./config.dev').config; // Development config  
+  config = require('./config.dev').config // Development config
 } else {
-  config = require('./config.prod').config; // Production config
+  config = require('./config.prod').config // Production config
 }
 
-export default config;
+export default config
