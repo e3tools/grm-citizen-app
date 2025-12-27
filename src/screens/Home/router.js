@@ -1,41 +1,45 @@
-import React from "react";
+import React from 'react'
 
-import { Feather } from '@expo/vector-icons';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { createStackNavigator } from '@react-navigation/stack';
-import { Platform, Pressable, StyleSheet, Text, View } from "react-native";
-import { Icon } from "react-native-elements";
-import posed from 'react-native-pose';
-import { version } from '../../../package.json';
-import { i18n } from "../../translations/i18n";
-import { colors } from '../../utils/colors';
-import Home from './GRM/screens/Home';
-import Profile from "./Profile";
-import AllIssues from "./GRM/screens/AllIssues";
-import IssueDetail from "./GRM/screens/IssueDetail";
-import AllIssueAttachments from "./GRM/screens/AllIssueAttachments";
-
-
+import {Feather} from '@expo/vector-icons'
+import {createBottomTabNavigator} from '@react-navigation/bottom-tabs'
+import {createStackNavigator} from '@react-navigation/stack'
+import {Platform, Pressable, StyleSheet, Text, View} from 'react-native'
+import {Icon} from 'react-native-elements'
+import posed from 'react-native-pose'
+import {version} from '../../../package.json'
+import {i18n} from '../../translations/i18n'
+import {colors} from '../../utils/colors'
+import Home from './GRM/screens/Home'
+import Profile from './Profile'
+import AllIssues from './GRM/screens/AllIssues'
+import IssueDetail from './GRM/screens/IssueDetail'
+import AllIssueAttachments from './GRM/screens/AllIssueAttachments'
 
 const iconConfig = {
   focused: {
     x: 0,
-    transition: { type: 'tween', ease: 'linear' },
+    transition: {type: 'tween', ease: 'linear'},
   },
-  unfocused: { x: 0 },
-};
+  unfocused: {x: 0},
+}
 
-const customHeaderOptions = (label) => ({
+const customHeaderOptions = label => ({
   headerBackTitle: () => null,
   headerTintColor: '#00bc82',
-  headerTitle: () => { return (<View>
-          <View>
-            <Text>{label}</Text>
-            <Text style={{ color: colors.secondary, fontSize: 12, textAlign: "center" }}>
-               v {version}
-            </Text>
+  headerTitle: () => {
+    return (
+      <View>
+        <View>
+          <Text>{label}</Text>
+          <Text
+            style={{color: colors.secondary, fontSize: 12, textAlign: 'center'}}
+          >
+            v {version}
+          </Text>
+        </View>
       </View>
-  </View>)},
+    )
+  },
   headerTitleAllowFontScaling: true,
   headerTitleAlign: 'center',
   headerTitleStyle: {
@@ -47,57 +51,67 @@ const customHeaderOptions = (label) => ({
     textAlign: 'left',
     color: '#373737',
   },
-});
+})
 
-const customHeaderRightIcon = ({ navigation }) => ({
+const customHeaderRightIcon = ({navigation}) => ({
   headerRight: () => (
-      <View style={styles.iconContainer}>
-        <Pressable
-          onPress={() => {
-            navigation.navigate('SearchBarGrm')
-          }}>
-          <Icon type="ionicon" color={colors.primary} size={35}
-                name={Platform.OS === "ios" ? "ios-search" : "search"}/>
-        </Pressable>
-      </View>
-  )
-});
+    <View style={styles.iconContainer}>
+      <Pressable
+        onPress={() => {
+          navigation.navigate('SearchBarGrm')
+        }}
+      >
+        <Icon
+          type="ionicon"
+          color={colors.primary}
+          size={35}
+          name={Platform.OS === 'ios' ? 'ios-search' : 'search'}
+        />
+      </Pressable>
+    </View>
+  ),
+})
 
-const customHeaderLeftIcon = ({ navigation, pageToNavigate }) => ({
+const customHeaderLeftIcon = ({navigation, pageToNavigate}) => ({
   headerLeft: () => (
-      <View style={styles.iconContainer}>
-        <Pressable
-          onPress={() => {
-              navigation.reset({
-                  index: 0,
-                  routes: [{name: pageToNavigate}],
-                });
-          }}>
-          <Icon type="ionicon" color={colors.primary} size={35}
-                style={{ marginLeft: 25 }}
-                name="arrow-back-outline" />
-        </Pressable>
-      </View>
-  )
-});
+    <View style={styles.iconContainer}>
+      <Pressable
+        onPress={() => {
+          navigation.reset({
+            index: 0,
+            routes: [{name: pageToNavigate}],
+          })
+        }}
+      >
+        <Icon
+          type="ionicon"
+          color={colors.primary}
+          size={35}
+          style={{marginLeft: 25}}
+          name="arrow-back-outline"
+        />
+      </Pressable>
+    </View>
+  ),
+})
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1
+    flex: 1,
   },
   icon: {
-    paddingLeft: 10
+    paddingLeft: 10,
   },
   iconContainer: {
-    flexDirection: "row",
-    justifyContent: "space-evenly",
-    marginRight: 25
-  }
-});
+    flexDirection: 'row',
+    justifyContent: 'space-evenly',
+    marginRight: 25,
+  },
+})
 
-const Tab = createBottomTabNavigator();
-const AnimatedFeatherIcon = posed(Feather)(iconConfig);
-const HomeStack = createStackNavigator();
+const Tab = createBottomTabNavigator()
+const AnimatedFeatherIcon = posed(Feather)(iconConfig)
+const HomeStack = createStackNavigator()
 
 function DashboardStackScreen() {
   return (
@@ -106,7 +120,7 @@ function DashboardStackScreen() {
       <HomeStack.Screen
         name="GRM"
         component={HomeRouter}
-        options={({ navigation, route }) => ({
+        options={({navigation, route}) => ({
           ...customHeaderOptions(i18n.t('my_grievances')),
           ...customHeaderRightIcon({navigation, route}),
         })}
@@ -114,7 +128,7 @@ function DashboardStackScreen() {
       <HomeStack.Screen
         name="All issues"
         component={AllIssues}
-        options={({ navigation, route }) => ({
+        options={({navigation, route}) => ({
           ...customHeaderOptions(i18n.t('all_cases')),
           ...customHeaderLeftIcon({navigation, route, pageToNavigate: 'GRM'}),
         })}
@@ -122,26 +136,33 @@ function DashboardStackScreen() {
       <HomeStack.Screen
         name="Issue detail"
         component={IssueDetail}
-        options={({ navigation, route }) => ({
+        options={({navigation, route}) => ({
           ...customHeaderOptions(i18n.t('case_detail')),
-          ...customHeaderLeftIcon({navigation, route, pageToNavigate: 'All issues'}),
+          ...customHeaderLeftIcon({
+            navigation,
+            route,
+            pageToNavigate: 'All issues',
+          }),
         })}
       />
       <HomeStack.Screen
         name="All issue attachments"
         component={AllIssueAttachments}
-        options={({ navigation, route }) => ({
+        options={({navigation, route}) => ({
           ...customHeaderOptions(i18n.t('attachments')),
-          ...customHeaderLeftIcon({navigation, route, pageToNavigate: 'All issues'}),
+          ...customHeaderLeftIcon({
+            navigation,
+            route,
+            pageToNavigate: 'All issues',
+          }),
         })}
       />
     </HomeStack.Navigator>
-  );
+  )
 }
 
-
-
-function HomeRouter() {a
+function HomeRouter() {
+  a
   return (
     <Tab.Navigator
       tabBarOptions={{
@@ -153,7 +174,7 @@ function HomeRouter() {a
         name="Home"
         options={{
           headerShown: false,
-          tabBarIcon: ({ focused, color, size }) => (
+          tabBarIcon: ({focused, color, size}) => (
             <AnimatedFeatherIcon
               pose={focused ? 'focused' : 'unfocused'}
               name="home"
@@ -168,7 +189,7 @@ function HomeRouter() {a
         name="Profile"
         options={{
           headerShown: false,
-          tabBarIcon: ({ focused, color, size }) => (
+          tabBarIcon: ({focused, color, size}) => (
             <AnimatedFeatherIcon
               pose={focused ? 'focused' : 'unfocused'}
               name="user"
@@ -180,7 +201,7 @@ function HomeRouter() {a
         component={Profile}
       />
     </Tab.Navigator>
-  );
+  )
 }
 
-export default DashboardStackScreen;
+export default DashboardStackScreen

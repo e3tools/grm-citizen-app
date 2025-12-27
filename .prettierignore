@@ -1,0 +1,19 @@
+# Dependencies
+node_modules/
+package-lock.json
+yarn.lock
+
+# Build outputs
+.expo/
+dist/
+web-build/
+android/
+ios/
+
+# Generated files
+*.log
+*.tsbuildinfo
+
+# Config files that shouldn't be formatted
+keystore-base64.txt
+

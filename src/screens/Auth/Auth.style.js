@@ -1,36 +1,35 @@
-import { Dimensions } from 'react-native';
-import { colors } from '../../utils/colors';
+import {Dimensions} from 'react-native'
+import {colors} from '../../utils/colors'
 
-const { width  } = Dimensions.get("screen");
+const {width} = Dimensions.get('screen')
 const ada = 1
 
 export default {
   containerView: {
     flex: 1,
     paddingTop: 10,
-
   },
   loginScreenContainer: {
     flex: 1,
-    justifyContent: "space-between"
+    justifyContent: 'space-between',
   },
   errorText: {
     marginTop: 5,
-    color: "red",
+    color: 'red',
     fontSize: 12,
   },
   loginFormTextInput: {
     borderRadius: 10,
-    backgroundColor: "white",
+    backgroundColor: 'white',
     fontSize: 14,
-    color: "#707070",
+    color: '#707070',
     paddingVertical: 10,
     height: 40,
     borderColor: colors.lightgray,
     borderWidth: 1,
   },
   loginFormTextIcon: {
-    marginTop: 27
+    marginTop: 27,
   },
   inputLabel: {
     fontSize: 16,
@@ -45,19 +44,18 @@ export default {
     alignItems: 'center',
   },
   textHint: {
-    fontFamily: "Poppins_400Regular",
+    fontFamily: 'Poppins_400Regular',
     fontSize: 9,
-    fontWeight: "bold",
-    fontStyle: "normal",
+    fontWeight: 'bold',
+    fontStyle: 'normal',
     letterSpacing: 0,
-    textAlign: "left",
-    color: "#707070",
+    textAlign: 'left',
+    color: '#707070',
   },
   hintContainer: {
-    alignItems: "center",
+    alignItems: 'center',
   },
-  formContainer: {
-  },
+  formContainer: {},
   loginLinkContainer: {
     width: '100%',
     alignItems: 'center',
@@ -72,4 +70,4 @@ export default {
     fontWeight: 'bold',
     marginLeft: 5,
   },
-};
+}

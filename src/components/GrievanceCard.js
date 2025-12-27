@@ -1,36 +1,53 @@
-import { Feather } from '@expo/vector-icons';
-import { useNavigation } from "@react-navigation/native";
-import React from 'react';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { i18n } from "../translations/i18n";
-import { colors } from '../utils/colors';
-import { formatDate } from "../utils/date";
-import { getStatusInfo } from "../utils/issue";
+import {Feather} from '@expo/vector-icons'
+import {useNavigation} from '@react-navigation/native'
+import React from 'react'
+import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
+import {i18n} from '../translations/i18n'
+import {colors} from '../utils/colors'
+import {formatDate} from '../utils/date'
+import {getStatusInfo} from '../utils/issue'
 
-const GrievanceCard = ({ issue }) => {
-  const getCategoryInfo = (category) => {
+const GrievanceCard = ({issue}) => {
+  const getCategoryInfo = category => {
     const categoryMap = {
-      'grievance': { icon: 'alert-octagon', color: '#f9e3e2', textColor: '#ca3a31' },
-      'feedback': { icon: 'message-circle', color: '#dee9fc', textColor: '#3662e2' },
-      'question': { icon: 'help-circle', color: '#e2fbe8', textColor: '#4ca055' }
-    };
+      grievance: {
+        icon: 'alert-octagon',
+        color: '#f9e3e2',
+        textColor: '#ca3a31',
+      },
+      feedback: {
+        icon: 'message-circle',
+        color: '#dee9fc',
+        textColor: '#3662e2',
+      },
+      question: {icon: 'help-circle', color: '#e2fbe8', textColor: '#4ca055'},
+    }
 
-    
-    return categoryMap[category] || categoryMap['grievance'];
-  };
+    return categoryMap[category] || categoryMap['grievance']
+  }
 
-  const statusInfo = getStatusInfo(issue.status);
-  const categoryInfo = getCategoryInfo((issue.issue_type.name).toLowerCase());
-  const navigation = useNavigation();
+  const statusInfo = getStatusInfo(issue.status)
+  const categoryInfo = getCategoryInfo(issue.issue_type.name.toLowerCase())
+  const navigation = useNavigation()
 
   return (
-    <TouchableOpacity onPress={() => { navigation.navigate('Issue detail', {id: issue.id})}} style={styles.card}>
+    <TouchableOpacity
+      onPress={() => {
+        navigation.navigate('Issue detail', {id: issue.id})
+      }}
+      style={styles.card}
+    >
       <View style={styles.cardContent}>
         <View style={styles.leftSection}>
-          <View style={[styles.iconContainer, { backgroundColor: categoryInfo.color }]}>
-            <Feather 
-              name={categoryInfo.icon} 
-              size={20} 
+          <View
+            style={[
+              styles.iconContainer,
+              {backgroundColor: categoryInfo.color},
+            ]}
+          >
+            <Feather
+              name={categoryInfo.icon}
+              size={20}
               color={categoryInfo.textColor}
             />
           </View>
@@ -39,24 +56,22 @@ const GrievanceCard = ({ issue }) => {
               {issue.tracking_code || 'Untitled Issue'}
             </Text>
             <Text style={styles.subtitle}>
-              { i18n.t(issue.issue_type.name.toLowerCase())}
+              {i18n.t(issue.issue_type.name.toLowerCase())}
             </Text>
-            <Text style={styles.date}>
-              {formatDate(issue.intake_date)}
-            </Text>
+            <Text style={styles.date}>{formatDate(issue.intake_date)}</Text>
           </View>
         </View>
         <View style={styles.rightSection}>
-          <View style={[styles.statusTag, { backgroundColor: statusInfo.color }]}>
-            <Text style={[styles.statusText, { color: statusInfo.textColor }]}>
+          <View style={[styles.statusTag, {backgroundColor: statusInfo.color}]}>
+            <Text style={[styles.statusText, {color: statusInfo.textColor}]}>
               {statusInfo.text}
             </Text>
           </View>
         </View>
       </View>
     </TouchableOpacity>
-  );
-};
+  )
+}
 
 const styles = StyleSheet.create({
   card: {
@@ -123,6 +138,6 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: '600',
   },
-});
+})
 
-export default GrievanceCard;
+export default GrievanceCard

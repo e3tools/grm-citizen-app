@@ -1,5 +1,5 @@
-import baseStyles from '../Auth.style';
+import baseStyles from '../Auth.style'
 
 export default {
   ...baseStyles,
-};
+}

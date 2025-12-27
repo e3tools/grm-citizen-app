@@ -1,2 +1,2 @@
-import HomeRouter from "./router";
-export default HomeRouter;
+import HomeRouter from './router'
+export default HomeRouter

@@ -1,93 +1,85 @@
-import { useNavigation } from '@react-navigation/native';
-import React, { useState } from 'react';
-import { Controller, useForm } from 'react-hook-form';
-import {
-  Modal,
-  ScrollView,
-  Text,
-  View
-} from 'react-native';
+import {useNavigation} from '@react-navigation/native'
+import React, {useState} from 'react'
+import {Controller, useForm} from 'react-hook-form'
+import {Modal, ScrollView, Text, View} from 'react-native'
 import {
   useBlurOnFulfill,
-  useClearByFocusCell
-} from 'react-native-confirmation-code-field';
-import { ActivityIndicator, Button, Provider, TextInput } from 'react-native-paper';
-import { useDispatch } from 'react-redux';
-import { default as BigCheck } from '../../../../assets/big-check.svg';
-import { default as SuccessLogo } from '../../../../assets/success_logo.svg';
-import {fetchAuthCredentials, register} from '../../../services/authService';
-import {login, signUp} from '../../../store/ducks/authentication.duck';
-import { i18n } from "../../../translations/i18n";
-import { colors } from '../../../utils/colors';
-import MESSAGES from '../../../utils/formErrorMessages';
-import { emailRegex, passwordRegex } from '../../../utils/formUtils';
-import styles from './SignUp.style';
-import CustomButton from "../../../components/CustomButton";
+  useClearByFocusCell,
+} from 'react-native-confirmation-code-field'
+import {
+  ActivityIndicator,
+  Button,
+  Provider,
+  TextInput,
+} from 'react-native-paper'
+import {useDispatch} from 'react-redux'
+import {default as BigCheck} from '../../../../assets/big-check.svg'
+import {default as SuccessLogo} from '../../../../assets/success_logo.svg'
+import {fetchAuthCredentials, register} from '../../../services/authService'
+import {login, signUp} from '../../../store/ducks/authentication.duck'
+import {i18n} from '../../../translations/i18n'
+import {colors} from '../../../utils/colors'
+import MESSAGES from '../../../utils/formErrorMessages'
+import {emailRegex, passwordRegex} from '../../../utils/formUtils'
+import styles from './SignUp.style'
+import CustomButton from '../../../components/CustomButton'
 
-const CELL_COUNT = 6;
+const CELL_COUNT = 6
 
-function SignUp({ route }) {
-  const dispatch = useDispatch();
-  const navigation = useNavigation();
-  const [successModal, setSuccessModal] = React.useState(false);
-  const [loading, setLoading] = React.useState(false);
-  const [credentials, setCredentials] = React.useState();
-  const [isPasswordSecure, setIsPasswordSecure] = useState(true);
-  const {
-      control,
-      handleSubmit,
-      errors,
-      watch,
-      formState,
-      getValues,
-      setError
-  } = useForm({
-    criteriaMode: 'all',
-    defaultValues: {
-      first_name: '',
-      last_name: '',
-      username: '',
-      email: '',
-      phone_number: '',
-      password: '',
-      confirmPassword: '',
-    },
-    mode: 'onBlur'
-  });
+function SignUp({route}) {
+  const dispatch = useDispatch()
+  const navigation = useNavigation()
+  const [successModal, setSuccessModal] = React.useState(false)
+  const [loading, setLoading] = React.useState(false)
+  const [credentials, setCredentials] = React.useState()
+  const [isPasswordSecure, setIsPasswordSecure] = useState(true)
+  const {control, handleSubmit, errors, watch, formState, getValues, setError} =
+    useForm({
+      criteriaMode: 'all',
+      defaultValues: {
+        first_name: '',
+        last_name: '',
+        username: '',
+        email: '',
+        phone_number: '',
+        password: '',
+        confirmPassword: '',
+      },
+      mode: 'onBlur',
+    })
 
-  const [value, setValue] = React.useState('');
-  const ref = useBlurOnFulfill({ value, cellCount: CELL_COUNT });
-  const [props, getCellOnLayoutHandler] = useClearByFocusCell({ value, setValue });
+  const [value, setValue] = React.useState('')
+  const ref = useBlurOnFulfill({value, cellCount: CELL_COUNT})
+  const [props, getCellOnLayoutHandler] = useClearByFocusCell({value, setValue})
 
-  const onSignUp = async (data) => {
-    setLoading(true);
+  const onSignUp = async data => {
+    setLoading(true)
 
     // handle code with backend, check if valid
-    const response = await register({ ...data });
+    const response = await register({...data})
     if (response.errors) {
-        Object.keys(response.errors).forEach(key => {
-            setError(key, {
-                type: "custom",
-                message: (response.errors[key]).join(". ")
-            })
-        });
-        setLoading(false);
-        return;
+      Object.keys(response.errors).forEach(key => {
+        setError(key, {
+          type: 'custom',
+          message: response.errors[key].join('. '),
+        })
+      })
+      setLoading(false)
+      return
     }
 
-    setLoading(false);
+    setLoading(false)
 
-    setSuccessModal(true);
+    setSuccessModal(true)
 
     const responseLogin = await fetchAuthCredentials({
-        username: response.data.username,
-        password: data.password
-    });
+      username: response.data.username,
+      password: data.password,
+    })
 
-    setLoading(false);
-    dispatch(login(responseLogin));
-
-  };
+    setLoading(false)
+    dispatch(login(responseLogin))
+  }
 
   return (
     <Provider>
@@ -142,377 +134,421 @@ function SignUp({ route }) {
           paddingBottom: 60,
           paddingHorizontal: 30,
         }}
-        contentContainerStyle={{ flexGrow: 1, paddingTop: 20, paddingBottom: 20 }}
+        contentContainerStyle={{flexGrow: 1, paddingTop: 20, paddingBottom: 20}}
         keyboardShouldPersistTaps="handled"
       >
-            <View style={styles.loginScreenContainer}>
-              <View style={styles.formContainer}>
-                <View style={{ borderRadius: 10 }}>
+        <View style={styles.loginScreenContainer}>
+          <View style={styles.formContainer}>
+            <View style={{borderRadius: 10}}>
+              {/* First Name Field */}
+              <Controller
+                control={control}
+                formState={formState}
+                render={({field: {onChange, onBlur, value}}) => {
+                  return (
+                    <View style={{marginBottom: 16}}>
+                      <Text style={styles.inputLabel}>
+                        {i18n.t('first_name')}
+                      </Text>
+                      <TextInput
+                        theme={{
+                          roundness: 10,
+                          colors: {
+                            primary: colors.primary,
+                            placeholder: colors.lightgray,
+                            text: colors.darkGrey,
+                            onSurface: colors.darkGrey,
+                            background: colors.white,
+                          },
+                        }}
+                        mode="flat"
+                        placeholder={i18n.t('enter_your_full_name')}
+                        placeholderTextColor={colors.secondary}
+                        underlineColor={colors.lightgray}
+                        activeUnderlineColor={colors.primary}
+                        selectionColor={colors.primary}
+                        style={styles.loginFormTextInput}
+                        onBlur={onBlur}
+                        onChangeText={onChange}
+                        value={value}
+                      />
+                      {formState.errors.first_name && (
+                        <Text style={styles.errorText}>
+                          {formState.errors.first_name.message}
+                        </Text>
+                      )}
+                    </View>
+                  )
+                }}
+                name="first_name"
+                rules={{
+                  required: {
+                    value: true,
+                    message: MESSAGES.required,
+                  },
+                }}
+                defaultValue=""
+              />
 
-                  {/* First Name Field */}
-                  <Controller
-                    control={control}
-                    formState={formState}
-                    render={({ field: { onChange, onBlur, value } }) => {
-                      return (
-                        <View style={{ marginBottom: 16 }}>
-                          <Text style={styles.inputLabel}>{i18n.t('first_name')}</Text>
-                          <TextInput
-                            theme={{
-                              roundness: 10,
-                              colors: {
-                                primary: colors.primary,
-                                placeholder: colors.lightgray,
-                                text: colors.darkGrey,
-                                onSurface: colors.darkGrey,
-                                background: colors.white,
-                              },
-                            }}
-                            mode="flat"
-                            placeholder={i18n.t('enter_your_full_name')}
-                            placeholderTextColor={colors.secondary}
-                            underlineColor={colors.lightgray}
-                            activeUnderlineColor={colors.primary}
-                            selectionColor={colors.primary}
-                            style={styles.loginFormTextInput}
-                            onBlur={onBlur}
-                            onChangeText={onChange}
-                            value={value}
-                          />
-                        {formState.errors.first_name && <Text style={styles.errorText}>{formState.errors.first_name.message}</Text>}
-                        </View>
-                      );
-                    }}
-                    name="first_name"
-                    rules={{
-                      required: {
-                        value: true,
-                        message: MESSAGES.required,
-                      },
-                    }}
-                    defaultValue=""
-                  />
-
-                  {/* Last Name Field */}
-                  <Controller
-                    control={control}
-                    formState={formState}
-                    render={({ field: { onChange, onBlur, value } }) => (
-                      <View style={{ marginBottom: 16 }}>
-                        <Text style={styles.inputLabel}>{i18n.t('last_name')}</Text>
-                        <TextInput
-                          theme={{
-                            roundness: 10,
-                            colors: {
-                              primary: colors.primary,
-                              placeholder: colors.lightgray,
-                              text: colors.darkGrey,
-                              onSurface: colors.darkGrey,
-                              background: colors.white,
-                            },
-                          }}
-                          mode="flat"
-                          placeholder={i18n.t('enter_your_last_name')}
-                          placeholderTextColor={colors.secondary}
-                          underlineColor={colors.lightgray}
-                          activeUnderlineColor={colors.primary}
-                          selectionColor={colors.primary}
-                          style={styles.loginFormTextInput}
-                          onBlur={onBlur}
-                          onChangeText={onChange}
-                          value={value}
-                        />
-                        {formState.errors.last_name && <Text style={styles.errorText}>{formState.errors.last_name.message}</Text>}
-                      </View>
+              {/* Last Name Field */}
+              <Controller
+                control={control}
+                formState={formState}
+                render={({field: {onChange, onBlur, value}}) => (
+                  <View style={{marginBottom: 16}}>
+                    <Text style={styles.inputLabel}>{i18n.t('last_name')}</Text>
+                    <TextInput
+                      theme={{
+                        roundness: 10,
+                        colors: {
+                          primary: colors.primary,
+                          placeholder: colors.lightgray,
+                          text: colors.darkGrey,
+                          onSurface: colors.darkGrey,
+                          background: colors.white,
+                        },
+                      }}
+                      mode="flat"
+                      placeholder={i18n.t('enter_your_last_name')}
+                      placeholderTextColor={colors.secondary}
+                      underlineColor={colors.lightgray}
+                      activeUnderlineColor={colors.primary}
+                      selectionColor={colors.primary}
+                      style={styles.loginFormTextInput}
+                      onBlur={onBlur}
+                      onChangeText={onChange}
+                      value={value}
+                    />
+                    {formState.errors.last_name && (
+                      <Text style={styles.errorText}>
+                        {formState.errors.last_name.message}
+                      </Text>
                     )}
-                    name="last_name"
-                    rules={{
-                      required: {
-                        value: true,
-                        message: MESSAGES.required,
-                      },
-                    }}
-                    defaultValue=""
-                  />
+                  </View>
+                )}
+                name="last_name"
+                rules={{
+                  required: {
+                    value: true,
+                    message: MESSAGES.required,
+                  },
+                }}
+                defaultValue=""
+              />
 
-                  {/* Username Field */}
-                  <Controller
-                    control={control}
-                    formState={formState}
-                    render={({ field: { onChange, onBlur, value } }) => (
-                      <View style={{ marginBottom: 16 }}>
-                        <Text style={styles.inputLabel}>{i18n.t('username')}</Text>
-                        <TextInput
-                          theme={{
-                            roundness: 10,
-                            colors: {
-                              primary: colors.primary,
-                              placeholder: colors.lightgray,
-                              text: colors.darkGrey,
-                              onSurface: colors.darkGrey,
-                              background: colors.white,
-                            },
-                          }}
-                          mode="flat"
-                          placeholder={i18n.t('enter_your_username')}
-                          placeholderTextColor={colors.secondary}
-                          underlineColor={colors.lightgray}
-                          activeUnderlineColor={colors.primary}
-                          selectionColor={colors.primary}
-                          style={styles.loginFormTextInput}
-                          onBlur={onBlur}
-                          onChangeText={onChange}
-                          value={value}
-                        />
-                        {formState.errors.username && <Text style={styles.errorText}>{formState.errors.username.message}</Text>}
-                      </View>
+              {/* Username Field */}
+              <Controller
+                control={control}
+                formState={formState}
+                render={({field: {onChange, onBlur, value}}) => (
+                  <View style={{marginBottom: 16}}>
+                    <Text style={styles.inputLabel}>{i18n.t('username')}</Text>
+                    <TextInput
+                      theme={{
+                        roundness: 10,
+                        colors: {
+                          primary: colors.primary,
+                          placeholder: colors.lightgray,
+                          text: colors.darkGrey,
+                          onSurface: colors.darkGrey,
+                          background: colors.white,
+                        },
+                      }}
+                      mode="flat"
+                      placeholder={i18n.t('enter_your_username')}
+                      placeholderTextColor={colors.secondary}
+                      underlineColor={colors.lightgray}
+                      activeUnderlineColor={colors.primary}
+                      selectionColor={colors.primary}
+                      style={styles.loginFormTextInput}
+                      onBlur={onBlur}
+                      onChangeText={onChange}
+                      value={value}
+                    />
+                    {formState.errors.username && (
+                      <Text style={styles.errorText}>
+                        {formState.errors.username.message}
+                      </Text>
                     )}
-                    name="username"
-                    rules={{
-                      required: {
-                        value: true,
-                        message: MESSAGES.required,
-                      },
-                    }}
-                    defaultValue=""
-                  />
+                  </View>
+                )}
+                name="username"
+                rules={{
+                  required: {
+                    value: true,
+                    message: MESSAGES.required,
+                  },
+                }}
+                defaultValue=""
+              />
 
-                  {/* Email Field (Optional) */}
-                  <Controller
-                    control={control}
-                    formState={formState}
-                    render={({ field: { onChange, onBlur, value } }) => (
-                      <View style={{ marginBottom: 16 }}>
-                        <View style={styles.inputLabel}>
-                            <Text style={{fontSize: 16,color: colors.darkGrey, marginBottom: 8, fontWeight: 'bold'}}>{i18n.t('email')}</Text>
-                            <Text style={{ margin: '10', color: colors.secondary }}>{i18n.t('optional')}</Text>
-                        </View>
-                        <TextInput
-                          theme={{
-                            roundness: 10,
-                            colors: {
-                              primary: colors.primary,
-                              placeholder: colors.lightgray,
-                              text: colors.darkGrey,
-                              onSurface: colors.darkGrey,
-                              background: colors.white,
-                            },
-                          }}
-                          mode="flat"
-                          placeholder={i18n.t('enter_your_email')}
-                          placeholderTextColor={colors.secondary}
-                          underlineColor={colors.lightgray}
-                          activeUnderlineColor={colors.primary}
-                          selectionColor={colors.primary}
-                          style={styles.loginFormTextInput}
-                          onBlur={onBlur}
-                          onChangeText={onChange}
-                          value={value}
-                        />
-                        {formState.errors.email && <Text style={styles.errorText}>{formState.errors.email.message}</Text>}
-                      </View>
+              {/* Email Field (Optional) */}
+              <Controller
+                control={control}
+                formState={formState}
+                render={({field: {onChange, onBlur, value}}) => (
+                  <View style={{marginBottom: 16}}>
+                    <View style={styles.inputLabel}>
+                      <Text
+                        style={{
+                          fontSize: 16,
+                          color: colors.darkGrey,
+                          marginBottom: 8,
+                          fontWeight: 'bold',
+                        }}
+                      >
+                        {i18n.t('email')}
+                      </Text>
+                      <Text style={{margin: '10', color: colors.secondary}}>
+                        {i18n.t('optional')}
+                      </Text>
+                    </View>
+                    <TextInput
+                      theme={{
+                        roundness: 10,
+                        colors: {
+                          primary: colors.primary,
+                          placeholder: colors.lightgray,
+                          text: colors.darkGrey,
+                          onSurface: colors.darkGrey,
+                          background: colors.white,
+                        },
+                      }}
+                      mode="flat"
+                      placeholder={i18n.t('enter_your_email')}
+                      placeholderTextColor={colors.secondary}
+                      underlineColor={colors.lightgray}
+                      activeUnderlineColor={colors.primary}
+                      selectionColor={colors.primary}
+                      style={styles.loginFormTextInput}
+                      onBlur={onBlur}
+                      onChangeText={onChange}
+                      value={value}
+                    />
+                    {formState.errors.email && (
+                      <Text style={styles.errorText}>
+                        {formState.errors.email.message}
+                      </Text>
                     )}
-                    name="email"
-                    rules={{
-                      pattern: {
-                        value: emailRegex,
-                        message: MESSAGES.email,
-                      },
-                    }}
-                    defaultValue=""
-                  />
+                  </View>
+                )}
+                name="email"
+                rules={{
+                  pattern: {
+                    value: emailRegex,
+                    message: MESSAGES.email,
+                  },
+                }}
+                defaultValue=""
+              />
 
-                  {/* Phone Number Field */}
-                  <Controller
-                    control={control}
-                    formState={formState}
-                    render={({ field: { onChange, onBlur, value } }) => (
-                      <View style={{ marginBottom: 16 }}>
-                        <Text style={styles.inputLabel}>{i18n.t('phone_number')}</Text>
-                        <TextInput
-                          theme={{
-                            roundness: 10,
-                            colors: {
-                              primary: colors.primary,
-                              placeholder: colors.lightgray,
-                              text: colors.darkGrey,
-                              onSurface: colors.darkGrey,
-                              background: colors.white,
-                            },
-                          }}
-                          mode="flat"
-                          placeholder={i18n.t('enter_your_phone_number')}
-                          placeholderTextColor={colors.secondary}
-                          underlineColor={colors.lightgray}
-                          activeUnderlineColor={colors.primary}
-                          selectionColor={colors.primary}
-                          style={styles.loginFormTextInput}
-                          onBlur={onBlur}
-                          onChangeText={onChange}
-                          value={value}
-                          keyboardType="phone-pad"
-                        />
-                        {formState.errors.phoneNumber && <Text style={styles.errorText}>{formState.errors.phoneNumber.message}</Text>}
-                      </View>
+              {/* Phone Number Field */}
+              <Controller
+                control={control}
+                formState={formState}
+                render={({field: {onChange, onBlur, value}}) => (
+                  <View style={{marginBottom: 16}}>
+                    <Text style={styles.inputLabel}>
+                      {i18n.t('phone_number')}
+                    </Text>
+                    <TextInput
+                      theme={{
+                        roundness: 10,
+                        colors: {
+                          primary: colors.primary,
+                          placeholder: colors.lightgray,
+                          text: colors.darkGrey,
+                          onSurface: colors.darkGrey,
+                          background: colors.white,
+                        },
+                      }}
+                      mode="flat"
+                      placeholder={i18n.t('enter_your_phone_number')}
+                      placeholderTextColor={colors.secondary}
+                      underlineColor={colors.lightgray}
+                      activeUnderlineColor={colors.primary}
+                      selectionColor={colors.primary}
+                      style={styles.loginFormTextInput}
+                      onBlur={onBlur}
+                      onChangeText={onChange}
+                      value={value}
+                      keyboardType="phone-pad"
+                    />
+                    {formState.errors.phoneNumber && (
+                      <Text style={styles.errorText}>
+                        {formState.errors.phoneNumber.message}
+                      </Text>
                     )}
-                    name="phone_number"
-                    rules={{
-                      required: {
-                        value: true,
-                        message: MESSAGES.required,
-                      },
-                    }}
-                    defaultValue=""
-                  />
+                  </View>
+                )}
+                name="phone_number"
+                rules={{
+                  required: {
+                    value: true,
+                    message: MESSAGES.required,
+                  },
+                }}
+                defaultValue=""
+              />
 
-                  {/* Password Field */}
-                  <Controller
-                    control={control}
-                    formState={formState}
-                    render={({ field: { onChange, onBlur, value } }) => (
-                      <View style={{ marginBottom: 16 }}>
-                        <Text style={styles.inputLabel}>{i18n.t('password')}</Text>
-                        <TextInput
-                          theme={{
-                            roundness: 10,
-                            colors: {
-                              primary: colors.primary,
-                              placeholder: colors.lightgray,
-                              text: colors.darkGrey,
-                              onSurface: colors.darkGrey,
-                              background: colors.white,
-                            },
-                          }}
-                          mode="flat"
-                          placeholder={i18n.t('enter_your_password')}
-                          placeholderTextColor={colors.secondary}
-                          underlineColor={colors.lightgray}
-                          activeUnderlineColor={colors.primary}
-                          selectionColor={colors.primary}
-                          style={styles.loginFormTextInput}
-                          onBlur={onBlur}
-                          onChangeText={onChange}
-                          value={value}
-                          secureTextEntry={isPasswordSecure}
-                          left={
-                            <TextInput.Icon
-                              style={styles.loginFormTextIcon}
-                              onPress={() => setIsPasswordSecure(!isPasswordSecure)}
-                              color={colors.primary}
-                              icon={isPasswordSecure ? 'eye-off-outline' : 'eye-outline'}/>
+              {/* Password Field */}
+              <Controller
+                control={control}
+                formState={formState}
+                render={({field: {onChange, onBlur, value}}) => (
+                  <View style={{marginBottom: 16}}>
+                    <Text style={styles.inputLabel}>{i18n.t('password')}</Text>
+                    <TextInput
+                      theme={{
+                        roundness: 10,
+                        colors: {
+                          primary: colors.primary,
+                          placeholder: colors.lightgray,
+                          text: colors.darkGrey,
+                          onSurface: colors.darkGrey,
+                          background: colors.white,
+                        },
+                      }}
+                      mode="flat"
+                      placeholder={i18n.t('enter_your_password')}
+                      placeholderTextColor={colors.secondary}
+                      underlineColor={colors.lightgray}
+                      activeUnderlineColor={colors.primary}
+                      selectionColor={colors.primary}
+                      style={styles.loginFormTextInput}
+                      onBlur={onBlur}
+                      onChangeText={onChange}
+                      value={value}
+                      secureTextEntry={isPasswordSecure}
+                      left={
+                        <TextInput.Icon
+                          style={styles.loginFormTextIcon}
+                          onPress={() => setIsPasswordSecure(!isPasswordSecure)}
+                          color={colors.primary}
+                          icon={
+                            isPasswordSecure ? 'eye-off-outline' : 'eye-outline'
                           }
                         />
-                        {formState.errors.password && (
-                          <Text style={styles.errorText}>{formState.errors.password.message}</Text>
-                        )}
-                      </View>
+                      }
+                    />
+                    {formState.errors.password && (
+                      <Text style={styles.errorText}>
+                        {formState.errors.password.message}
+                      </Text>
                     )}
-                    name="password"
-                    rules={{
-                      required: {
-                        value: true,
-                        message: MESSAGES.required,
-                      },
-                      pattern: {
-                        value: passwordRegex,
-                        message: MESSAGES.password,
-                      },
-                      minLength: {
-                        value: 8,
-                        message: MESSAGES.minLength(8),
-                      },
-                      maxLength: {
-                        value: 16,
-                        message: MESSAGES.maxLength(16),
-                      },
-                    }}
-                    defaultValue=""
-                  />
+                  </View>
+                )}
+                name="password"
+                rules={{
+                  required: {
+                    value: true,
+                    message: MESSAGES.required,
+                  },
+                  pattern: {
+                    value: passwordRegex,
+                    message: MESSAGES.password,
+                  },
+                  minLength: {
+                    value: 8,
+                    message: MESSAGES.minLength(8),
+                  },
+                  maxLength: {
+                    value: 16,
+                    message: MESSAGES.maxLength(16),
+                  },
+                }}
+                defaultValue=""
+              />
 
-                  {/* Confirm Password Field */}
-                  <Controller
-                    control={control}
-                    formState={formState}
-                    render={({ field: { onChange, onBlur, value } }) => (
-                      <View style={{ marginBottom: 16 }}>
-                        <Text style={styles.inputLabel}>{i18n.t('confirm_password')}</Text>
-                        <TextInput
-                          theme={{
-                            roundness: 10,
-                            colors: {
-                              primary: colors.primary,
-                              placeholder: colors.lightgray,
-                              text: colors.darkGrey,
-                              onSurface: colors.darkGrey,
-                              background: colors.white,
-                            },
-                          }}
-                          mode="flat"
-                          placeholder={i18n.t('confirm_your_password')}
-                          placeholderTextColor={colors.secondary}
-                          underlineColor={colors.lightgray}
-                          activeUnderlineColor={colors.primary}
-                          selectionColor={colors.primary}
-                          style={styles.loginFormTextInput}
-                          onBlur={onBlur}
-                          onChangeText={onChange}
-                          value={value}
-                          secureTextEntry={isPasswordSecure}
-                          left={
-                            <TextInput.Icon
-                              style={styles.loginFormTextIcon}
-                              onPress={() => setIsPasswordSecure(!isPasswordSecure)}
-                              icon={isPasswordSecure ? 'eye-off-outline' : 'eye-outline'}
-                              color={colors.primary}
-                            />
+              {/* Confirm Password Field */}
+              <Controller
+                control={control}
+                formState={formState}
+                render={({field: {onChange, onBlur, value}}) => (
+                  <View style={{marginBottom: 16}}>
+                    <Text style={styles.inputLabel}>
+                      {i18n.t('confirm_password')}
+                    </Text>
+                    <TextInput
+                      theme={{
+                        roundness: 10,
+                        colors: {
+                          primary: colors.primary,
+                          placeholder: colors.lightgray,
+                          text: colors.darkGrey,
+                          onSurface: colors.darkGrey,
+                          background: colors.white,
+                        },
+                      }}
+                      mode="flat"
+                      placeholder={i18n.t('confirm_your_password')}
+                      placeholderTextColor={colors.secondary}
+                      underlineColor={colors.lightgray}
+                      activeUnderlineColor={colors.primary}
+                      selectionColor={colors.primary}
+                      style={styles.loginFormTextInput}
+                      onBlur={onBlur}
+                      onChangeText={onChange}
+                      value={value}
+                      secureTextEntry={isPasswordSecure}
+                      left={
+                        <TextInput.Icon
+                          style={styles.loginFormTextIcon}
+                          onPress={() => setIsPasswordSecure(!isPasswordSecure)}
+                          icon={
+                            isPasswordSecure ? 'eye-off-outline' : 'eye-outline'
                           }
+                          color={colors.primary}
                         />
-                        {formState.errors.confirm_password && (
-                          <Text style={styles.errorText}>{formState.errors.confirm_password.message}</Text>
-                        )}
-                      </View>
+                      }
+                    />
+                    {formState.errors.confirm_password && (
+                      <Text style={styles.errorText}>
+                        {formState.errors.confirm_password.message}
+                      </Text>
                     )}
-                    name="confirm_password"
-                    rules={{
-                      required: {
-                        value: true,
-                        message: MESSAGES.required,
-                      },
-                      validate: (value) => value === watch('password') || MESSAGES.passwordMatch,
-                    }}
-                    defaultValue=""
-                  />
-                </View>
-
-                <View style={styles.hintContainer}>
-                  <Text style={styles.textHint}>{i18n.t('password_hint')}</Text>
-                </View>
-              </View>
-              {/* Move login button inside the scroll view and ensure it's not cut off */}
-                <CustomButton
-                 backgroundColor="#24c38b"
-                 textColor="white"
-                 color="white"
-                 label={i18n.t('create_account')}
-                 iconName="plus-circle"
-                 onPress={handleSubmit(onSignUp)}
+                  </View>
+                )}
+                name="confirm_password"
+                rules={{
+                  required: {
+                    value: true,
+                    message: MESSAGES.required,
+                  },
+                  validate: value =>
+                    value === watch('password') || MESSAGES.passwordMatch,
+                }}
+                defaultValue=""
               />
             </View>
-          {/* Moved loginLinkContainer outside KeyboardAvoidingView to avoid absolute positioning conflicts */}
-          <View style={styles.loginLinkContainer}>
-            <Text style={styles.loginText}>
-              {i18n.t('already_have_account')}
-            </Text>
-            <Text
-                style={styles.loginLink}
-                onPress={() => navigation.navigate('LoginStack')}
-            >
-                {i18n.t('login')}
-            </Text>
+
+            <View style={styles.hintContainer}>
+              <Text style={styles.textHint}>{i18n.t('password_hint')}</Text>
+            </View>
           </View>
+          {/* Move login button inside the scroll view and ensure it's not cut off */}
+          <CustomButton
+            backgroundColor="#24c38b"
+            textColor="white"
+            color="white"
+            label={i18n.t('create_account')}
+            iconName="plus-circle"
+            onPress={handleSubmit(onSignUp)}
+          />
+        </View>
+        {/* Moved loginLinkContainer outside KeyboardAvoidingView to avoid absolute positioning conflicts */}
+        <View style={styles.loginLinkContainer}>
+          <Text style={styles.loginText}>{i18n.t('already_have_account')}</Text>
+          <Text
+            style={styles.loginLink}
+            onPress={() => navigation.navigate('LoginStack')}
+          >
+            {i18n.t('login')}
+          </Text>
+        </View>
       </ScrollView>
     </Provider>
-  );
+  )
 }
 
-export default SignUp;
+export default SignUp

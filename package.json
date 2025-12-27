@@ -9,9 +9,17 @@
     "web": "expo start --web",
     "lint": "expo lint",
     "lint:fix": "eslint --fix",
+    "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,md}\"",
+    "format:check": "prettier --check \"**/*.{js,jsx,ts,tsx,json,md}\"",
     "prebuild:android": "npx expo prebuild --platform android --clean",
     "build:android:local": "node scripts/build-android.js assembleRelease",
-    "build:android:bundle": "node scripts/build-android.js bundleRelease"
+    "build:android:bundle": "node scripts/build-android.js bundleRelease",
+    "prepare": "husky install"
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx,json,md}": [
+      "prettier --write"
+    ]
   },
   "dependencies": {
     "@expo-google-fonts/poppins": "^0.4.1",
@@ -73,6 +81,9 @@
     "eslint-plugin-prettier": "^5.5.4",
     "eslint-plugin-react": "^7.37.5",
     "eslint-plugin-react-native": "^5.0.0",
+    "husky": "^9.0.0",
+    "lint-staged": "^15.0.0",
+    "prettier": "^3.0.0",
     "typescript": "~5.9.2"
   },
   "private": true

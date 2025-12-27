@@ -1,10 +1,10 @@
-const { StyleSheet } = require("react-native");
+const {StyleSheet} = require('react-native')
 
-export const styles = (colors) =>
+export const styles = colors =>
   StyleSheet.create({
     container: {
       flex: 1,
-      backgroundColor: "white",
+      backgroundColor: 'white',
     },
     statusTag: {
       paddingHorizontal: 12,
@@ -18,4 +18,4 @@ export const styles = (colors) =>
       fontSize: 15,
       fontWeight: '600',
     },
-  });
+  })
