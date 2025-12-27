@@ -1,0 +1,178 @@
+name: Build React Native App
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch: # Allows manual triggering
+
+jobs:
+  build-android:
+    name: Build Android APK
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Install Expo CLI
+        run: npm install -g @expo/cli eas-cli
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Prebuild Android
+        run: npx expo prebuild --platform android --clean
+
+      - name: Decrypt Keystore
+        if: ${{ secrets.ANDROID_KEYSTORE != '' }}
+        run: |
+          echo "${{ secrets.ANDROID_KEYSTORE }}" | base64 -d > android/app/keystore.jks
+        env:
+          ANDROID_KEYSTORE: ${{ secrets.ANDROID_KEYSTORE }}
+
+      - name: Configure Gradle Properties
+        if: ${{ secrets.ANDROID_KEYSTORE != '' }}
+        run: |
+          echo "MYAPP_RELEASE_STORE_FILE=keystore.jks" >> android/gradle.properties
+          echo "MYAPP_RELEASE_KEY_ALIAS=${{ secrets.ANDROID_KEY_ALIAS }}" >> android/gradle.properties
+          echo "MYAPP_RELEASE_STORE_PASSWORD=${{ secrets.ANDROID_KEYSTORE_PASSWORD }}" >> android/gradle.properties
+          echo "MYAPP_RELEASE_KEY_PASSWORD=${{ secrets.ANDROID_KEY_PASSWORD }}" >> android/gradle.properties
+
+      - name: Build APK
+        run: |
+          cd android
+          ./gradlew assembleRelease
+        env:
+          ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+
+      - name: Build AAB (App Bundle)
+        run: |
+          cd android
+          ./gradlew bundleRelease
+        env:
+          ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+
+      - name: Upload APK Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: android-apk
+          path: android/app/build/outputs/apk/release/app-release.apk
+          retention-days: 30
+
+      - name: Upload AAB Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: android-aab
+          path: android/app/build/outputs/bundle/release/app-release.aab
+          retention-days: 30
+
+  # iOS build job commented out - uncomment when iOS credentials are available
+  # See CREDENTIALS_SETUP.md for instructions on setting up iOS credentials
+  # build-ios:
+  #   name: Build iOS App
+  #   runs-on: macos-latest
+  #   steps:
+  #     - name: Checkout Code
+  #       uses: actions/checkout@v4
+  #
+  #     - name: Set up Node.js
+  #       uses: actions/setup-node@v4
+  #       with:
+  #         node-version: '20'
+  #         cache: 'npm'
+  #
+  #     - name: Install Dependencies
+  #       run: npm ci
+  #
+  #     - name: Install Expo CLI
+  #       run: npm install -g @expo/cli eas-cli
+  #
+  #     - name: Install CocoaPods
+  #       run: |
+  #         sudo gem install cocoapods
+  #         pod --version
+  #
+  #     - name: Install xcpretty (optional)
+  #       run: gem install xcpretty || true
+  #
+  #     - name: Prebuild iOS
+  #       run: npx expo prebuild --platform ios --clean
+  #
+  #     - name: Install Pods
+  #       run: |
+  #         cd ios
+  #         pod install
+  #
+  #     - name: Set up Apple Certificate
+  #       if: ${{ secrets.APPLE_CERTIFICATE != '' }}
+  #       run: |
+  #         echo "${{ secrets.APPLE_CERTIFICATE }}" | base64 -d > apple_certificate.p12
+  #         security create-keychain -p "" build.keychain
+  #         security default-keychain -s build.keychain
+  #         security unlock-keychain -p "" build.keychain
+  #         security import apple_certificate.p12 -k build.keychain -P "${{ secrets.APPLE_CERTIFICATE_PASSWORD }}" -T /usr/bin/codesign
+  #         security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k "" build.keychain
+  #
+  #     - name: Set up Provisioning Profile
+  #       if: ${{ secrets.APPLE_PROVISIONING_PROFILE != '' }}
+  #       run: |
+  #         mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
+  #         echo "${{ secrets.APPLE_PROVISIONING_PROFILE }}" | base64 -d > ~/Library/MobileDevice/Provisioning\ Profiles/profile.mobileprovision
+  #
+  #     - name: Build iOS App
+  #       run: |
+  #         cd ios
+  #         SCHEME=$(xcodebuild -list -workspace *.xcworkspace 2>/dev/null | grep -A 1 'Schemes:' | tail -n 1 | xargs || echo "grm-citizen-app")
+  #         xcodebuild -workspace *.xcworkspace \
+  #           -scheme "$SCHEME" \
+  #           -configuration Release \
+  #           -destination 'generic/platform=iOS' \
+  #           -archivePath build/Release-iphoneos.xcarchive \
+  #           archive \
+  #           CODE_SIGN_IDENTITY="iPhone Distribution" \
+  #           PROVISIONING_PROFILE_SPECIFIER="$(/usr/libexec/PlistBuddy -c 'Print :UUID' ~/Library/MobileDevice/Provisioning\ Profiles/profile.mobileprovision 2>/dev/null || echo '')" \
+  #           | xcpretty || true
+  #
+  #     - name: Export IPA
+  #       run: |
+  #         cd ios
+  #         xcodebuild -exportArchive \
+  #           -archivePath build/Release-iphoneos.xcarchive \
+  #           -exportPath build \
+  #           -exportOptionsPlist ExportOptions.plist || \
+  #         xcodebuild -exportArchive \
+  #           -archivePath build/Release-iphoneos.xcarchive \
+  #           -exportPath build \
+  #           -exportMethod app-store \
+  #           -allowProvisioningUpdates
+  #
+  #     - name: Upload IPA Artifact
+  #       uses: actions/upload-artifact@v4
+  #       with:
+  #         name: ios-ipa
+  #         path: ios/build/*.ipa
+  #         retention-days: 30
+  #       continue-on-error: true
+
