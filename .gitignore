@@ -36,6 +36,11 @@ yarn-error.*
 # typescript
 *.tsbuildinfo
 
+# Testing
+coverage/
+.nyc_output/
+*.lcov
+
 app-example
 
 # generated native folders
