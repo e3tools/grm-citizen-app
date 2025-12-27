@@ -41,6 +41,23 @@ jobs:
       - name: Prebuild Android
         run: npx expo prebuild --platform android --clean
 
+      - name: Verify and Fix Expo Dependencies
+        run: |
+          npx expo install --fix
+          if [ ! -d "node_modules/expo-av" ]; then
+            echo "expo-av not found after prebuild, installing..."
+            npm install expo-av@^16.0.8 --legacy-peer-deps
+          fi
+          echo "Verifying expo-av installation:"
+          ls -la node_modules/expo-av/package.json || echo "WARNING: expo-av package.json not found"
+
+      - name: Clear Metro Cache
+        run: |
+          rm -rf .metro
+          rm -rf node_modules/.cache
+          rm -rf $TMPDIR/metro-* || true
+          rm -rf $TMPDIR/haste-* || true
+
       - name: Decrypt Keystore
         run: |
           if [ -n "${{ secrets.ANDROID_KEYSTORE }}" ]; then
@@ -64,10 +81,15 @@ jobs:
           fi
         continue-on-error: true
 
+      - name: Clean Gradle Build
+        run: |
+          cd android
+          ./gradlew clean
+
       - name: Build APK
         run: |
           cd android
-          ./gradlew assembleRelease
+          ./gradlew assembleRelease --no-daemon
         env:
           ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
           ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
@@ -76,7 +98,7 @@ jobs:
       - name: Build AAB (App Bundle)
         run: |
           cd android
-          ./gradlew bundleRelease
+          ./gradlew bundleRelease --no-daemon
         env:
           ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
           ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
