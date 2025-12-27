@@ -42,14 +42,12 @@ jobs:
         run: npx expo prebuild --platform android --clean
 
       - name: Decrypt Keystore
-        if: ${{ secrets.ANDROID_KEYSTORE != '' }}
+        if: ${{ secrets.ANDROID_KEYSTORE }}
         run: |
           echo "${{ secrets.ANDROID_KEYSTORE }}" | base64 -d > android/app/keystore.jks
-        env:
-          ANDROID_KEYSTORE: ${{ secrets.ANDROID_KEYSTORE }}
 
       - name: Configure Gradle Properties
-        if: ${{ secrets.ANDROID_KEYSTORE != '' }}
+        if: ${{ secrets.ANDROID_KEYSTORE }}
         run: |
           echo "MYAPP_RELEASE_STORE_FILE=keystore.jks" >> android/gradle.properties
           echo "MYAPP_RELEASE_KEY_ALIAS=${{ secrets.ANDROID_KEY_ALIAS }}" >> android/gradle.properties
