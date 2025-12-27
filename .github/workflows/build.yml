@@ -41,16 +41,6 @@ jobs:
       - name: Prebuild Android
         run: npx expo prebuild --platform android --clean
 
-      - name: Verify and Fix Expo Dependencies
-        run: |
-          npx expo install --fix
-          if [ ! -d "node_modules/expo-av" ]; then
-            echo "expo-av not found after prebuild, installing..."
-            npm install expo-av@^16.0.8 --legacy-peer-deps
-          fi
-          echo "Verifying expo-av installation:"
-          ls -la node_modules/expo-av/package.json || echo "WARNING: expo-av package.json not found"
-
       - name: Clear Metro Cache
         run: |
           rm -rf .metro
