@@ -164,17 +164,6 @@ The app automatically builds on every push to `main` branch via GitHub Actions.
 
 Download from: **GitHub Actions → Workflow run → Artifacts**
 
-### Signing Android Builds
-
-For signed production builds, add these GitHub Secrets:
-
-- `ANDROID_KEYSTORE` - Base64-encoded keystore
-- `ANDROID_KEYSTORE_PASSWORD` - Keystore password
-- `ANDROID_KEY_ALIAS` - Key alias
-- `ANDROID_KEY_PASSWORD` - Key password
-
-See [CREDENTIALS_SETUP.md](./CREDENTIALS_SETUP.md) for detailed instructions.
-
 ## 🎨 Code Quality
 
 ### Prettier (Code Formatting)
