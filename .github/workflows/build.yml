@@ -38,6 +38,17 @@ jobs:
       - name: Setup Android SDK
         uses: android-actions/setup-android@v3
 
+      - name: Create Production Config
+        run: |
+          mkdir -p config.prod
+          cat > config.prod/index.js << EOF
+          export const config = {
+              API_AUTH_BASE_URL: "${{ secrets.API_AUTH_BASE_URL || 'https://api.production.com' }}",
+              USER_SESSION_KEY: "${{ secrets.USER_SESSION_KEY || 'grmapp-citizen-prod-session-key' }}",
+          }
+          EOF
+          echo "Production config created"
+
       - name: Prebuild Android
         run: npx expo prebuild --platform android --clean
 
