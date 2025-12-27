@@ -1,2 +1,1 @@
-export { default } from './CompleteProfile';
-
+export {default} from './CompleteProfile'

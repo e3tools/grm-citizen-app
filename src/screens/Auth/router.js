@@ -1,8 +1,8 @@
-import { createStackNavigator } from "@react-navigation/stack";
-import React from "react";
-import { i18n } from "../../translations/i18n";
-import SignUp from "./SignUp";
-const Stack = createStackNavigator();
+import {createStackNavigator} from '@react-navigation/stack'
+import React from 'react'
+import {i18n} from '../../translations/i18n'
+import SignUp from './SignUp'
+const Stack = createStackNavigator()
 
 const AuthStack = () => {
   return (
@@ -14,10 +14,10 @@ const AuthStack = () => {
       <Stack.Screen
         name={i18n.t('create_account')}
         component={SignUp}
-        options={{ headerShown: true }}
+        options={{headerShown: true}}
       />
     </Stack.Navigator>
-  );
-};
+  )
+}
 
-export default AuthStack;
+export default AuthStack

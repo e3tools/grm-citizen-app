@@ -1,4 +1,4 @@
-import baseStyles from '../../Auth/Auth.style';
+import baseStyles from '../../Auth/Auth.style'
 
 const styles = {
   ...baseStyles,
@@ -31,7 +31,7 @@ const styles = {
   buttonContainer: {
     marginTop: 24,
     gap: 12,
-    alignItems: 'center'
+    alignItems: 'center',
   },
   loadingContainer: {
     flex: 1,
@@ -45,7 +45,6 @@ const styles = {
     color: '#707070',
     fontFamily: 'Poppins_400Regular',
   },
-};
+}
 
-export default styles;
-
+export default styles

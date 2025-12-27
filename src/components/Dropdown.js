@@ -1,67 +1,77 @@
-import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, Modal, FlatList, StyleSheet } from 'react-native';
-import { colors } from '../utils/colors';
-import {i18n} from "../translations/i18n";
+import React, {useState} from 'react'
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  Modal,
+  FlatList,
+  StyleSheet,
+} from 'react-native'
+import {colors} from '../utils/colors'
+import {i18n} from '../translations/i18n'
 
-const Dropdown = ({ 
-  label, 
-  options = [], 
-  value, 
-  onSelect, 
-  placeholder = "Select an option",
+const Dropdown = ({
+  label,
+  options = [],
+  value,
+  onSelect,
+  placeholder = 'Select an option',
   error,
-  optional
+  optional,
 }) => {
-  const [isVisible, setIsVisible] = useState(false);
+  const [isVisible, setIsVisible] = useState(false)
 
   const selectedOption = options.find(option => {
     if (typeof option === 'object' && option.id) {
-      return option.id === value;
+      return option.id === value
     }
-    return option === value;
-  });
+    return option === value
+  })
 
-  const displayValue = selectedOption 
-    ? (typeof selectedOption === 'object' ? selectedOption.name : selectedOption)
-    : '';
+  const displayValue = selectedOption
+    ? typeof selectedOption === 'object'
+      ? selectedOption.name
+      : selectedOption
+    : ''
 
-  const handleSelect = (option) => {
-    const optionValue = typeof option === 'object' && option.id ? option.id : option;
-    onSelect(optionValue);
-    setIsVisible(false);
-  };
+  const handleSelect = option => {
+    const optionValue =
+      typeof option === 'object' && option.id ? option.id : option
+    onSelect(optionValue)
+    setIsVisible(false)
+  }
 
   return (
     <View style={styles.container}>
-      <View style={{
-        width: '100%',
-        display: 'flex',
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center'
-      }}>
+      <View
+        style={{
+          width: '100%',
+          display: 'flex',
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+        }}
+      >
         {label && <Text style={styles.label}>{label}</Text>}
-        { optional ?
-            (
-                <Text style={{color: colors.secondary}}>{i18n.t('optional')}</Text>
-            )
-         :
-            null
-        }
+        {optional ? (
+          <Text style={{color: colors.secondary}}>{i18n.t('optional')}</Text>
+        ) : null}
       </View>
       <TouchableOpacity
         style={[styles.dropdown, error && styles.dropdownError]}
         onPress={() => setIsVisible(true)}
       >
         <View style={styles.inputLabel}>
-          <Text style={[styles.dropdownText, !displayValue && styles.placeholder]}>
+          <Text
+            style={[styles.dropdownText, !displayValue && styles.placeholder]}
+          >
             {displayValue || placeholder}
           </Text>
         </View>
         <Text style={styles.arrow}>▼</Text>
       </TouchableOpacity>
       {error && <Text style={styles.errorText}>{error}</Text>}
-      
+
       <Modal
         visible={isVisible}
         transparent
@@ -78,34 +88,40 @@ const Dropdown = ({
               data={options}
               keyExtractor={(item, index) => {
                 if (typeof item === 'object' && item.id) {
-                  return item.id.toString();
+                  return item.id.toString()
                 }
-                return index.toString();
+                return index.toString()
               }}
-              renderItem={({ item }) => {
-                const itemValue = typeof item === 'object' && item.id ? item.id : item;
-                const itemLabel = typeof item === 'object' ? item.name : item;
-                const isSelected = itemValue === value;
-                
+              renderItem={({item}) => {
+                const itemValue =
+                  typeof item === 'object' && item.id ? item.id : item
+                const itemLabel = typeof item === 'object' ? item.name : item
+                const isSelected = itemValue === value
+
                 return (
                   <TouchableOpacity
                     style={[styles.option, isSelected && styles.selectedOption]}
                     onPress={() => handleSelect(item)}
                   >
-                    <Text style={[styles.optionText, isSelected && styles.selectedOptionText]}>
+                    <Text
+                      style={[
+                        styles.optionText,
+                        isSelected && styles.selectedOptionText,
+                      ]}
+                    >
                       {itemLabel}
                     </Text>
                     {isSelected && <Text style={styles.checkmark}>✓</Text>}
                   </TouchableOpacity>
-                );
+                )
               }}
             />
           </View>
         </TouchableOpacity>
       </Modal>
     </View>
-  );
-};
+  )
+}
 
 const styles = StyleSheet.create({
   container: {
@@ -193,7 +209,6 @@ const styles = StyleSheet.create({
     color: colors.primary || '#24c38b',
     marginLeft: 8,
   },
-});
+})
 
-export default Dropdown;
-
+export default Dropdown

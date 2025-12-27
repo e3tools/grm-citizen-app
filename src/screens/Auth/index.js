@@ -1,3 +1,3 @@
-import AuthStack from "./router";
+import AuthStack from './router'
 
-export default AuthStack;
+export default AuthStack

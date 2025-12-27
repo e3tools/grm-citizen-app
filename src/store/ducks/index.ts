@@ -1,6 +1,6 @@
-import { combineReducers } from "redux-immutable";
-import authentication from "./authentication.duck";
+import {combineReducers} from 'redux-immutable'
+import authentication from './authentication.duck'
 
-const reducers = combineReducers({ authentication });
+const reducers = combineReducers({authentication})
 
-export default reducers;
+export default reducers

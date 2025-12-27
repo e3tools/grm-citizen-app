@@ -1,17 +1,16 @@
-import React from 'react';
-import { ImageBackground, StyleSheet } from 'react-native';
+import React from 'react'
+import {ImageBackground, StyleSheet} from 'react-native'
 
-const ImagePreviewCard = ({ uri, id }) => {
-  if (!uri) return null;
+const ImagePreviewCard = ({uri, id}) => {
+  if (!uri) return null
   return (
     <ImageBackground
       key={id}
-      source={{ uri }}
+      source={{uri}}
       style={styles.image}
-    >
-    </ImageBackground>
-  );
-};
+    ></ImageBackground>
+  )
+}
 
 const styles = StyleSheet.create({
   image: {
@@ -27,6 +26,6 @@ const styles = StyleSheet.create({
     padding: 5,
     backgroundColor: 'rgba(36, 195, 139, 1)',
   },
-});
+})
 
-export default ImagePreviewCard; 
+export default ImagePreviewCard
