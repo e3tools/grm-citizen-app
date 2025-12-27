@@ -18,7 +18,7 @@
     "build:android:local": "node scripts/build-android.js assembleRelease",
     "build:android:bundle": "node scripts/build-android.js bundleRelease",
     "prepare": "husky install",
-    "postinstall": "node -e \"try { require.resolve('patch-package'); require('child_process').execSync('npx patch-package', {stdio: 'inherit'}); } catch(e) { console.log('patch-package not found, skipping patches'); }\""
+    "postinstall": "patch-package"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx,json,md}": [
