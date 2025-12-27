@@ -18,7 +18,7 @@
     "build:android:local": "node scripts/build-android.js assembleRelease",
     "build:android:bundle": "node scripts/build-android.js bundleRelease",
     "prepare": "husky install",
-    "postinstall": "patch-package"
+    "postinstall": "node -e \"try { require.resolve('patch-package'); require('child_process').execSync('npx patch-package', {stdio: 'inherit'}); } catch(e) { console.log('patch-package not found, skipping patches'); }\""
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx,json,md}": [
@@ -92,6 +92,7 @@
     "jest": "^29.7.0",
     "jest-expo": "~52.0.0",
     "lint-staged": "^15.0.0",
+    "patch-package": "^8.0.1",
     "prettier": "^3.0.0",
     "react-test-renderer": "19.1.0",
     "typescript": "~5.9.2"
