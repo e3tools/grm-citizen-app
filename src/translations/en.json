@@ -70,5 +70,19 @@
   "no_comments_to_load": "No more comments to load",
   "no_attachments": "You haven't reported any attachments. Let's get started",
   "no_attachments_yet": "No attachments yet",
-  "no_attachments_to_load": "No more attachments to load"
+  "no_attachments_to_load": "No more attachments to load",
+  "non_confidential": "Non confidential",
+  "non_confidential_description": "Share some non-identifying details",
+  "confidential": "Confidential",
+  "confidential_description": "Share all your details for full transparency",
+  "anonymous": "Anonymous",
+  "anonymous_description": "Do not share any of your personal details",
+  "create_issue": "New case",
+  "create_issue_step_1": "Step 1: Choose your confidentiality level",
+  "create_issue_step_1_subtitle": "Select one of these options below to control what information is share with your manager",
+  "shared_information": "Shared information",
+  "name": "Name",
+  "age": "Age",
+  "citizen_group_1": "Citizen group 1",
+  "citizen_group_2": "Citizen group 2"
 }
