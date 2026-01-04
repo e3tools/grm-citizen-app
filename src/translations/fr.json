@@ -70,5 +70,19 @@
   "no_comments_to_load": "Plus aucun commentaire à charger",
   "no_attachments": "Vous n'avez signalé aucun fichier joint. Commençons.",
   "no_attachments_yet": "Aucun fichier joint pour l'instant.",
-  "no_attachments_to_load": "Plus aucun fichier joint à charger"
+  "no_attachments_to_load": "Plus aucun fichier joint à charger",
+  "non_confidential": "Non confidentiel",
+  "non_confidential_description": "Partagez des informations non identifiables",
+  "confidential": "Confidentiel",
+  "confidential_description": "Partagez toutes vos informations pour une transparence totale",
+  "anonymous": "Anonyme",
+  "anonymous_description": "Ne partagez aucune information personnelle",
+  "create_issue": "Nouveau cas",
+  "create_issue_step_1": "Étape 1: Choisissez votre niveau de confidentialité",
+  "create_issue_step_1_subtitle": "Sélectionnez l'une des options ci-dessous pour contrôler les informations partagées avec votre responsable",
+  "shared_information": "Informations partagées",
+  "name": "Nom",
+  "age": "Âge",
+  "citizen_group_1": "Groupe de citoyens 1",
+  "citizen_group_2": "Groupe de citoyens 2"
 }

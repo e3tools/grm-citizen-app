@@ -222,7 +222,7 @@ jobs:
   #         security import apple_certificate.p12 -k build.keychain -P "${{ secrets.APPLE_CERTIFICATE_PASSWORD }}" -T /usr/bin/codesign
   #         security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k "" build.keychain
   #
-  #     - name: Set up Provisioning Profile
+  #     - name: Set up Provisioning CreateIssue
   #       if: ${{ secrets.APPLE_PROVISIONING_PROFILE != '' }}
   #       run: |
   #         mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
