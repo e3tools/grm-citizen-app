@@ -44,6 +44,10 @@ const MATERIAL_MAPPING = {
   calendar: 'calendar-today',
   mic: 'mic-none',
   xmark: 'close',
+  'stop.circle': 'stop-circle',
+  video: 'videocam',
+  'apple.image.playground.fill': 'image',
+  document: 'file-present',
 } as MaterialIconMapping
 
 const FEATHER_MAPPING = {
@@ -52,6 +56,7 @@ const FEATHER_MAPPING = {
 
 const MATERIAL_COMMUNITY_MAPPING = {
   cloud: 'cloud-upload-outline',
+  'camera.rotate.fill': 'camera-flip',
 } as MaterialCommunityIconMapping
 
 /**

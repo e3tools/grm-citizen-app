@@ -4,13 +4,24 @@ import { IconSymbol } from '@/components/ui/icon-symbol'
 import { Colors } from '@/constants/theme'
 import CheckboxCard from '@/src/components/CheckboxCard'
 import Dropdown from '@/src/components/Dropdown'
+import RecordingCard from '@/src/components/RecordingCard'
 import Stepper from '@/src/components/Stepper'
 import { useColorScheme } from '@/src/hooks/use-color-scheme'
+import { isAudioFormat, isImageFormat } from '@/src/utils/formUtils'
 import RNDateTimePicker, {
   DateTimePickerEvent,
 } from '@react-native-community/datetimepicker'
 import { useNavigation } from '@react-navigation/native'
-import React, { useRef, useState } from 'react'
+import {
+  getRecordingPermissionsAsync,
+  RecordingPresets,
+  requestRecordingPermissionsAsync,
+  useAudioRecorder,
+} from 'expo-audio'
+import { CameraCapturedPicture } from 'expo-camera'
+import * as DocumentPicker from 'expo-document-picker'
+import { File } from 'expo-file-system'
+import React, { useCallback, useRef, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import {
   Image,
@@ -24,11 +35,19 @@ import {
 import { Provider, TextInput } from 'react-native-paper'
 import { useDispatch } from 'react-redux'
 import CustomButton from '../../../components/CustomButton'
+import CustomCamera from '../../../components/CustomCamera'
 import { i18n } from '../../../translations/i18n'
 import { colors } from '../../../utils/colors'
 import MESSAGES from '../../../utils/formErrorMessages'
 import globalStyles from '../../../utils/globalStyles'
-import styles from '../DetailsOfCase/DetailsOfCase.style'
+import styles from '../../Home/DetailsOfCase/DetailsOfCase.style'
+
+type Attachment = {
+  name: string
+  size: number | undefined
+  path: string
+  isAudio: boolean
+}
 
 function DetailsOfTheCase({ route }) {
   const theme = useColorScheme() ?? 'light'
@@ -39,11 +58,10 @@ function DetailsOfTheCase({ route }) {
   const [selectedDate, setSelectedDate] = useState<Date | undefined>()
   const [isDatePickerOpen, setIsDatePickerOpen] = useState<boolean>(false)
   const scrollViewRef = useRef<ScrollView | null>(null)
-  const [attachments, setAttachments] = useState([
-    { id: 1, name: 'r23r42csefs.jpg', size: 4354, path: '' },
-    { id: 2, name: '3e2rfewvd.mp4', size: 43124324, path: '' },
-    { id: 3, name: '4r32r3kmfsfs.jpg', size: 43124324, path: '' },
-  ])
+
+  const [attachments, setAttachments] = useState<Attachment[]>([])
+  const [isRecording, setIsRecording] = useState(false)
+  const [isCameraOpen, setIsCameraOpen] = useState(false)
 
   const {
     control,
@@ -341,6 +359,33 @@ function DetailsOfTheCase({ route }) {
     />
   )
 
+  function onTakeCameraMedia(media: CameraCapturedPicture): void {
+    addToAttachments(media)
+    console.log('media outside', media)
+    setAttachments([
+      ...attachments,
+      {
+        name: getNameFromFilePath(media.uri),
+        size: media.height * media.width, // TODO,
+        path: media.uri,
+        isAudio: false,
+      },
+    ])
+    setIsCameraOpen(false)
+  }
+
+  function getNameFromFilePath(filePath: string | null) {
+    return filePath?.split('/').reverse()[0] ?? ''
+  }
+
+  function addToAttachments(media: any): void {
+    setIsCameraOpen(false)
+  }
+
+  function openCamera(): void {
+    setIsCameraOpen(true)
+  }
+
   const AddAttachments = () => (
     <View style={{ marginTop: 36, marginBottom: 38 }}>
       <View style={styles.inputLabel}>
@@ -356,6 +401,7 @@ function DetailsOfTheCase({ route }) {
         }}
       >
         <TouchableOpacity
+          onPress={openCamera}
           style={{
             borderStyle: 'dashed',
             borderRadius: 5,
@@ -374,6 +420,7 @@ function DetailsOfTheCase({ route }) {
           <Text style={{ color: colors.primary }}>Take Photo</Text>
         </TouchableOpacity>
         <TouchableOpacity
+          onPress={toggleRecording}
           style={{
             borderStyle: 'dashed',
             borderRadius: 5,
@@ -386,11 +433,13 @@ function DetailsOfTheCase({ route }) {
         >
           <IconSymbol
             style={{ paddingBottom: 6 }}
-            name="mic"
+            name={!isRecording ? 'mic' : 'stop.circle'}
             size={30}
-            color={colors.primary}
+            color={!isRecording ? colors.primary : colors.error}
           />
-          <Text style={{ color: colors.primary }}>Record Audio</Text>
+          <Text style={{ color: colors.primary }}>
+            {!isRecording ? 'Record Audio' : 'PRESS TO STOP'}
+          </Text>
         </TouchableOpacity>
       </View>
       <View
@@ -424,7 +473,7 @@ function DetailsOfTheCase({ route }) {
           textColor={colors.primary}
           backgroundColor={colors.primary200}
           iconName={undefined}
-          onPress={undefined}
+          onPress={browseFile}
         />
       </View>
     </View>
@@ -433,56 +482,91 @@ function DetailsOfTheCase({ route }) {
   const MediaPreview = () => {
     return (
       <>
-        {attachments.map((mediaItem, componentIndex) => (
-          <View
-            key={mediaItem.id.toString()}
-            style={{
-              backgroundColor: colors.white,
-              padding: 16,
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              borderWidth: 1,
-              borderRadius: 5,
-              borderColor: colors.lightgray,
-              marginBottom: 13,
-            }}
-          >
-            <View
-              key={mediaItem.id.toString()}
-              style={{
-                backgroundColor: colors.white,
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-              }}
-            >
-              <View
-                style={{
-                  backgroundColor: colors.primary200,
-                  borderRadius: 5,
-                  padding: 5,
-                  marginRight: 10,
-                }}
-              >
-                <Image width={34} height={34} src={mediaItem.path} />
-              </View>
+        {attachments.map((mediaItem, componentIndex) => {
+          let unitConversionDigit, sizeDigit, sizeUnit
 
-              <View>
-                <Text style={{ fontWeight: 'bold' }}>{mediaItem.name}</Text>
-                <Text
+          if (mediaItem.size) {
+            if (mediaItem.size > 6000) {
+              sizeUnit = 'MB'
+              unitConversionDigit = 1024 * 1024
+            } else {
+              sizeUnit = 'KB'
+              unitConversionDigit = 1024
+            }
+            sizeDigit = (mediaItem.size / unitConversionDigit).toFixed(2)
+          }
+
+          return (
+            <View key={componentIndex.toString()}>
+              {mediaItem.isAudio ? (
+                <RecordingCard
+                  cardContainerStyle={{ flex: 1 }}
+                  mode="playback"
+                  initialURI={mediaItem.path}
+                  onRemove={() => removeAttachment(componentIndex)}
+                />
+              ) : (
+                <View
                   style={{
-                    color: colors.secondary,
-                    fontWeight: '500',
+                    backgroundColor: colors.white,
+                    padding: 16,
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    borderWidth: 1,
+                    borderRadius: 5,
+                    borderColor: colors.lightgray,
+                    marginBottom: 13,
                   }}
-                >{`${(mediaItem.size / 1000).toFixed(1)} MB`}</Text>
-              </View>
+                >
+                  <View
+                    style={{
+                      backgroundColor: colors.white,
+                      flexDirection: 'row',
+                      justifyContent: 'space-between',
+                      alignItems: 'center',
+                      flex: 1,
+                    }}
+                  >
+                    <View
+                      style={{
+                        backgroundColor: colors.primary200,
+                        borderRadius: 5,
+                        padding: 5,
+                        marginRight: 10,
+                      }}
+                    >
+                      {isImageFormat(mediaItem.path) ? (
+                        <Image width={34} height={34} src={mediaItem.path} />
+                      ) : (
+                        <IconSymbol name={'document'} color={colors.primary} />
+                      )}
+                    </View>
+
+                    <View style={{ flex: 1 }}>
+                      <Text style={{ fontWeight: 'bold' }}>
+                        {mediaItem.name}
+                      </Text>
+                      <Text
+                        style={{
+                          color: colors.secondary,
+                          fontWeight: '500',
+                        }}
+                      >
+                        {sizeDigit} {sizeUnit}
+                      </Text>
+                    </View>
+                  </View>
+                  <TouchableOpacity
+                    onPress={() => removeAttachment(componentIndex)}
+                  >
+                    <IconSymbol name={'xmark'} color={colors.secondary} />
+                  </TouchableOpacity>
+                </View>
+              )}
             </View>
-            <TouchableOpacity onPress={removeAttachment(componentIndex)}>
-              <IconSymbol name={'xmark'} color={colors.secondary} />
-            </TouchableOpacity>
-          </View>
-        ))}
+          )
+        })}
       </>
     )
   }
@@ -500,10 +584,6 @@ function DetailsOfTheCase({ route }) {
           </View>
 
           <TextInput
-            onFocus={e => {
-              e.persist()
-              // scrollToInputBottom(e)
-            }}
             multiline={true}
             theme={{
               roundness: 10,
@@ -572,61 +652,152 @@ function DetailsOfTheCase({ route }) {
     </View>
   )
 
+  const recorderStatusListener = useCallback(
+    status => {
+      if (status.isFinished) {
+        const recordingName = getNameFromFilePath(status.url)
+        const isAudio = isAudioFormat(recordingName)
+        const recordingUrl = status.url ?? ''
+        const audioFile = new File(recordingUrl)
+
+        console.log(attachments.length)
+
+        setAttachments([
+          ...attachments,
+          {
+            name: recordingName,
+            size: audioFile.size,
+            path: recordingUrl,
+            isAudio,
+          },
+        ])
+      }
+    },
+    [attachments],
+  )
+
+  const audioRecorder = useAudioRecorder(
+    RecordingPresets.LOW_QUALITY,
+    status => {
+      if (status.isFinished) {
+        const recordingName = getNameFromFilePath(status.url)
+        const isAudio = isAudioFormat(recordingName)
+        const recordingUrl = status.url ?? ''
+        const audioFile = new File(recordingUrl)
+
+        console.log(attachments.length)
+
+        setAttachments([
+          ...attachments,
+          {
+            name: recordingName,
+            size: audioFile.size,
+            path: recordingUrl,
+            isAudio,
+          },
+        ])
+      }
+    },
+  )
+
+  const toggleRecording = async () => {
+    if (!isRecording) {
+      const permissions = await getRecordingPermissionsAsync()
+      if (!permissions.granted) {
+        const request = await requestRecordingPermissionsAsync()
+        if (!request.granted) return
+      }
+      setIsRecording(true)
+      await audioRecorder.prepareToRecordAsync()
+      audioRecorder.record({ atTime: 100 })
+    } else {
+      setIsRecording(false)
+      await audioRecorder.stop()
+    }
+  }
+
   return (
     <Provider>
-      <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : 'position'}
-        style={{ flex: 1, backgroundColor: '#f8fafc' }}
-        contentContainerStyle={{
-          flex: 1,
-          backgroundColor: '#f8fafc',
-        }}
-      >
-        <ScrollView
-          ref={scrollViewRef}
-          style={{
-            backgroundColor: '#f8fafc',
-            flex: 1,
-            paddingBottom: 60,
-          }}
+      {isCameraOpen ? (
+        <CustomCamera onTakeCameraMedia={onTakeCameraMedia} />
+      ) : (
+        <KeyboardAvoidingView
+          behavior={Platform.OS === 'ios' ? 'padding' : 'position'}
+          style={{ flex: 1, backgroundColor: '#f8fafc' }}
           contentContainerStyle={{
-            flexGrow: 1,
-            paddingTop: 5,
-            paddingBottom: 20,
+            flex: 1,
+            backgroundColor: '#f8fafc',
           }}
-          keyboardShouldPersistTaps="handled"
         >
-          <View style={globalStyles.screenContainer}>
-            <View style={styles.formContainer}>
-              <View>
-                <Stepper currentStep={2} numberOfSteps={4} />
-                <View style={{ paddingBottom: 30 }}>
-                  <Text style={styles.stepTitle}>
-                    {i18n.t('case_details_step_2_title')}
-                  </Text>
+          <ScrollView
+            ref={scrollViewRef}
+            style={{
+              backgroundColor: '#f8fafc',
+              flex: 1,
+              paddingBottom: 60,
+            }}
+            contentContainerStyle={{
+              flexGrow: 1,
+              paddingTop: 5,
+              paddingBottom: 20,
+            }}
+            keyboardShouldPersistTaps="handled"
+          >
+            <View style={globalStyles.screenContainer}>
+              <View style={styles.formContainer}>
+                <View>
+                  <Stepper currentStep={2} numberOfSteps={4} />
+                  <View style={{ paddingBottom: 30 }}>
+                    <Text style={styles.stepTitle}>
+                      {i18n.t('case_details_step_2_title')}
+                    </Text>
+                  </View>
+                  <CalendarField />
+                  <CaseFrequencySelector />
+                  <Dropdowns />
+                  <DescriptionInput />
+                  <AddAttachments />
+                  <MediaPreview />
                 </View>
-                <CalendarField />
-                <CaseFrequencySelector />
-                <Dropdowns />
-                <DescriptionInput />
-                <AddAttachments />
-                <MediaPreview />
               </View>
             </View>
-          </View>
-          <Separator />
-          <NextButton />
-        </ScrollView>
-      </KeyboardAvoidingView>
+            <Separator />
+            <NextButton />
+          </ScrollView>
+        </KeyboardAvoidingView>
+      )}
     </Provider>
   )
 
   function removeAttachment(componentIndex: number) {
-    return () => {
-      const updatedAttachments = attachments.filter(
-        (item, index) => componentIndex !== index,
-      )
-      setAttachments(updatedAttachments)
+    const updatedAttachments = attachments.filter(
+      (_, index) => componentIndex !== index,
+    )
+    setAttachments(updatedAttachments)
+  }
+
+  async function browseFile() {
+    try {
+      const result = await DocumentPicker.getDocumentAsync({
+        copyToCacheDirectory: true,
+        type: '*/*',
+        multiple: true,
+        base64: true,
+      })
+      if (!result.canceled) {
+        const files = result.assets.map(asset => {
+          const isAudio = isAudioFormat(asset.name)
+          return {
+            name: asset.name,
+            size: asset.size,
+            path: asset.uri,
+            isAudio,
+          }
+        })
+        setAttachments([...attachments, ...files])
+      }
+    } catch (error) {
+      console.error(error)
     }
   }
 

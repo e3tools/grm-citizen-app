@@ -23,3 +23,11 @@ export const alphabeticWithAccentsRegex = new RegExp(
 export const alphanumericWithAccentsRegex = new RegExp(
   `^(${alphabeticWithAccentStr}|[0-9])*$`,
 )
+
+export const isAudioFormat = recordingName => {
+  return /\.(m4a|mp3|wav|aac|3gp)$/i.test(recordingName)
+}
+
+export const isImageFormat = imagePath => {
+  return /\.(png|jpg|jpeg|bmp|gif|webp|psd)$/i.test(imagePath)
+}

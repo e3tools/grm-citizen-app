@@ -52,6 +52,8 @@
   "save_and_continue": "Enregistrer et continuer",
   "saving": "Enregistrement...",
   "loading": "Chargement...",
+  "recording_in_progress": "Enregistrement en cours",
+  "playing_in_progress": "Lecture audio en cours",
   "group_id": "Citoyen de type 1",
   "group_2_id": "Citoyen de type 2",
   "my_recent_grievance": "Mes griefs récents",
