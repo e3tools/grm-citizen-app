@@ -4,7 +4,6 @@ import {
   CameraType,
   useCameraPermissions,
   CameraMode,
-  Camera,
   CameraCapturedPicture,
 } from 'expo-camera'
 import React, { PropsWithChildren, useRef, useState } from 'react'
@@ -56,15 +55,43 @@ export default function CustomCamera({
     }
 
     if (cameraMode == 'video') {
-      setIsRecording(true)
-      const image: CameraCapturedPicture | undefined =
-        await cameraRef.current.takePictureAsync()
-      setIsRecording(false)
-      onTakeCameraMedia(image)
+      toggleVideoRecording()
+
     } else {
       const image: CameraCapturedPicture | undefined =
         await cameraRef.current.takePictureAsync()
       onTakeCameraMedia(image)
+    }
+  }
+
+  const stopRecording = () => {
+    if (!cameraReady || !cameraRef.current) {
+      return
+    }
+    cameraRef.current.stopRecording()
+    setIsRecording(false)
+  }
+  
+  const startRecording = async () => {
+    if (!cameraReady || !cameraRef.current) {
+      return
+    }
+    setIsRecording(true)
+    try {
+      const video = await cameraRef.current.recordAsync({ maxDuration: 3 })
+      console.log(video);
+      
+    }
+    catch (e) {
+      console.error(e);
+     }
+  }
+  
+  const toggleVideoRecording = () => {
+    if (isRecording) {
+      stopRecording()
+    } else {
+      startRecording()
     }
   }
 
@@ -75,13 +102,12 @@ export default function CustomCamera({
         onCameraReady={() => setCameraReady(true)}
         style={styles.camera}
         facing={facing}
-        mode={cameraMode}
+        mode={'picture'}
       />
       <View style={styles.buttonContainer}>
         <TouchableOpacity
           style={styles.iconButton}
-          onPress={toggleCameraFacing}
-        >
+          onPress={toggleCameraFacing}>
           <IconSymbol
             name={'camera.rotate.fill'}
             size={34}
@@ -92,8 +118,7 @@ export default function CustomCamera({
 
         <TouchableOpacity
           style={styles.captureButton}
-          onPress={takeImageOrVideo}
-        >
+          onPress={takeImageOrVideo}>
           {cameraMode === 'video' ? (
             <View
               style={[
@@ -108,7 +133,8 @@ export default function CustomCamera({
           )}
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.iconButton} onPress={toggleCameraMode}>
+        {/* Video recorder */}
+        {/* <TouchableOpacity style={styles.iconButton} onPress={toggleCameraMode}>
           <Text style={styles.iconText}>
             {cameraMode === 'video' ? (
               <IconSymbol
@@ -123,7 +149,9 @@ export default function CustomCamera({
           <Text style={styles.labelText}>
             {cameraMode === 'video' ? 'Take Photo' : 'Switch Video'}
           </Text>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
+
+        <View style={styles.iconButton}></View> 
       </View>
     </View>
   )

@@ -31,3 +31,8 @@ export const isAudioFormat = recordingName => {
 export const isImageFormat = imagePath => {
   return /\.(png|jpg|jpeg|bmp|gif|webp|psd)$/i.test(imagePath)
 }
+
+export const isVideoFormat = videoPath =>
+{
+  return /\.(mov|avi|mp4|wmv|mkv|webm)$/i.test(videoPath)
+}

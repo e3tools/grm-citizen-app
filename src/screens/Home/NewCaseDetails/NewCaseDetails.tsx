@@ -1,5 +1,5 @@
-//CURRENTLY USING HARD CODED DATA
-
+import { useNewCaseDetails } from '@/src/hooks/useNewCaseDetails'
+import { File } from 'expo-file-system'
 import { IconSymbol } from '@/components/ui/icon-symbol'
 import { Colors } from '@/constants/theme'
 import CheckboxCard from '@/src/components/CheckboxCard'
@@ -7,7 +7,11 @@ import Dropdown from '@/src/components/Dropdown'
 import RecordingCard from '@/src/components/RecordingCard'
 import Stepper from '@/src/components/Stepper'
 import { useColorScheme } from '@/src/hooks/use-color-scheme'
-import { isAudioFormat, isImageFormat } from '@/src/utils/formUtils'
+import {
+  isAudioFormat,
+  isImageFormat,
+  isVideoFormat,
+} from '@/src/utils/formUtils'
 import RNDateTimePicker, {
   DateTimePickerEvent,
 } from '@react-native-community/datetimepicker'
@@ -15,13 +19,13 @@ import { useNavigation } from '@react-navigation/native'
 import {
   getRecordingPermissionsAsync,
   RecordingPresets,
+  RecordingStatus,
   requestRecordingPermissionsAsync,
   useAudioRecorder,
 } from 'expo-audio'
 import { CameraCapturedPicture } from 'expo-camera'
 import * as DocumentPicker from 'expo-document-picker'
-import { File } from 'expo-file-system'
-import React, { useCallback, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import {
   Image,
@@ -32,7 +36,13 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native'
-import { Provider, TextInput } from 'react-native-paper'
+import {
+  ActivityIndicator,
+  Modal,
+  Portal,
+  Provider,
+  TextInput,
+} from 'react-native-paper'
 import { useDispatch } from 'react-redux'
 import CustomButton from '../../../components/CustomButton'
 import CustomCamera from '../../../components/CustomCamera'
@@ -40,7 +50,7 @@ import { i18n } from '../../../translations/i18n'
 import { colors } from '../../../utils/colors'
 import MESSAGES from '../../../utils/formErrorMessages'
 import globalStyles from '../../../utils/globalStyles'
-import styles from '../../Home/DetailsOfCase/DetailsOfCase.style'
+import styles from '../../Home/NewCaseDetails/NewCaseDetails.style'
 
 type Attachment = {
   name: string
@@ -49,19 +59,19 @@ type Attachment = {
   isAudio: boolean
 }
 
-function DetailsOfTheCase({ route }) {
+function NewCaseDetails({ route }) {
   const theme = useColorScheme() ?? 'light'
   const dispatch = useDispatch()
   const navigation = useNavigation()
-  const [successModal, setSuccessModal] = React.useState(false)
-  const [loading, setLoading] = React.useState(false)
   const [selectedDate, setSelectedDate] = useState<Date | undefined>()
   const [isDatePickerOpen, setIsDatePickerOpen] = useState<boolean>(false)
   const scrollViewRef = useRef<ScrollView | null>(null)
 
   const [attachments, setAttachments] = useState<Attachment[]>([])
-  const [isRecording, setIsRecording] = useState(false)
   const [isCameraOpen, setIsCameraOpen] = useState(false)
+  const [isRecording, setIsRecording] = useState(false)
+  const [recorderStatus, setRecorderStatus] = useState<RecordingStatus>()
+  const { isLoading, error, data } = useNewCaseDetails()
 
   const {
     control,
@@ -86,6 +96,33 @@ function DetailsOfTheCase({ route }) {
     mode: 'all',
   })
 
+  function onTakeCameraMedia(media: CameraCapturedPicture): void {
+    addToAttachments(media)
+    console.log('media outside', media)
+    setAttachments([
+      ...attachments,
+      {
+        name: getNameFromFilePath(media.uri),
+        size: media.height * media.width, // TODO,
+        path: media.uri,
+        isAudio: false,
+      },
+    ])
+    setIsCameraOpen(false)
+  }
+
+  function getNameFromFilePath(filePath: string | null) {
+    return filePath?.split('/').reverse()[0] ?? ''
+  }
+
+  function addToAttachments(media: any): void {
+    setIsCameraOpen(false)
+  }
+
+  function openCamera(): void {
+    setIsCameraOpen(true)
+  }
+
   const CalendarField = () => {
     return (
       <Controller
@@ -94,8 +131,12 @@ function DetailsOfTheCase({ route }) {
         render={({ field: { onChange, onBlur, value } }) => {
           return (
             <View style={styles.fieldContainer}>
-              <Text style={styles.inputLabel}>When did it happen?</Text>
-              <Text style={styles.inputSubLabel}>Date of Occurrence</Text>
+              <Text style={styles.inputLabel}>
+                {i18n.t('when_did_it_happen')}
+              </Text>
+              <Text style={styles.inputSubLabel}>
+                {i18n.t('date_of_occurrence')}
+              </Text>
 
               <View
                 style={[
@@ -110,7 +151,8 @@ function DetailsOfTheCase({ route }) {
                 ]}
               >
                 <Text style={styles.fieldPlaceholderText}>
-                  {selectedDate?.toLocaleDateString() ?? 'Select a Date'}
+                  {selectedDate?.toLocaleDateString() ??
+                    i18n.t('select_a_date')}
                 </Text>
                 <TouchableOpacity onPress={openCalendar}>
                   <IconSymbol
@@ -203,23 +245,24 @@ function DetailsOfTheCase({ route }) {
     </>
   )
 
+  console.log(data)
+
   const CaseTypeDropdown = () => (
     <Controller
       control={control}
       formState={formState}
       render={({ field: { onChange, value } }) => (
         <View>
-          <Text style={styles.inputLabel}>What is this issue about?</Text>
-          <Text style={[styles.inputSubLabel]}>Case Type</Text>
+          <Text style={styles.inputLabel}>
+            {i18n.t('what_is_this_issue_about')}
+          </Text>
+          <Text style={[styles.inputSubLabel]}>{i18n.t('case_type')}</Text>
           <Dropdown
             label={''}
-            options={[
-              { name: 'Case type 1', id: 1 },
-              { name: 'Case type 2', id: 2 },
-            ]}
+            options={data?.types.results}
             value={value}
             onSelect={onChange}
-            placeholder={'Select Case Type'}
+            placeholder={i18n.t('select_case_type')}
             error={formState?.errors?.case_type?.message}
             optional={false}
           />
@@ -241,13 +284,10 @@ function DetailsOfTheCase({ route }) {
       formState={formState}
       render={({ field: { onChange, value } }) => (
         <View>
-          <Text style={[styles.inputSubLabel]}>Subtype</Text>
+          <Text style={[styles.inputSubLabel]}>{i18n.t('case_subtype')}</Text>
           <Dropdown
             label={''}
-            options={[
-              { name: 'Case sub type 1', id: 1 },
-              { name: 'Case sub type 2', id: 2 },
-            ]}
+            options={data?.subtypes.results}
             value={value}
             onSelect={onChange}
             placeholder={'Select Subtype'}
@@ -272,14 +312,11 @@ function DetailsOfTheCase({ route }) {
       formState={formState}
       render={({ field: { onChange, value } }) => (
         <View>
-          <Text style={[styles.inputSubLabel]}>Category</Text>
+          <Text style={[styles.inputSubLabel]}>{i18n.t('case_category')}</Text>
           <Dropdown
             label={''}
-            options={[
-              { name: 'Case category 1', id: 1 },
-              { name: 'Case category 2', id: 2 },
-            ]}
             value={value}
+            options={data?.categories.results}
             onSelect={onChange}
             placeholder={'Select Category'}
             error={formState?.errors?.case_category?.message}
@@ -303,14 +340,11 @@ function DetailsOfTheCase({ route }) {
       formState={formState}
       render={({ field: { onChange, value } }) => (
         <View>
-          <Text style={[styles.inputSubLabel]}>Component</Text>
+          <Text style={[styles.inputSubLabel]}>{i18n.t('case_component')}</Text>
           <Dropdown
             label={''}
-            options={[
-              { name: 'Case component 1', id: 1 },
-              { name: 'Case component 2', id: 2 },
-            ]}
             value={value}
+            options={data?.components.results}
             onSelect={onChange}
             placeholder={'Select Component'}
             error={formState?.errors?.case_component?.message}
@@ -334,14 +368,13 @@ function DetailsOfTheCase({ route }) {
       formState={formState}
       render={({ field: { onChange, value } }) => (
         <View>
-          <Text style={[styles.inputSubLabel]}>Sub Component</Text>
+          <Text style={[styles.inputSubLabel]}>
+            {i18n.t('case_sub_component')}
+          </Text>
           <Dropdown
             label={''}
-            options={[
-              { name: 'Case sub component 1', id: 1 },
-              { name: 'Case sub component 2', id: 2 },
-            ]}
             value={value}
+            options={data?.subcomponents.results}
             onSelect={onChange}
             placeholder={'Select Sub-component'}
             error={formState?.errors?.case_sub_component?.message}
@@ -359,77 +392,25 @@ function DetailsOfTheCase({ route }) {
     />
   )
 
-  function onTakeCameraMedia(media: CameraCapturedPicture): void {
-    addToAttachments(media)
-    console.log('media outside', media)
-    setAttachments([
-      ...attachments,
-      {
-        name: getNameFromFilePath(media.uri),
-        size: media.height * media.width, // TODO,
-        path: media.uri,
-        isAudio: false,
-      },
-    ])
-    setIsCameraOpen(false)
-  }
-
-  function getNameFromFilePath(filePath: string | null) {
-    return filePath?.split('/').reverse()[0] ?? ''
-  }
-
-  function addToAttachments(media: any): void {
-    setIsCameraOpen(false)
-  }
-
-  function openCamera(): void {
-    setIsCameraOpen(true)
-  }
-
   const AddAttachments = () => (
-    <View style={{ marginTop: 36, marginBottom: 38 }}>
+    <View style={styles.addAttachmentsContainer}>
       <View style={styles.inputLabel}>
-        <Text style={styles.inputLabel}>{'Attach Supporting Evidence'}</Text>
+        <Text style={styles.inputLabel}>
+          {i18n.t('include_attachments_title')}
+        </Text>
       </View>
-      <View
-        style={{
-          flexDirection: 'row',
-          width: '100%',
-          height: 120,
-          justifyContent: 'space-between',
-          marginBottom: 25,
-        }}
-      >
-        <TouchableOpacity
-          onPress={openCamera}
-          style={{
-            borderStyle: 'dashed',
-            borderRadius: 5,
-            borderWidth: 2,
-            borderColor: colors.lightgray,
-            width: '46%',
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}
-        >
+      <View style={styles.addMediaContainer}>
+        <TouchableOpacity onPress={openCamera} style={styles.addPhotoButton}>
           <IconSymbol
             style={{ paddingBottom: 10 }}
             name="camera"
             color={colors.primary}
           />
-          <Text style={{ color: colors.primary }}>Take Photo</Text>
+          <Text style={{ color: colors.primary }}>{i18n.t('take_photo')}</Text>
         </TouchableOpacity>
         <TouchableOpacity
           onPress={toggleRecording}
-          style={{
-            borderStyle: 'dashed',
-            borderRadius: 5,
-            borderWidth: 2,
-            borderColor: colors.lightgray,
-            width: '46%',
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}
+          style={styles.addPhotoButton}
         >
           <IconSymbol
             style={{ paddingBottom: 6 }}
@@ -438,32 +419,23 @@ function DetailsOfTheCase({ route }) {
             color={!isRecording ? colors.primary : colors.error}
           />
           <Text style={{ color: colors.primary }}>
-            {!isRecording ? 'Record Audio' : 'PRESS TO STOP'}
+            {!isRecording ? i18n.t('record_audio') : i18n.t('press_to_stop')}
           </Text>
         </TouchableOpacity>
       </View>
-      <View
-        style={{
-          borderStyle: 'dashed',
-          borderRadius: 5,
-          borderWidth: 2,
-          height: 200,
-          borderColor: colors.lightgray,
-          width: '100%',
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}
-      >
+      <View style={styles.otherFilesContainer}>
         <IconSymbol
           style={{ paddingBottom: 6 }}
           name="cloud"
           size={30}
           color={colors.darkGrey}
         />
-        <Text style={styles.addOtherFilesLabel}>Attach Other Files</Text>
+        <Text style={styles.addOtherFilesLabel}>
+          {i18n.t('attach_other_files')}
+        </Text>
 
         <Text style={{ color: colors.darkGrey }}>
-          Add images, videos, or documents
+          {i18n.t('attach_other_files_description')}
         </Text>
         <CustomButton
           borderRadius={24}
@@ -483,8 +455,8 @@ function DetailsOfTheCase({ route }) {
     return (
       <>
         {attachments.map((mediaItem, componentIndex) => {
-          let unitConversionDigit, sizeDigit, sizeUnit
-
+          let unitConversionDigit, sizeDigit
+          let sizeUnit = 'KB'
           if (mediaItem.size) {
             if (mediaItem.size > 6000) {
               sizeUnit = 'MB'
@@ -494,6 +466,8 @@ function DetailsOfTheCase({ route }) {
               unitConversionDigit = 1024
             }
             sizeDigit = (mediaItem.size / unitConversionDigit).toFixed(2)
+          } else {
+            sizeDigit = (0).toFixed(2)
           }
 
           return (
@@ -506,40 +480,18 @@ function DetailsOfTheCase({ route }) {
                   onRemove={() => removeAttachment(componentIndex)}
                 />
               ) : (
-                <View
-                  style={{
-                    backgroundColor: colors.white,
-                    padding: 16,
-                    flexDirection: 'row',
-                    justifyContent: 'space-between',
-                    alignItems: 'center',
-                    borderWidth: 1,
-                    borderRadius: 5,
-                    borderColor: colors.lightgray,
-                    marginBottom: 13,
-                  }}
-                >
-                  <View
-                    style={{
-                      backgroundColor: colors.white,
-                      flexDirection: 'row',
-                      justifyContent: 'space-between',
-                      alignItems: 'center',
-                      flex: 1,
-                    }}
-                  >
-                    <View
-                      style={{
-                        backgroundColor: colors.primary200,
-                        borderRadius: 5,
-                        padding: 5,
-                        marginRight: 10,
-                      }}
-                    >
+                <View style={styles.mediaPreviewCardContainer}>
+                  <View style={styles.mediaPreviewCardLeftContent}>
+                    <View style={styles.mediaPreviewCardIconContainer}>
                       {isImageFormat(mediaItem.path) ? (
                         <Image width={34} height={34} src={mediaItem.path} />
                       ) : (
-                        <IconSymbol name={'document'} color={colors.primary} />
+                        <IconSymbol
+                          name={
+                            isVideoFormat(mediaItem.path) ? 'video' : 'document'
+                          }
+                          color={colors.primary}
+                        />
                       )}
                     </View>
 
@@ -547,12 +499,7 @@ function DetailsOfTheCase({ route }) {
                       <Text style={{ fontWeight: 'bold' }}>
                         {mediaItem.name}
                       </Text>
-                      <Text
-                        style={{
-                          color: colors.secondary,
-                          fontWeight: '500',
-                        }}
-                      >
+                      <Text style={styles.mediaPreviewCardSubtitle}>
                         {sizeDigit} {sizeUnit}
                       </Text>
                     </View>
@@ -579,7 +526,7 @@ function DetailsOfTheCase({ route }) {
         <View style={{ marginTop: 16 }}>
           <View style={styles.inputLabel}>
             <Text style={styles.inputLabel}>
-              {'Describe the issue in detail'}
+              {i18n.t('case_description_input_label')}
             </Text>
           </View>
 
@@ -602,7 +549,7 @@ function DetailsOfTheCase({ route }) {
             underlineColor={colors.lightgray}
             activeUnderlineColor={colors.primary}
             selectionColor={colors.primary}
-            contentStyle={{ height: 160, paddingRight: 35 }}
+            contentStyle={styles.descriptionInputContent}
             style={styles.caseDetailFormTextInput}
             onBlur={() => {
               onBlur()
@@ -620,27 +567,17 @@ function DetailsOfTheCase({ route }) {
       name="case_description"
       rules={{
         maxLength: 1000,
+        required: { value: true, message: MESSAGES.required },
       }}
     />
   )
 
-  const Separator = () => (
-    <View
-      style={{
-        marginTop: 20,
-        width: '100%',
-        height: 1,
-        backgroundColor: colors.lightgray,
-      }}
-    />
-  )
+  const Separator = () => <View style={styles.lineSeparator} />
 
   const NextButton = () => (
     <View style={{ marginHorizontal: 30 }}>
       <CustomButton
-        style={{
-          width: '100%',
-        }}
+        style={{ width: '100%' }}
         borderRadius={24}
         backgroundColor={colors.primary}
         textColor="white"
@@ -652,52 +589,33 @@ function DetailsOfTheCase({ route }) {
     </View>
   )
 
-  const recorderStatusListener = useCallback(
-    status => {
-      if (status.isFinished) {
-        const recordingName = getNameFromFilePath(status.url)
-        const isAudio = isAudioFormat(recordingName)
-        const recordingUrl = status.url ?? ''
-        const audioFile = new File(recordingUrl)
+  const recorderStatusListener = (status: RecordingStatus) => {
+    setRecorderStatus(status)
+  }
 
-        console.log(attachments.length)
-
-        setAttachments([
-          ...attachments,
-          {
-            name: recordingName,
-            size: audioFile.size,
-            path: recordingUrl,
-            isAudio,
-          },
-        ])
-      }
-    },
-    [attachments],
-  )
+  useEffect(() => {
+    if (!recorderStatus) return
+    if (recorderStatus.isFinished) {
+      const recordingName = getNameFromFilePath(recorderStatus.url)
+      const isAudio = isAudioFormat(recordingName)
+      const recordingUrl = recorderStatus.url ?? ''
+      const audioFile = new File(recordingUrl)
+      setAttachments([
+        ...attachments,
+        {
+          name: recordingName,
+          size: audioFile.size,
+          path: recordingUrl,
+          isAudio,
+        },
+      ])
+      setRecorderStatus(undefined)
+    }
+  }, [recorderStatus])
 
   const audioRecorder = useAudioRecorder(
-    RecordingPresets.LOW_QUALITY,
-    status => {
-      if (status.isFinished) {
-        const recordingName = getNameFromFilePath(status.url)
-        const isAudio = isAudioFormat(recordingName)
-        const recordingUrl = status.url ?? ''
-        const audioFile = new File(recordingUrl)
-
-        console.log(attachments.length)
-
-        setAttachments([
-          ...attachments,
-          {
-            name: recordingName,
-            size: audioFile.size,
-            path: recordingUrl,
-            isAudio,
-          },
-        ])
-      }
-    },
+    RecordingPresets.HIGH_QUALITY,
+    recorderStatusListener,
   )
 
   const toggleRecording = async () => {
@@ -716,55 +634,126 @@ function DetailsOfTheCase({ route }) {
     }
   }
 
-  return (
-    <Provider>
-      {isCameraOpen ? (
-        <CustomCamera onTakeCameraMedia={onTakeCameraMedia} />
-      ) : (
-        <KeyboardAvoidingView
-          behavior={Platform.OS === 'ios' ? 'padding' : 'position'}
-          style={{ flex: 1, backgroundColor: '#f8fafc' }}
-          contentContainerStyle={{
-            flex: 1,
-            backgroundColor: '#f8fafc',
+  const ErrorSnackBar = ({ message }: { message: string }) => {
+    return (
+      <View
+        style={{
+          backgroundColor: colors.darkGrey,
+          flexDirection: 'row',
+          maxHeight: 150,
+          minHeight: 50,
+          justifyContent: 'center',
+          alignItems: 'center',
+          paddingHorizontal: 24,
+        }}
+      >
+        <View style={{ flex: 1 }}>
+          <Text style={{ color: 'white' }}>{message}</Text>
+        </View>
+        <TouchableOpacity onPress={() => {}}>
+          <Text
+            style={{
+              color: colors.primary,
+              fontWeight: 'bold',
+              fontSize: 18,
+            }}
+          >
+            Retry
+          </Text>
+        </TouchableOpacity>
+      </View>
+    )
+  }
+
+  const ErrorView = ({ message }: { message: string }) => {
+    return (
+      <View
+        style={{
+          backgroundColor: colors.white,
+          flex: 1,
+          justifyContent: 'center',
+          alignItems: 'center',
+          paddingHorizontal: 24,
+        }}
+      >
+        <View style={{ alignItems: 'center', marginBottom: 50 }}>
+          <Text style={{ color: colors.secondary }}>
+            Oops, something went wrong.
+          </Text>
+          <Text style={{ color: colors.secondary }}>Error Code: {message}</Text>
+        </View>
+        <TouchableOpacity
+          onPress={() => {
+            navigation.goBack()
           }}
         >
-          <ScrollView
-            ref={scrollViewRef}
+          <Text
             style={{
-              backgroundColor: '#f8fafc',
-              flex: 1,
-              paddingBottom: 60,
+              color: colors.primary,
+              fontWeight: 'bold',
+              fontSize: 18,
             }}
-            contentContainerStyle={{
-              flexGrow: 1,
-              paddingTop: 5,
-              paddingBottom: 20,
-            }}
-            keyboardShouldPersistTaps="handled"
           >
-            <View style={globalStyles.screenContainer}>
-              <View style={styles.formContainer}>
-                <View>
-                  <Stepper currentStep={2} numberOfSteps={4} />
-                  <View style={{ paddingBottom: 30 }}>
-                    <Text style={styles.stepTitle}>
-                      {i18n.t('case_details_step_2_title')}
-                    </Text>
+            Go back
+          </Text>
+        </TouchableOpacity>
+      </View>
+    )
+  }
+
+  const Loading = () => {
+    return (
+      <ActivityIndicator style={{ marginTop: 24 }} color={colors.primary} />
+    )
+  }
+
+  return (
+    <Provider>
+      {isLoading && <Loading />}
+      {error && <ErrorView message={error.message} />}
+      {!isLoading && !error && (
+        <>
+          <Portal>
+            <Modal style={styles.cameraModal} visible={isCameraOpen}>
+              {isCameraOpen && (
+                <CustomCamera onTakeCameraMedia={onTakeCameraMedia} />
+              )}
+            </Modal>
+          </Portal>
+          <KeyboardAvoidingView
+            behavior={Platform.OS === 'ios' ? 'padding' : 'position'}
+            style={styles.keyboardAvoidingView}
+            contentContainerStyle={styles.keyboardAvoidingViewContentContainer}
+          >
+            <ScrollView
+              ref={scrollViewRef}
+              style={styles.mainScrollView}
+              contentContainerStyle={styles.scrollableContentContainer}
+              keyboardShouldPersistTaps="handled"
+            >
+              <View style={globalStyles.screenContainer}>
+                <View style={styles.formContainer}>
+                  <View>
+                    <Stepper currentStep={2} numberOfSteps={4} />
+                    <View style={{ paddingBottom: 30 }}>
+                      <Text style={styles.stepTitle}>
+                        {i18n.t('case_details_step_2_title')}
+                      </Text>
+                    </View>
+                    <CalendarField />
+                    <CaseFrequencySelector />
+                    <Dropdowns />
+                    <DescriptionInput />
+                    <AddAttachments />
+                    <MediaPreview />
                   </View>
-                  <CalendarField />
-                  <CaseFrequencySelector />
-                  <Dropdowns />
-                  <DescriptionInput />
-                  <AddAttachments />
-                  <MediaPreview />
                 </View>
               </View>
-            </View>
-            <Separator />
-            <NextButton />
-          </ScrollView>
-        </KeyboardAvoidingView>
+              <Separator />
+              <NextButton />
+            </ScrollView>
+          </KeyboardAvoidingView>
+        </>
       )}
     </Provider>
   )
@@ -794,7 +783,8 @@ function DetailsOfTheCase({ route }) {
             isAudio,
           }
         })
-        setAttachments([...attachments, ...files])
+        // setAttachments([...attachments, ...files])
+        setAttachments(prev => [...prev, ...files])
       }
     } catch (error) {
       console.error(error)
@@ -818,4 +808,4 @@ function DetailsOfTheCase({ route }) {
   }
 }
 
-export default DetailsOfTheCase
+export default NewCaseDetails

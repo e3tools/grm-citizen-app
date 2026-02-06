@@ -1,4 +1,6 @@
-let config
+let config: {
+    [x: string]: string;
+}
 
 if (__DEV__) {
   config = require('./config.dev').config // Development config

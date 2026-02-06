@@ -83,6 +83,7 @@ const Home = () => {
             textColor="white"
             color="white"
             label={i18n.t('report_grievance')}
+            onPress={() => navigation.navigate('issue_create')}
           />
         </View>
       ) : (
