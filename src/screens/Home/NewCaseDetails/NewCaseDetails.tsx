@@ -25,7 +25,7 @@ import {
 } from 'expo-audio'
 import { CameraCapturedPicture } from 'expo-camera'
 import * as DocumentPicker from 'expo-document-picker'
-import React, { useCallback, useEffect, useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import {
   Image,
@@ -244,8 +244,6 @@ function NewCaseDetails({ route }) {
       <CaseSubComponentDropdown />
     </>
   )
-
-  console.log(data)
 
   const CaseTypeDropdown = () => (
     <Controller
@@ -574,6 +572,14 @@ function NewCaseDetails({ route }) {
 
   const Separator = () => <View style={styles.lineSeparator} />
 
+  const onSubmit = e => {
+    console.log('Successfully captured data: ', e)
+  }
+
+  const onInvalid = e => {
+    console.error('Invalid data. Reason: ', e)
+  }
+
   const NextButton = () => (
     <View style={{ marginHorizontal: 30 }}>
       <CustomButton
@@ -584,7 +590,7 @@ function NewCaseDetails({ route }) {
         color="white"
         label={'Next'}
         iconName={undefined}
-        onPress={undefined}
+        onPress={handleSubmit(onSubmit, onInvalid)}
       />
     </View>
   )

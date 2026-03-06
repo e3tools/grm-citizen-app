@@ -56,7 +56,6 @@ export default function CustomCamera({
 
     if (cameraMode == 'video') {
       toggleVideoRecording()
-
     } else {
       const image: CameraCapturedPicture | undefined =
         await cameraRef.current.takePictureAsync()
@@ -71,7 +70,7 @@ export default function CustomCamera({
     cameraRef.current.stopRecording()
     setIsRecording(false)
   }
-  
+
   const startRecording = async () => {
     if (!cameraReady || !cameraRef.current) {
       return
@@ -79,14 +78,12 @@ export default function CustomCamera({
     setIsRecording(true)
     try {
       const video = await cameraRef.current.recordAsync({ maxDuration: 3 })
-      console.log(video);
-      
+      console.log(video)
+    } catch (e) {
+      console.error(e)
     }
-    catch (e) {
-      console.error(e);
-     }
   }
-  
+
   const toggleVideoRecording = () => {
     if (isRecording) {
       stopRecording()
@@ -107,7 +104,8 @@ export default function CustomCamera({
       <View style={styles.buttonContainer}>
         <TouchableOpacity
           style={styles.iconButton}
-          onPress={toggleCameraFacing}>
+          onPress={toggleCameraFacing}
+        >
           <IconSymbol
             name={'camera.rotate.fill'}
             size={34}
@@ -118,7 +116,8 @@ export default function CustomCamera({
 
         <TouchableOpacity
           style={styles.captureButton}
-          onPress={takeImageOrVideo}>
+          onPress={takeImageOrVideo}
+        >
           {cameraMode === 'video' ? (
             <View
               style={[
@@ -151,7 +150,7 @@ export default function CustomCamera({
           </Text>
         </TouchableOpacity> */}
 
-        <View style={styles.iconButton}></View> 
+        <View style={styles.iconButton}></View>
       </View>
     </View>
   )
@@ -161,6 +160,7 @@ export const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
+    position: 'relative',
   },
   message: {
     textAlign: 'center',
@@ -178,21 +178,25 @@ export const styles = StyleSheet.create({
   iconText: {
     color: colors.secondary,
     fontWeight: '500',
+    fontSize: 14,
   },
   labelText: {
     color: colors.secondary,
     fontWeight: '500',
+    fontSize: 12,
+    marginTop: 4,
   },
   iconButton: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    paddingVertical: 8,
   },
   captureButton: {
     justifyContent: 'center',
     alignItems: 'center',
     flex: 2,
-    paddingBottom: 38,
+    paddingVertical: 12,
   },
   buttonContainer: {
     bottom: 0,
@@ -201,8 +205,14 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: 'white',
     width: '100%',
-    height: 170,
     paddingHorizontal: 24,
+    paddingTop: 16,
+    paddingBottom: 28,
+    shadowColor: '#000',
+    shadowOpacity: 0.08,
+    shadowRadius: 12,
+    shadowOffset: { width: 0, height: -4 },
+    elevation: 12,
   },
   button: {
     flex: 1,
