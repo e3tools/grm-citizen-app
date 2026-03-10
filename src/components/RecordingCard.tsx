@@ -1,6 +1,6 @@
-import { Audio } from 'expo-av'
+import {Audio} from 'expo-av'
 import * as React from 'react'
-import { useEffect, useState } from 'react'
+import {useEffect, useState} from 'react'
 import {
   Dimensions,
   StyleProp,
@@ -10,12 +10,12 @@ import {
   View,
   ViewStyle,
 } from 'react-native'
-import { IconButton } from 'react-native-paper'
-import { i18n } from '../translations/i18n'
-import { colors } from '../utils/colors'
-import { IconSymbol } from '@/components/ui/icon-symbol'
+import {IconButton} from 'react-native-paper'
+import {i18n} from '../translations/i18n'
+import {colors} from '../utils/colors'
+import {IconSymbol} from '@/components/ui/icon-symbol'
 
-const { width } = Dimensions.get('screen')
+const {width} = Dimensions.get('screen')
 
 const milliSecondToHHMMSS = value => {
   const milliSecond = Number(value / 1000)
@@ -39,7 +39,7 @@ type RecordingCardProps = {
 const RecordingCard: React.FC<RecordingCardProps> = ({
   mode = 'full',
   initialURI,
-  cardContainerStyle = { width: width - 45 },
+  cardContainerStyle = {width: width - 45},
   onRemove,
 }) => {
   const [recordingURI, setRecordingURI] = useState<string | null>(null)
@@ -64,9 +64,9 @@ const RecordingCard: React.FC<RecordingCardProps> = ({
       if (mode === 'playback' && initialURI) {
         setRecordingURI(initialURI)
         try {
-          const { sound: loadedSound, status } = await Audio.Sound.createAsync(
-            { uri: initialURI },
-            { shouldPlay: false },
+          const {sound: loadedSound, status} = await Audio.Sound.createAsync(
+            {uri: initialURI},
+            {shouldPlay: false},
           )
           tempSound = loadedSound
           if (status && status.durationMillis) {
@@ -100,9 +100,9 @@ const RecordingCard: React.FC<RecordingCardProps> = ({
         await sound.unloadAsync()
         setSound(null)
       }
-      const { sound: newSound } = await Audio.Sound.createAsync(
-        { uri: recordingURI },
-        { shouldPlay: true },
+      const {sound: newSound} = await Audio.Sound.createAsync(
+        {uri: recordingURI},
+        {shouldPlay: true},
         onPlaybackStatusUpdate,
       )
       setSound(newSound)
@@ -128,7 +128,7 @@ const RecordingCard: React.FC<RecordingCardProps> = ({
         style={[
           styles.iconContainer,
           styles.alignCenter,
-          { flexDirection: 'column' },
+          {flexDirection: 'column'},
         ]}
       >
         {recordingURI && !playing && (
@@ -151,16 +151,16 @@ const RecordingCard: React.FC<RecordingCardProps> = ({
         )}
       </View>
       <View
-        style={[styles.alignCenter, { flexDirection: 'column', width: '70%' }]}
+        style={[styles.alignCenter, {flexDirection: 'column', width: '70%'}]}
       >
         <Text style={styles.title}>{current}</Text>
         {mode === 'full' && isRecording && (
-          <Text style={{ color: colors.primary }}>
+          <Text style={{color: colors.primary}}>
             {i18n.t('recording_in_progress')}
           </Text>
         )}
         {playing && (
-          <Text style={{ color: colors.primary }}>
+          <Text style={{color: colors.primary}}>
             {i18n.t('playing_in_progress')}
           </Text>
         )}

@@ -1,12 +1,12 @@
-import { useNewCaseDetails } from '@/src/hooks/useNewCaseDetails'
-import { File } from 'expo-file-system'
-import { IconSymbol } from '@/components/ui/icon-symbol'
-import { Colors } from '@/constants/theme'
+import {useNewCaseDetails} from '@/src/hooks/useNewCaseDetails'
+import {File} from 'expo-file-system'
+import {IconSymbol} from '@/components/ui/icon-symbol'
+import {Colors} from '@/constants/theme'
 import CheckboxCard from '@/src/components/CheckboxCard'
 import Dropdown from '@/src/components/Dropdown'
 import RecordingCard from '@/src/components/RecordingCard'
 import Stepper from '@/src/components/Stepper'
-import { useColorScheme } from '@/src/hooks/use-color-scheme'
+import {useColorScheme} from '@/src/hooks/use-color-scheme'
 import {
   isAudioFormat,
   isImageFormat,
@@ -15,7 +15,7 @@ import {
 import RNDateTimePicker, {
   DateTimePickerEvent,
 } from '@react-native-community/datetimepicker'
-import { useNavigation } from '@react-navigation/native'
+import {useNavigation} from '@react-navigation/native'
 import {
   getRecordingPermissionsAsync,
   RecordingPresets,
@@ -23,10 +23,10 @@ import {
   requestRecordingPermissionsAsync,
   useAudioRecorder,
 } from 'expo-audio'
-import { CameraCapturedPicture } from 'expo-camera'
+import {CameraCapturedPicture} from 'expo-camera'
 import * as DocumentPicker from 'expo-document-picker'
-import React, { useEffect, useRef, useState } from 'react'
-import { Controller, useForm } from 'react-hook-form'
+import React, {useEffect, useRef, useState} from 'react'
+import {Controller, useForm} from 'react-hook-form'
 import {
   Image,
   KeyboardAvoidingView,
@@ -43,11 +43,11 @@ import {
   Provider,
   TextInput,
 } from 'react-native-paper'
-import { useDispatch } from 'react-redux'
+import {useDispatch} from 'react-redux'
 import CustomButton from '../../../components/CustomButton'
 import CustomCamera from '../../../components/CustomCamera'
-import { i18n } from '../../../translations/i18n'
-import { colors } from '../../../utils/colors'
+import {i18n} from '../../../translations/i18n'
+import {colors} from '../../../utils/colors'
 import MESSAGES from '../../../utils/formErrorMessages'
 import globalStyles from '../../../utils/globalStyles'
 import styles from '../../Home/NewCaseDetails/NewCaseDetails.style'
@@ -59,7 +59,7 @@ type Attachment = {
   isAudio: boolean
 }
 
-function NewCaseDetails({ route }) {
+function NewCaseDetails({route}) {
   const theme = useColorScheme() ?? 'light'
   const dispatch = useDispatch()
   const navigation = useNavigation()
@@ -71,30 +71,23 @@ function NewCaseDetails({ route }) {
   const [isCameraOpen, setIsCameraOpen] = useState(false)
   const [isRecording, setIsRecording] = useState(false)
   const [recorderStatus, setRecorderStatus] = useState<RecordingStatus>()
-  const { isLoading, error, data } = useNewCaseDetails()
+  const {isLoading, error, data} = useNewCaseDetails()
 
-  const {
-    control,
-    handleSubmit,
-    errors,
-    watch,
-    formState,
-    getValues,
-    setError,
-  } = useForm({
-    criteriaMode: 'all',
-    defaultValues: {
-      case_occurrence_date: '',
-      case_occurrence_frequency: '',
-      case_type: '',
-      case_sub_type: '',
-      case_category: '',
-      case_sub_component: '',
-      case_component: '',
-      case_description: '',
-    },
-    mode: 'all',
-  })
+  const {control, handleSubmit, errors, watch, formState, getValues, setError} =
+    useForm({
+      criteriaMode: 'all',
+      defaultValues: {
+        case_occurrence_date: '',
+        case_occurrence_frequency: '',
+        case_type: '',
+        case_sub_type: '',
+        case_category: '',
+        case_sub_component: '',
+        case_component: '',
+        case_description: '',
+      },
+      mode: 'all',
+    })
 
   function onTakeCameraMedia(media: CameraCapturedPicture): void {
     addToAttachments(media)
@@ -128,7 +121,7 @@ function NewCaseDetails({ route }) {
       <Controller
         control={control}
         formState={formState}
-        render={({ field: { onChange, onBlur, value } }) => {
+        render={({field: {onChange, onBlur, value}}) => {
           return (
             <View style={styles.fieldContainer}>
               <Text style={styles.inputLabel}>
@@ -198,7 +191,7 @@ function NewCaseDetails({ route }) {
     <Controller
       control={control}
       formState={formState}
-      render={({ field: { onChange, value } }) => (
+      render={({field: {onChange, value}}) => (
         <View style={styles.fieldContainer}>
           <CheckboxCard
             label={'One-time event'}
@@ -249,7 +242,7 @@ function NewCaseDetails({ route }) {
     <Controller
       control={control}
       formState={formState}
-      render={({ field: { onChange, value } }) => (
+      render={({field: {onChange, value}}) => (
         <View>
           <Text style={styles.inputLabel}>
             {i18n.t('what_is_this_issue_about')}
@@ -280,7 +273,7 @@ function NewCaseDetails({ route }) {
     <Controller
       control={control}
       formState={formState}
-      render={({ field: { onChange, value } }) => (
+      render={({field: {onChange, value}}) => (
         <View>
           <Text style={[styles.inputSubLabel]}>{i18n.t('case_subtype')}</Text>
           <Dropdown
@@ -308,7 +301,7 @@ function NewCaseDetails({ route }) {
     <Controller
       control={control}
       formState={formState}
-      render={({ field: { onChange, value } }) => (
+      render={({field: {onChange, value}}) => (
         <View>
           <Text style={[styles.inputSubLabel]}>{i18n.t('case_category')}</Text>
           <Dropdown
@@ -336,7 +329,7 @@ function NewCaseDetails({ route }) {
     <Controller
       control={control}
       formState={formState}
-      render={({ field: { onChange, value } }) => (
+      render={({field: {onChange, value}}) => (
         <View>
           <Text style={[styles.inputSubLabel]}>{i18n.t('case_component')}</Text>
           <Dropdown
@@ -364,7 +357,7 @@ function NewCaseDetails({ route }) {
     <Controller
       control={control}
       formState={formState}
-      render={({ field: { onChange, value } }) => (
+      render={({field: {onChange, value}}) => (
         <View>
           <Text style={[styles.inputSubLabel]}>
             {i18n.t('case_sub_component')}
@@ -400,30 +393,30 @@ function NewCaseDetails({ route }) {
       <View style={styles.addMediaContainer}>
         <TouchableOpacity onPress={openCamera} style={styles.addPhotoButton}>
           <IconSymbol
-            style={{ paddingBottom: 10 }}
+            style={{paddingBottom: 10}}
             name="camera"
             color={colors.primary}
           />
-          <Text style={{ color: colors.primary }}>{i18n.t('take_photo')}</Text>
+          <Text style={{color: colors.primary}}>{i18n.t('take_photo')}</Text>
         </TouchableOpacity>
         <TouchableOpacity
           onPress={toggleRecording}
           style={styles.addPhotoButton}
         >
           <IconSymbol
-            style={{ paddingBottom: 6 }}
+            style={{paddingBottom: 6}}
             name={!isRecording ? 'mic' : 'stop.circle'}
             size={30}
             color={!isRecording ? colors.primary : colors.error}
           />
-          <Text style={{ color: colors.primary }}>
+          <Text style={{color: colors.primary}}>
             {!isRecording ? i18n.t('record_audio') : i18n.t('press_to_stop')}
           </Text>
         </TouchableOpacity>
       </View>
       <View style={styles.otherFilesContainer}>
         <IconSymbol
-          style={{ paddingBottom: 6 }}
+          style={{paddingBottom: 6}}
           name="cloud"
           size={30}
           color={colors.darkGrey}
@@ -432,7 +425,7 @@ function NewCaseDetails({ route }) {
           {i18n.t('attach_other_files')}
         </Text>
 
-        <Text style={{ color: colors.darkGrey }}>
+        <Text style={{color: colors.darkGrey}}>
           {i18n.t('attach_other_files_description')}
         </Text>
         <CustomButton
@@ -472,7 +465,7 @@ function NewCaseDetails({ route }) {
             <View key={componentIndex.toString()}>
               {mediaItem.isAudio ? (
                 <RecordingCard
-                  cardContainerStyle={{ flex: 1 }}
+                  cardContainerStyle={{flex: 1}}
                   mode="playback"
                   initialURI={mediaItem.path}
                   onRemove={() => removeAttachment(componentIndex)}
@@ -493,10 +486,8 @@ function NewCaseDetails({ route }) {
                       )}
                     </View>
 
-                    <View style={{ flex: 1 }}>
-                      <Text style={{ fontWeight: 'bold' }}>
-                        {mediaItem.name}
-                      </Text>
+                    <View style={{flex: 1}}>
+                      <Text style={{fontWeight: 'bold'}}>{mediaItem.name}</Text>
                       <Text style={styles.mediaPreviewCardSubtitle}>
                         {sizeDigit} {sizeUnit}
                       </Text>
@@ -520,8 +511,8 @@ function NewCaseDetails({ route }) {
     <Controller
       control={control}
       formState={formState}
-      render={({ field: { onChange, onBlur, value } }) => (
-        <View style={{ marginTop: 16 }}>
+      render={({field: {onChange, onBlur, value}}) => (
+        <View style={{marginTop: 16}}>
           <View style={styles.inputLabel}>
             <Text style={styles.inputLabel}>
               {i18n.t('case_description_input_label')}
@@ -565,7 +556,7 @@ function NewCaseDetails({ route }) {
       name="case_description"
       rules={{
         maxLength: 1000,
-        required: { value: true, message: MESSAGES.required },
+        required: {value: true, message: MESSAGES.required},
       }}
     />
   )
@@ -581,9 +572,9 @@ function NewCaseDetails({ route }) {
   }
 
   const NextButton = () => (
-    <View style={{ marginHorizontal: 30 }}>
+    <View style={{marginHorizontal: 30}}>
       <CustomButton
-        style={{ width: '100%' }}
+        style={{width: '100%'}}
         borderRadius={24}
         backgroundColor={colors.primary}
         textColor="white"
@@ -633,14 +624,14 @@ function NewCaseDetails({ route }) {
       }
       setIsRecording(true)
       await audioRecorder.prepareToRecordAsync()
-      audioRecorder.record({ atTime: 100 })
+      audioRecorder.record({atTime: 100})
     } else {
       setIsRecording(false)
       await audioRecorder.stop()
     }
   }
 
-  const ErrorSnackBar = ({ message }: { message: string }) => {
+  const ErrorSnackBar = ({message}: {message: string}) => {
     return (
       <View
         style={{
@@ -653,8 +644,8 @@ function NewCaseDetails({ route }) {
           paddingHorizontal: 24,
         }}
       >
-        <View style={{ flex: 1 }}>
-          <Text style={{ color: 'white' }}>{message}</Text>
+        <View style={{flex: 1}}>
+          <Text style={{color: 'white'}}>{message}</Text>
         </View>
         <TouchableOpacity onPress={() => {}}>
           <Text
@@ -671,7 +662,7 @@ function NewCaseDetails({ route }) {
     )
   }
 
-  const ErrorView = ({ message }: { message: string }) => {
+  const ErrorView = ({message}: {message: string}) => {
     return (
       <View
         style={{
@@ -682,11 +673,11 @@ function NewCaseDetails({ route }) {
           paddingHorizontal: 24,
         }}
       >
-        <View style={{ alignItems: 'center', marginBottom: 50 }}>
-          <Text style={{ color: colors.secondary }}>
+        <View style={{alignItems: 'center', marginBottom: 50}}>
+          <Text style={{color: colors.secondary}}>
             Oops, something went wrong.
           </Text>
-          <Text style={{ color: colors.secondary }}>Error Code: {message}</Text>
+          <Text style={{color: colors.secondary}}>Error Code: {message}</Text>
         </View>
         <TouchableOpacity
           onPress={() => {
@@ -708,9 +699,7 @@ function NewCaseDetails({ route }) {
   }
 
   const Loading = () => {
-    return (
-      <ActivityIndicator style={{ marginTop: 24 }} color={colors.primary} />
-    )
+    return <ActivityIndicator style={{marginTop: 24}} color={colors.primary} />
   }
 
   return (
@@ -741,7 +730,7 @@ function NewCaseDetails({ route }) {
                 <View style={styles.formContainer}>
                   <View>
                     <Stepper currentStep={2} numberOfSteps={4} />
-                    <View style={{ paddingBottom: 30 }}>
+                    <View style={{paddingBottom: 30}}>
                       <Text style={styles.stepTitle}>
                         {i18n.t('case_details_step_2_title')}
                       </Text>

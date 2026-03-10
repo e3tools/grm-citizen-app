@@ -1,5 +1,5 @@
-import { colors } from '../../../utils/colors'
-import { StyleSheet } from 'react-native'
+import {colors} from '../../../utils/colors'
+import {StyleSheet} from 'react-native'
 
 export default StyleSheet.create({
   containerView: {
@@ -156,7 +156,7 @@ export default StyleSheet.create({
     marginLeft: 5,
   },
 
-  fieldContainer: { marginBottom: 16 },
+  fieldContainer: {marginBottom: 16},
   fieldPlaceholderText: {
     fontWeight: '500',
     color: colors.secondary,
@@ -167,11 +167,11 @@ export default StyleSheet.create({
     marginBottom: 8,
     fontWeight: 'bold',
   },
-  addAttachmentsContainer: { marginTop: 36, marginBottom: 38 },
+  addAttachmentsContainer: {marginTop: 36, marginBottom: 38},
   mediaPreviewCardSubtitle: {
     color: colors.secondary,
     fontWeight: '500',
   },
-  descriptionInputContent: { height: 160, paddingRight: 35 },
-  keyboardAvoidingView: { flex: 1, backgroundColor: '#f8fafc' },
+  descriptionInputContent: {height: 160, paddingRight: 35},
+  keyboardAvoidingView: {flex: 1, backgroundColor: '#f8fafc'},
 })

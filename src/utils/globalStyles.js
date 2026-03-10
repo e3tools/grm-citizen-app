@@ -1,5 +1,5 @@
-import { Dimensions, Platform, StyleSheet } from 'react-native'
-import { getStatusBarHeight } from 'react-native-iphone-x-helper'
+import {Dimensions, Platform, StyleSheet} from 'react-native'
+import {getStatusBarHeight} from 'react-native-iphone-x-helper'
 
 export const screenHeight = Dimensions.get('window').height
 export const shadow = {

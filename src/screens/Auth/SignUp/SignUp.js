@@ -50,7 +50,10 @@ function SignUp({route}) {
 
   const [value, setValue] = React.useState('')
   const ref = useBlurOnFulfill({value, cellCount: CELL_COUNT})
-  const [props, getCellOnLayoutHandler] = useClearByFocusCell({value, setValue})
+  const [props, getCellOnLayoutHandler] = useClearByFocusCell({
+    value,
+    setValue,
+  })
 
   const onSignUp = async data => {
     setLoading(true)
@@ -134,7 +137,11 @@ function SignUp({route}) {
           paddingBottom: 60,
           paddingHorizontal: 30,
         }}
-        contentContainerStyle={{flexGrow: 1, paddingTop: 20, paddingBottom: 20}}
+        contentContainerStyle={{
+          flexGrow: 1,
+          paddingTop: 20,
+          paddingBottom: 20,
+        }}
         keyboardShouldPersistTaps="handled"
       >
         <View style={styles.loginScreenContainer}>

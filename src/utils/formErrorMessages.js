@@ -1,4 +1,4 @@
-import { i18n } from "../translations/i18n"
+import {i18n} from '../translations/i18n'
 
 const MESSAGES = {
   required: i18n.t('this_field_is_required'),

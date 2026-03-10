@@ -1,7 +1,7 @@
-import { Feather } from '@expo/vector-icons'
+import {Feather} from '@expo/vector-icons'
 import React from 'react'
-import { Text, TouchableOpacity } from 'react-native'
-import { colors } from '../utils/colors'
+import {Text, TouchableOpacity} from 'react-native'
+import {colors} from '../utils/colors'
 
 const CustomButton = ({
   label,
@@ -41,7 +41,7 @@ const CustomButton = ({
           name={iconName.replace(/'/g, '')}
           size={20}
           color={textColor || color || 'white'}
-          style={{ marginRight: 8, marginTop: -1 }}
+          style={{marginRight: 8, marginTop: -1}}
         />
       )}
       <Text style={textStyle}>{label}</Text>

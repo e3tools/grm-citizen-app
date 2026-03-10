@@ -1,32 +1,35 @@
-import { useEffect, useState } from "react";
-import { getNewCaseDetailsParams, NewCaseDetails } from "../services/newCaseDetailsService";
+import {useEffect, useState} from 'react'
+import {
+  getNewCaseDetailsParams,
+  NewCaseDetails,
+} from '../services/newCaseDetailsService'
 
 type Error = {
-    message: string;
-};
+  message: string
+}
 
 export function useNewCaseDetails() {
-    const [isLoading, setIsLoading] = useState(true);
-    const [error, setError] = useState<Error>();
-    const [data, setData] = useState<NewCaseDetails>();
+  const [isLoading, setIsLoading] = useState(true)
+  const [error, setError] = useState<Error>()
+  const [data, setData] = useState<NewCaseDetails>()
 
-    const fetchNewCaseDetails = async () => {
-        const result: NewCaseDetails | undefined = await getNewCaseDetailsParams();
-        setIsLoading(false)
-        if (!result) {
-            setError({message: 'Could not retrieve form parameters.'})
-            return
-        }
-        setData(result);
+  const fetchNewCaseDetails = async () => {
+    const result: NewCaseDetails | undefined = await getNewCaseDetailsParams()
+    setIsLoading(false)
+    if (!result) {
+      setError({message: 'Could not retrieve form parameters.'})
+      return
     }
-    
-    useEffect(() => {
-      fetchNewCaseDetails()
-    }, [])
-    
-    return {
-        isLoading,
-        error,
-        data
-    }
+    setData(result)
+  }
+
+  useEffect(() => {
+    fetchNewCaseDetails()
+  }, [])
+
+  return {
+    isLoading,
+    error,
+    data,
+  }
 }

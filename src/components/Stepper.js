@@ -1,13 +1,13 @@
 import React from 'react'
-import { View } from 'react-native'
-import { colors } from '../utils/colors'
+import {View} from 'react-native'
+import {colors} from '../utils/colors'
 
-const Stepper = ({ currentStep, numberOfSteps }) => {
+const Stepper = ({currentStep, numberOfSteps}) => {
   return (
     <View
-      style={{ flexDirection: 'row', width: '100%', justifyContent: 'center' }}
+      style={{flexDirection: 'row', width: '100%', justifyContent: 'center'}}
     >
-      {Array.from({ length: numberOfSteps }).map((_, index) => {
+      {Array.from({length: numberOfSteps}).map((_, index) => {
         const stepNumber = index + 1
 
         return (

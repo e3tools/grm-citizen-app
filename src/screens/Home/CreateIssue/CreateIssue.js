@@ -9,7 +9,7 @@ import CheckboxCard from '../../../components/CheckboxCard'
 import posed from 'react-native-pose'
 import {Feather} from '@expo/vector-icons'
 import Stepper from '../../../components/Stepper'
-import { useNavigation } from '@react-navigation/native'
+import {useNavigation} from '@react-navigation/native'
 
 const iconConfig = {
   focused: {

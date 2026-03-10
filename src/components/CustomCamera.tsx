@@ -1,4 +1,4 @@
-import { IconSymbol } from '@/components/ui/icon-symbol'
+import {IconSymbol} from '@/components/ui/icon-symbol'
 import {
   CameraView,
   CameraType,
@@ -6,9 +6,9 @@ import {
   CameraMode,
   CameraCapturedPicture,
 } from 'expo-camera'
-import React, { PropsWithChildren, useRef, useState } from 'react'
-import { View, Text, Button, TouchableOpacity, StyleSheet } from 'react-native'
-import { colors } from '../utils/colors'
+import React, {PropsWithChildren, useRef, useState} from 'react'
+import {View, Text, Button, TouchableOpacity, StyleSheet} from 'react-native'
+import {colors} from '../utils/colors'
 
 type Props = PropsWithChildren<{
   onTakeCameraMedia: (media: any) => void
@@ -77,7 +77,7 @@ export default function CustomCamera({
     }
     setIsRecording(true)
     try {
-      const video = await cameraRef.current.recordAsync({ maxDuration: 3 })
+      const video = await cameraRef.current.recordAsync({maxDuration: 3})
       console.log(video)
     } catch (e) {
       console.error(e)
@@ -211,7 +211,7 @@ export const styles = StyleSheet.create({
     shadowColor: '#000',
     shadowOpacity: 0.08,
     shadowRadius: 12,
-    shadowOffset: { width: 0, height: -4 },
+    shadowOffset: {width: 0, height: -4},
     elevation: 12,
   },
   button: {

@@ -1,7 +1,7 @@
-import React, { useEffect } from 'react'
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import { colors } from '../utils/colors'
-import { RadioButton } from 'react-native-paper'
+import React, {useEffect} from 'react'
+import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
+import {colors} from '../utils/colors'
+import {RadioButton} from 'react-native-paper'
 
 const CheckboxCard = ({
   label,
@@ -28,7 +28,7 @@ const CheckboxCard = ({
         setValue(newValue)
         onValueUpdate(newValue)
       }}
-      style={[styles.card, { elevation: shadow ? 5 : 0 }]}
+      style={[styles.card, {elevation: shadow ? 5 : 0}]}
     >
       <View
         style={[

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, {useState} from 'react'
 import {
   View,
   Text,
@@ -7,9 +7,9 @@ import {
   FlatList,
   StyleSheet,
 } from 'react-native'
-import { colors } from '../utils/colors'
-import { i18n } from '../translations/i18n'
-import { IconSymbol } from '@/components/ui/icon-symbol'
+import {colors} from '../utils/colors'
+import {i18n} from '../translations/i18n'
+import {IconSymbol} from '@/components/ui/icon-symbol'
 
 const Dropdown = ({
   label,
@@ -55,7 +55,7 @@ const Dropdown = ({
       >
         {label && <Text style={styles.label}>{label}</Text>}
         {optional ? (
-          <Text style={{ color: colors.secondary }}>{i18n.t('optional')}</Text>
+          <Text style={{color: colors.secondary}}>{i18n.t('optional')}</Text>
         ) : null}
       </View>
       <TouchableOpacity
@@ -73,7 +73,7 @@ const Dropdown = ({
           name={'chevron.right'}
           size={20}
           color={colors.darkGrey}
-          style={{ transform: [{ rotate: isVisible ? '0deg' : '90deg' }] }}
+          style={{transform: [{rotate: isVisible ? '0deg' : '90deg'}]}}
         />
       </TouchableOpacity>
       {error && <Text style={styles.errorText}>{error}</Text>}
@@ -98,7 +98,7 @@ const Dropdown = ({
                 }
                 return index.toString()
               }}
-              renderItem={({ item }) => {
+              renderItem={({item}) => {
                 const itemValue =
                   typeof item === 'object' && item.id ? item.id : item
                 const itemLabel = typeof item === 'object' ? item.name : item

@@ -1,5 +1,5 @@
 let config: {
-    [x: string]: string;
+  [x: string]: string
 }
 
 if (__DEV__) {

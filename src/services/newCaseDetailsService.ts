@@ -32,8 +32,6 @@ export const getComponents = async () => {
       ...requestOptions,
     })
 
-    console.log('Success components retrieval.');
-
     // {
     //   "count": 1,
     //     "next": null,
@@ -101,7 +99,7 @@ export const getIssueTypes = async () => {
     const response = await request({
       ...requestOptions,
     })
-    
+
     return response?.data ?? undefined
   } catch (error) {
     console.error('Error Fetching Issue Types', error.message)
