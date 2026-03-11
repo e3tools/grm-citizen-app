@@ -1,4 +1,4 @@
-import config from '@/config'
+import config from '../../config'
 import request from '../utils/request'
 
 const baseURL = config.API_AUTH_BASE_URL
@@ -18,9 +18,7 @@ export type NewCaseDetails = {
   subtypes: BaseListResponseType
 }
 
-export const getComponents = async () => {
-  console.log('Retrieve components ....')
-
+export const getIssueComponents = async () => {
   const url = `${baseURL}/issues/components/`
   const requestOptions = {
     url,
@@ -107,7 +105,7 @@ export const getIssueTypes = async () => {
   }
 }
 
-export const getSubcomponents = async () => {
+export const getIssueSubcomponents = async () => {
   const url = `${baseURL}/issues/subcomponents/`
   const requestOptions = {
     url,
@@ -128,8 +126,8 @@ export const getSubcomponents = async () => {
 export async function getNewCaseDetailsParams(): Promise<
   NewCaseDetails | undefined
 > {
-  const components = await getComponents()
-  const subcomponents = await getSubcomponents()
+  const components = await getIssueComponents()
+  const subcomponents = await getIssueSubcomponents()
   const categories = await getIssueCategories()
   const types = await getIssueTypes()
   const subtypes = await getIssueSubTypes()
