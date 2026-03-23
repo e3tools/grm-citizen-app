@@ -565,6 +565,7 @@ function NewCaseDetails({route}) {
 
   const onSubmit = e => {
     console.log('Successfully captured data: ', e)
+    navigation.navigate('location_details')
   }
 
   const onInvalid = e => {

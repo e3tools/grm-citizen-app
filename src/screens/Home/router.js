@@ -14,6 +14,7 @@ import IssueDetail from './GRM/screens/IssueDetail'
 import AllIssueAttachments from './GRM/screens/AllIssueAttachments'
 import CreateIssue from './CreateIssue'
 import NewCaseDetails from './NewCaseDetails/NewCaseDetails'
+import LocationDetails from './LocationDetails/LocationDetails'
 
 const iconConfig = {
   focused: {
@@ -179,6 +180,17 @@ function DashboardStackScreen() {
       <HomeStack.Screen
         name={'new_case_details'}
         component={NewCaseDetails}
+        options={({navigation, route}) => ({
+          ...customHeaderOptions(i18n.t('create_issue')),
+          ...customHeaderLeftIcon({
+            navigation,
+            route,
+          }),
+        })}
+      />
+      <HomeStack.Screen
+        name={'location_details'}
+        component={LocationDetails}
         options={({navigation, route}) => ({
           ...customHeaderOptions(i18n.t('create_issue')),
           ...customHeaderLeftIcon({
