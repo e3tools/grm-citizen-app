@@ -6,6 +6,7 @@ import {
   Modal,
   FlatList,
   StyleSheet,
+  TextInput,
 } from 'react-native'
 import {colors} from '../utils/colors'
 import {i18n} from '../translations/i18n'
@@ -19,8 +20,10 @@ const Dropdown = ({
   placeholder = 'Select an option',
   error,
   optional,
+  enableSearch = true,
 }) => {
   const [isVisible, setIsVisible] = useState(false)
+  const [searchText, setSearchText] = useState('')
 
   const selectedOption = options.find(option => {
     if (typeof option === 'object' && option.id) {
@@ -35,11 +38,19 @@ const Dropdown = ({
       : selectedOption
     : ''
 
+  const filteredOptions = enableSearch
+    ? options.filter(option => {
+        const label = typeof option === 'object' ? option.name : option
+        return label.toLowerCase().includes(searchText.toLowerCase())
+      })
+    : options
+
   const handleSelect = option => {
     const optionValue =
       typeof option === 'object' && option.id ? option.id : option
     onSelect(optionValue)
     setIsVisible(false)
+    setSearchText('')
   }
 
   return (
@@ -60,7 +71,10 @@ const Dropdown = ({
       </View>
       <TouchableOpacity
         style={[styles.dropdown, error && styles.dropdownError]}
-        onPress={() => setIsVisible(true)}
+        onPress={() => {
+          setIsVisible(true)
+          setSearchText('')
+        }}
       >
         <View style={styles.inputLabel}>
           <Text
@@ -89,9 +103,19 @@ const Dropdown = ({
           activeOpacity={1}
           onPress={() => setIsVisible(false)}
         >
-          <View style={styles.modalContent}>
+          <View style={[styles.modalContent, {marginBottom: 0, paddingVertical: 0}]}>
+            {enableSearch && (
+              <TextInput
+                style={styles.searchInput}
+                placeholder="Search..."
+                value={searchText}
+                onChangeText={setSearchText}
+                autoCapitalize="none"
+                autoCorrect={false}
+              />
+            )}
             <FlatList
-              data={options}
+              data={filteredOptions}
               keyExtractor={(item, index) => {
                 if (typeof item === 'object' && item.id) {
                   return item.id.toString()
@@ -184,6 +208,22 @@ const styles = StyleSheet.create({
     width: '80%',
     maxHeight: '70%',
     paddingVertical: 8,
+  },
+  searchInput: {
+    borderColor: colors.primary,
+    borderTopEndRadius: 8,
+    borderTopRightRadius: 6,
+    borderTopLeftRadius: 6,
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    marginBottom: 8,
+    fontSize: 16,
+    backgroundColor: '#F9F9F9',
+    marginBottom: 0,
+    borderWidth: 3,
+    marginHorizontal: 0,
+    marginVertical: 0,
+    padding: 0
   },
   option: {
     flexDirection: 'row',

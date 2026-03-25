@@ -6,7 +6,6 @@ import {useNavigation} from '@react-navigation/native'
 import React, {useRef} from 'react'
 import {Controller, useForm} from 'react-hook-form'
 import {
-  Image,
   KeyboardAvoidingView,
   Platform,
   ScrollView,
@@ -14,13 +13,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native'
-import {
-  ActivityIndicator,
-  Modal,
-  Portal,
-  Provider,
-  TextInput,
-} from 'react-native-paper'
+import {ActivityIndicator, Provider, TextInput} from 'react-native-paper'
 import {useDispatch} from 'react-redux'
 import CustomButton from '../../../components/CustomButton'
 import {i18n} from '../../../translations/i18n'
@@ -34,7 +27,7 @@ function LocationDetails({route}) {
   const dispatch = useDispatch()
   const navigation = useNavigation()
   const scrollViewRef = useRef<ScrollView | null>(null)
-  const {isLoading, error, data} = useLocationDetails()
+  const {isLoading, error, districts, wards, fetchWards} = useLocationDetails()
 
   const {control, handleSubmit, errors, watch, formState, getValues, setError} =
     useForm({
@@ -42,7 +35,7 @@ function LocationDetails({route}) {
       defaultValues: {
         case_district: '',
         case_ward: '',
-        case_description: '',
+        detailed_location_description: '',
       },
       mode: 'all',
     })
@@ -54,36 +47,42 @@ function LocationDetails({route}) {
     </>
   )
 
-  const LocationDistrictDropdown = () => (
-    <Controller
-      control={control}
-      formState={formState}
-      render={({field: {onChange, value}}) => (
-        <View>
-          <Text style={styles.inputLabel}>
-            District
-            <Text style={{color: colors.primary}}>*</Text>
-          </Text>
-          <Dropdown
-            label={''}
-            options={data?.types.results}
-            value={value}
-            onSelect={onChange}
-            placeholder={i18n.t('select_location_district')}
-            error={formState?.errors?.case_district?.message}
-            optional={false}
-          />
-        </View>
-      )}
-      name="case_district"
-      rules={{
-        required: {
-          value: true,
-          message: MESSAGES.required,
-        },
-      }}
-    />
-  )
+  const LocationDistrictDropdown = () => {
+
+    return (
+      <Controller
+        control={control}
+        formState={formState}
+        render={({field: {onChange, value}}) => (
+          <View>
+            <Text style={styles.inputLabel}>
+              District <Text style={{color: colors.primary}}>*</Text>
+            </Text>
+            <Dropdown
+              label={''}
+              options={districts}
+              value={value}
+              onSelect={(e: any) => {
+                console.log(e)
+                onChange(e)
+                fetchWards(e)
+              }}
+              placeholder={i18n.t('select_location_district')}
+              error={formState?.errors?.case_district?.message}
+              optional={false}
+            />
+          </View>
+        )}
+        name="case_district"
+        rules={{
+          required: {
+            value: true,
+            message: MESSAGES.required,
+          },
+        }}
+      />
+    )
+  }
 
   const LocationWardDropdown = () => (
     <Controller
@@ -92,17 +91,18 @@ function LocationDetails({route}) {
       render={({field: {onChange, value}}) => (
         <View>
           <Text style={styles.inputLabel}>
-            {i18n.t('location_ward_dropdown')}
+            {i18n.t('location_ward_dropdown')}{' '}
             <Text style={{color: colors.primary}}>*</Text>
           </Text>
           <Dropdown
             label={''}
-            options={data?.wards.results}
+            options={wards}
             value={value}
             onSelect={onChange}
             placeholder={i18n.t('location_ward_dropdown_placeholder')}
             error={formState?.errors?.case_ward?.message}
             optional={false}
+            enableSearch={false}
           />
         </View>
       )}
@@ -154,14 +154,14 @@ function LocationDetails({route}) {
             onChangeText={onChange}
             value={value}
           />
-          {formState.errors.case_description && (
+          {formState.errors.detailed_location_description && (
             <Text style={styles.errorText}>
-              {formState.errors.case_description.message}
+              {formState.errors.detailed_location_description.message}
             </Text>
           )}
         </View>
       )}
-      name="case_description"
+      name="detailed_location_description"
       rules={{
         maxLength: 1000,
         required: {value: false, message: MESSAGES.required},
@@ -206,8 +206,7 @@ function LocationDetails({route}) {
           justifyContent: 'center',
           alignItems: 'center',
           paddingHorizontal: 24,
-        }}
-      >
+        }}>
         <View style={{flex: 1}}>
           <Text style={{color: 'white'}}>{message}</Text>
         </View>
@@ -217,8 +216,7 @@ function LocationDetails({route}) {
               color: colors.primary,
               fontWeight: 'bold',
               fontSize: 18,
-            }}
-          >
+            }}>
             Retry
           </Text>
         </TouchableOpacity>
@@ -235,8 +233,7 @@ function LocationDetails({route}) {
           justifyContent: 'center',
           alignItems: 'center',
           paddingHorizontal: 24,
-        }}
-      >
+        }}>
         <View style={{alignItems: 'center', marginBottom: 50}}>
           <Text style={{color: colors.secondary}}>
             Oops, something went wrong.
@@ -246,15 +243,13 @@ function LocationDetails({route}) {
         <TouchableOpacity
           onPress={() => {
             navigation.goBack()
-          }}
-        >
+          }}>
           <Text
             style={{
               color: colors.primary,
               fontWeight: 'bold',
               fontSize: 18,
-            }}
-          >
+            }}>
             Go back
           </Text>
         </TouchableOpacity>
@@ -268,21 +263,19 @@ function LocationDetails({route}) {
 
   return (
     <Provider>
-      {/* {isLoading && <Loading />} */}
-      {/* {error && <ErrorView message={error.message} />} */}
-      {isLoading && !error && (
+      {isLoading && <Loading />}
+      {error && <ErrorView message={error.message} />}
+      {!isLoading && !error && (
         <>
           <KeyboardAvoidingView
             behavior={Platform.OS === 'ios' ? 'padding' : 'position'}
             style={styles.keyboardAvoidingView}
-            contentContainerStyle={styles.keyboardAvoidingViewContentContainer}
-          >
+            contentContainerStyle={styles.keyboardAvoidingViewContentContainer}>
             <ScrollView
               ref={scrollViewRef}
               style={styles.mainScrollView}
               contentContainerStyle={styles.scrollableContentContainer}
-              keyboardShouldPersistTaps="handled"
-            >
+              keyboardShouldPersistTaps="handled">
               <View style={globalStyles.screenContainer}>
                 <View style={styles.formContainer}>
                   <View>

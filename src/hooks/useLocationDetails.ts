@@ -1,35 +1,71 @@
 import {useEffect, useState} from 'react'
-// import {
-//   getLocationDetailsParams,
-//   LocationDetails,
-// } from '../services/locationDetailsService'
+import {
+  getDistricts,
+  getWards,
+} from '../services/newCaseLocationDetailsService'
+import {getEncryptedData, storeEncryptedData} from '../utils/storageManager'
 
 type Error = {
   message: string
 }
 
+type Region = {
+  id: number,
+  administrative_level: number,
+  created_date: string,
+  name: string,
+  parent: number,
+  updated_date: string
+}
+
 export function useLocationDetails() {
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<Error>()
-  // const [data, setData] = useState<LocationDetails>()
+  const [districts, setDistricts] = useState<Region[] | undefined>()
+  const [wards, setWards] = useState<Region[] | undefined>()
 
-  const fetchLocationDetails = async () => {
-    // const result: LocationDetails | undefined = await getLocationDetailsParams()
-    // setIsLoading(false)
-    // if (!result) {
-    //   setError({message: 'Could not retrieve form parameters.'})
-    //   return
-    // }
-    // setData(result)
+  const fetchDistricts = async () => {
+    const result: any[] | undefined = await getDistricts()
+    console.log(result);
+    
+    setIsLoading(false)
+    if (!result) {
+      setError({message: 'Could not retrieve form parameters.'})
+      return
+    }
+    setDistricts(result)
+    await storeEncryptedData('districts', result)
+  }
+
+  const fetchWards = async (id: number) => {
+    setIsLoading(true)
+    const result: any[] | undefined = await getWards(id)
+    setIsLoading(false)
+    if (!result) {
+      setError({message: 'Could not retrieve form parameters.'})
+      return
+    }
+    setWards(result)
   }
 
   useEffect(() => {
-    fetchLocationDetails()
+    const loadDistricts = async () => {
+      const cachedDistricts = await getEncryptedData('districts')
+      if (cachedDistricts) {
+        setDistricts(cachedDistricts)
+        setIsLoading(false)
+      } else {
+        await fetchDistricts()
+      }
+    }
+    loadDistricts()
   }, [])
 
   return {
     isLoading,
     error,
-    // data,
+    districts,
+    wards,
+    fetchWards,
   }
 }
