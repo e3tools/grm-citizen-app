@@ -3,7 +3,8 @@ import Stepper from '@/src/components/Stepper'
 import {useColorScheme} from '@/src/hooks/use-color-scheme'
 import {useLocationDetails} from '@/src/hooks/useLocationDetails'
 import {useNavigation} from '@react-navigation/native'
-import React, {useRef} from 'react'
+import {useFocusEffect} from '@react-navigation/native'
+import React, {useEffect, useRef} from 'react'
 import {Controller, useForm} from 'react-hook-form'
 import {
   KeyboardAvoidingView,
@@ -20,6 +21,7 @@ import {i18n} from '../../../translations/i18n'
 import {colors} from '../../../utils/colors'
 import MESSAGES from '../../../utils/formErrorMessages'
 import globalStyles from '../../../utils/globalStyles'
+import {getEncryptedData, storeEncryptedData} from '../../../utils/storageManager'
 import styles from '../LocationDetails/LocationDetails.style'
 
 function LocationDetails({route}) {
@@ -29,7 +31,7 @@ function LocationDetails({route}) {
   const scrollViewRef = useRef<ScrollView | null>(null)
   const {isLoading, error, districts, wards, fetchWards} = useLocationDetails()
 
-  const {control, handleSubmit, errors, watch, formState, getValues, setError} =
+  const {control, handleSubmit, errors, watch, formState, getValues, setError, setValue, reset} =
     useForm({
       criteriaMode: 'all',
       defaultValues: {
@@ -40,10 +42,37 @@ function LocationDetails({route}) {
       mode: 'all',
     })
 
+  const watchedDistrict = watch('case_district')
+
+  // Load persisted form data when screen comes into focus
+  useFocusEffect(
+    React.useCallback(() => {
+      const loadFormData = async () => {
+        const savedData = await getEncryptedData('locationFormData')
+        if (savedData) {
+          reset(savedData)
+          // If district is saved, fetch wards
+          if (savedData.case_district) {
+            fetchWards(savedData.case_district)
+          }
+        }
+      }
+      loadFormData()
+    }, [reset, fetchWards])
+  )
+
+  // Save form data whenever it changes
+  useEffect(() => {
+    const subscription = watch((value) => {
+      storeEncryptedData('locationFormData', value)
+    })
+    return () => subscription.unsubscribe()
+  }, [watch])
+
   const Dropdowns = () => (
     <>
       <LocationDistrictDropdown />
-      <LocationWardDropdown />
+      {watchedDistrict && <LocationWardDropdown />}
     </>
   )
 
@@ -65,6 +94,7 @@ function LocationDetails({route}) {
               onSelect={(e: any) => {
                 console.log(e)
                 onChange(e)
+                setValue('case_ward', '')
                 fetchWards(e)
               }}
               placeholder={i18n.t('select_location_district')}
