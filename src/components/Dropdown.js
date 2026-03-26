@@ -7,6 +7,7 @@ import {
   FlatList,
   StyleSheet,
   TextInput,
+  ActivityIndicator,
 } from 'react-native'
 import {colors} from '../utils/colors'
 import {i18n} from '../translations/i18n'
@@ -21,6 +22,7 @@ const Dropdown = ({
   error,
   optional,
   enableSearch = true,
+  loading = false,
 }) => {
   const [isVisible, setIsVisible] = useState(false)
   const [searchText, setSearchText] = useState('')
@@ -38,12 +40,14 @@ const Dropdown = ({
       : selectedOption
     : ''
 
-  const filteredOptions = enableSearch
-    ? options.filter(option => {
-        const label = typeof option === 'object' ? option.name : option
-        return label.toLowerCase().includes(searchText.toLowerCase())
-      })
-    : options
+  const filteredOptions = !loading
+    ? enableSearch
+      ? options.filter(option => {
+          const label = typeof option === 'object' ? option.name : option
+          return label.toLowerCase().includes(searchText.toLowerCase())
+        })
+      : options
+    : []
 
   const handleSelect = option => {
     const optionValue =
@@ -114,38 +118,46 @@ const Dropdown = ({
                 autoCorrect={false}
               />
             )}
-            <FlatList
-              data={filteredOptions}
-              keyExtractor={(item, index) => {
-                if (typeof item === 'object' && item.id) {
-                  return item.id.toString()
-                }
-                return index.toString()
-              }}
-              renderItem={({item}) => {
-                const itemValue =
-                  typeof item === 'object' && item.id ? item.id : item
-                const itemLabel = typeof item === 'object' ? item.name : item
-                const isSelected = itemValue === value
+            {loading ? (
+              <View style={styles.loadingContainer}>
+                <ActivityIndicator color={colors.primary} size="large" />
+              </View>
+            ) : (
+              <FlatList
+                data={filteredOptions}
+                keyExtractor={(item, index) =>
+                {
+                  if (typeof item === 'object' && item.id) {
+                    return item.id.toString()
+                  }
+                  return index.toString()
+                }}
+                renderItem={({ item }) =>
+                {
+                  const itemValue =
+                    typeof item === 'object' && item.id ? item.id : item
+                  const itemLabel = typeof item === 'object' ? item.name : item
+                  const isSelected = itemValue === value
 
-                return (
-                  <TouchableOpacity
-                    style={[styles.option, isSelected && styles.selectedOption]}
-                    onPress={() => handleSelect(item)}
-                  >
-                    <Text
-                      style={[
-                        styles.optionText,
-                        isSelected && styles.selectedOptionText,
-                      ]}
+                  return (
+                    <TouchableOpacity
+                      style={[styles.option, isSelected && styles.selectedOption]}
+                      onPress={() => handleSelect(item)}
                     >
-                      {itemLabel}
-                    </Text>
-                    {isSelected && <Text style={styles.checkmark}>✓</Text>}
-                  </TouchableOpacity>
-                )
-              }}
-            />
+                      <Text
+                        style={[
+                          styles.optionText,
+                          isSelected && styles.selectedOptionText,
+                        ]}
+                      >
+                        {itemLabel}
+                      </Text>
+                      {isSelected && <Text style={styles.checkmark}>✓</Text>}
+                    </TouchableOpacity>
+                  )
+                }}
+              />
+            )}
           </View>
         </TouchableOpacity>
       </Modal>
@@ -208,6 +220,11 @@ const styles = StyleSheet.create({
     width: '80%',
     maxHeight: '70%',
     paddingVertical: 8,
+  },
+  loadingContainer: {
+    minHeight: 200,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   searchInput: {
     borderColor: colors.primary,

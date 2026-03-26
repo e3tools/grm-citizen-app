@@ -24,12 +24,13 @@ import globalStyles from '../../../utils/globalStyles'
 import {getEncryptedData, storeEncryptedData} from '../../../utils/storageManager'
 import styles from '../LocationDetails/LocationDetails.style'
 
-function LocationDetails({route}) {
+function LocationDetails({ route }) {
+  
   const theme = useColorScheme() ?? 'light'
   const dispatch = useDispatch()
   const navigation = useNavigation()
   const scrollViewRef = useRef<ScrollView | null>(null)
-  const {isLoading, error, districts, wards, fetchWards} = useLocationDetails()
+  const {areDistrictsLoading, areWardsLoading, error, districts, wards, fetchWards} = useLocationDetails()
 
   const {control, handleSubmit, errors, watch, formState, getValues, setError, setValue, reset} =
     useForm({
@@ -87,8 +88,10 @@ function LocationDetails({route}) {
             <Text style={styles.inputLabel}>
               District <Text style={{color: colors.primary}}>*</Text>
             </Text>
+
             <Dropdown
               label={''}
+              loading={areDistrictsLoading}
               options={districts}
               value={value}
               onSelect={(e: any) => {
@@ -128,6 +131,7 @@ function LocationDetails({route}) {
             label={''}
             options={wards}
             value={value}
+            loading={areWardsLoading}
             onSelect={onChange}
             placeholder={i18n.t('location_ward_dropdown_placeholder')}
             error={formState?.errors?.case_ward?.message}
@@ -201,9 +205,9 @@ function LocationDetails({route}) {
 
   const Separator = () => <View style={styles.lineSeparator} />
 
-  const onSubmit = e => {
-    console.log('Successfully captured data: ', e)
-    navigation.navigate('location_details')
+  const onSubmit = capturedData => {
+    console.log('Successfully captured data: ', capturedData)
+    // navigation.navigate('summary', capturedData + previous data)
   }
 
   const onInvalid = e => {
@@ -287,15 +291,14 @@ function LocationDetails({route}) {
     )
   }
 
-  const Loading = () => {
-    return <ActivityIndicator style={{marginTop: 24}} color={colors.primary} />
-  }
+
+console.log(error);
 
   return (
     <Provider>
-      {isLoading && <Loading />}
+      
       {error && <ErrorView message={error.message} />}
-      {!isLoading && !error && (
+      {!error && (
         <>
           <KeyboardAvoidingView
             behavior={Platform.OS === 'ios' ? 'padding' : 'position'}

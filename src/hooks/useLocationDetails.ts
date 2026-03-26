@@ -19,16 +19,16 @@ type Region = {
 }
 
 export function useLocationDetails() {
-  const [isLoading, setIsLoading] = useState(true)
+  const [areDistrictsLoading, setAreDistrictsLoading] = useState(true)
+  const [areWardsLoading, setAreWardsLoading] = useState(true)
   const [error, setError] = useState<Error>()
   const [districts, setDistricts] = useState<Region[] | undefined>()
   const [wards, setWards] = useState<Region[] | undefined>()
 
   const fetchDistricts = async () => {
     const result: any[] | undefined = await getDistricts()
-    console.log(result);
     
-    setIsLoading(false)
+    setAreDistrictsLoading(false)
     if (!result) {
       setError({message: 'Could not retrieve form parameters.'})
       return
@@ -38,9 +38,9 @@ export function useLocationDetails() {
   }
 
   const fetchWards = async (id: number) => {
-    setIsLoading(true)
+    setAreWardsLoading(true)
     const result: any[] | undefined = await getWards(id)
-    setIsLoading(false)
+    setAreWardsLoading(false)
     if (!result) {
       setError({message: 'Could not retrieve form parameters.'})
       return
@@ -53,7 +53,7 @@ export function useLocationDetails() {
       const cachedDistricts = await getEncryptedData('districts')
       if (cachedDistricts) {
         setDistricts(cachedDistricts)
-        setIsLoading(false)
+        setAreDistrictsLoading(false)
       } else {
         await fetchDistricts()
       }
@@ -62,7 +62,8 @@ export function useLocationDetails() {
   }, [])
 
   return {
-    isLoading,
+    areDistrictsLoading,
+    areWardsLoading,
     error,
     districts,
     wards,

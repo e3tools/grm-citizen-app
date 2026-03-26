@@ -95,7 +95,7 @@ describe('newCaseDetailsService', () => {
   })
 
   describe('Get Issue Sub Types  ', () => {
-    it('should fetch issue sub-components', async () => {
+    it('should fetch issue sub-types', async () => {
       const mockResponse = {data: [{id: 1, name: 'Subtype 1'}]}
       require('../utils/request').default.mockResolvedValue(mockResponse)
       const data = await getIssueSubTypes()
