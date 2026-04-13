@@ -42,12 +42,9 @@ export const getWards = async (id: number) => {
     const response = await request({
       ...requestOptions,
     })
-    console.log(response);
-    
+
     return response?.data ?? undefined
   } catch (error) {
     return undefined
   }
 }
-
-

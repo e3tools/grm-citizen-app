@@ -21,27 +21,45 @@ import {i18n} from '../../../translations/i18n'
 import {colors} from '../../../utils/colors'
 import MESSAGES from '../../../utils/formErrorMessages'
 import globalStyles from '../../../utils/globalStyles'
-import {getEncryptedData, storeEncryptedData} from '../../../utils/storageManager'
+import {
+  getEncryptedData,
+  storeEncryptedData,
+} from '../../../utils/storageManager'
 import styles from '../LocationDetails/LocationDetails.style'
 
-function LocationDetails({ route }) {
-  
+function LocationDetails({route}) {
   const theme = useColorScheme() ?? 'light'
   const dispatch = useDispatch()
   const navigation = useNavigation()
   const scrollViewRef = useRef<ScrollView | null>(null)
-  const {areDistrictsLoading, areWardsLoading, error, districts, wards, fetchWards} = useLocationDetails()
+  const {
+    areDistrictsLoading,
+    areWardsLoading,
+    error,
+    districts,
+    wards,
+    fetchWards,
+  } = useLocationDetails()
 
-  const {control, handleSubmit, errors, watch, formState, getValues, setError, setValue, reset} =
-    useForm({
-      criteriaMode: 'all',
-      defaultValues: {
-        case_district: '',
-        case_ward: '',
-        detailed_location_description: '',
-      },
-      mode: 'all',
-    })
+  const {
+    control,
+    handleSubmit,
+    errors,
+    watch,
+    formState,
+    getValues,
+    setError,
+    setValue,
+    reset,
+  } = useForm({
+    criteriaMode: 'all',
+    defaultValues: {
+      case_district: '',
+      case_ward: '',
+      detailed_location_description: '',
+    },
+    mode: 'all',
+  })
 
   const watchedDistrict = watch('case_district')
 
@@ -59,12 +77,12 @@ function LocationDetails({ route }) {
         }
       }
       loadFormData()
-    }, [reset, fetchWards])
+    }, [reset, fetchWards]),
   )
 
   // Save form data whenever it changes
   useEffect(() => {
-    const subscription = watch((value) => {
+    const subscription = watch(value => {
       storeEncryptedData('locationFormData', value)
     })
     return () => subscription.unsubscribe()
@@ -78,7 +96,6 @@ function LocationDetails({ route }) {
   )
 
   const LocationDistrictDropdown = () => {
-
     return (
       <Controller
         control={control}
@@ -240,7 +257,8 @@ function LocationDetails({ route }) {
           justifyContent: 'center',
           alignItems: 'center',
           paddingHorizontal: 24,
-        }}>
+        }}
+      >
         <View style={{flex: 1}}>
           <Text style={{color: 'white'}}>{message}</Text>
         </View>
@@ -250,7 +268,8 @@ function LocationDetails({ route }) {
               color: colors.primary,
               fontWeight: 'bold',
               fontSize: 18,
-            }}>
+            }}
+          >
             Retry
           </Text>
         </TouchableOpacity>
@@ -267,7 +286,8 @@ function LocationDetails({ route }) {
           justifyContent: 'center',
           alignItems: 'center',
           paddingHorizontal: 24,
-        }}>
+        }}
+      >
         <View style={{alignItems: 'center', marginBottom: 50}}>
           <Text style={{color: colors.secondary}}>
             Oops, something went wrong.
@@ -277,13 +297,15 @@ function LocationDetails({ route }) {
         <TouchableOpacity
           onPress={() => {
             navigation.goBack()
-          }}>
+          }}
+        >
           <Text
             style={{
               color: colors.primary,
               fontWeight: 'bold',
               fontSize: 18,
-            }}>
+            }}
+          >
             Go back
           </Text>
         </TouchableOpacity>
@@ -291,24 +313,24 @@ function LocationDetails({ route }) {
     )
   }
 
-
-console.log(error);
+  console.log(error)
 
   return (
     <Provider>
-      
       {error && <ErrorView message={error.message} />}
       {!error && (
         <>
           <KeyboardAvoidingView
             behavior={Platform.OS === 'ios' ? 'padding' : 'position'}
             style={styles.keyboardAvoidingView}
-            contentContainerStyle={styles.keyboardAvoidingViewContentContainer}>
+            contentContainerStyle={styles.keyboardAvoidingViewContentContainer}
+          >
             <ScrollView
               ref={scrollViewRef}
               style={styles.mainScrollView}
               contentContainerStyle={styles.scrollableContentContainer}
-              keyboardShouldPersistTaps="handled">
+              keyboardShouldPersistTaps="handled"
+            >
               <View style={globalStyles.screenContainer}>
                 <View style={styles.formContainer}>
                   <View>

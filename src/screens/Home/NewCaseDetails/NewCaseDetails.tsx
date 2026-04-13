@@ -249,7 +249,7 @@ function NewCaseDetails({route}) {
           </Text>
           <Text style={[styles.inputSubLabel]}>{i18n.t('case_type')}</Text>
           <Dropdown
-          enableSearch={false}
+            enableSearch={false}
             label={''}
             options={data?.types.results}
             value={value}
@@ -278,7 +278,7 @@ function NewCaseDetails({route}) {
         <View>
           <Text style={[styles.inputSubLabel]}>{i18n.t('case_subtype')}</Text>
           <Dropdown
-          enableSearch={false}
+            enableSearch={false}
             label={''}
             options={data?.subtypes.results}
             value={value}
@@ -307,7 +307,7 @@ function NewCaseDetails({route}) {
         <View>
           <Text style={[styles.inputSubLabel]}>{i18n.t('case_category')}</Text>
           <Dropdown
-          enableSearch={false}
+            enableSearch={false}
             label={''}
             value={value}
             options={data?.categories.results}
@@ -336,7 +336,7 @@ function NewCaseDetails({route}) {
         <View>
           <Text style={[styles.inputSubLabel]}>{i18n.t('case_component')}</Text>
           <Dropdown
-          enableSearch={false}
+            enableSearch={false}
             label={''}
             value={value}
             options={data?.components.results}
@@ -367,7 +367,7 @@ function NewCaseDetails({route}) {
             {i18n.t('case_sub_component')}
           </Text>
           <Dropdown
-          enableSearch={false}
+            enableSearch={false}
             label={''}
             value={value}
             options={data?.subcomponents.results}

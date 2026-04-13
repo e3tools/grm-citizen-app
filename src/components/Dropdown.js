@@ -1,17 +1,17 @@
+import {IconSymbol} from '@/components/ui/icon-symbol'
 import React, {useState} from 'react'
 import {
-  View,
-  Text,
-  TouchableOpacity,
-  Modal,
-  FlatList,
-  StyleSheet,
-  TextInput,
   ActivityIndicator,
+  FlatList,
+  Modal,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
 } from 'react-native'
-import {colors} from '../utils/colors'
 import {i18n} from '../translations/i18n'
-import {IconSymbol} from '@/components/ui/icon-symbol'
+import {colors} from '../utils/colors'
 
 const Dropdown = ({
   label,
@@ -107,7 +107,9 @@ const Dropdown = ({
           activeOpacity={1}
           onPress={() => setIsVisible(false)}
         >
-          <View style={[styles.modalContent, {marginBottom: 0, paddingVertical: 0}]}>
+          <View
+            style={[styles.modalContent, {marginBottom: 0, paddingVertical: 0}]}
+          >
             {enableSearch && (
               <TextInput
                 style={styles.searchInput}
@@ -125,15 +127,13 @@ const Dropdown = ({
             ) : (
               <FlatList
                 data={filteredOptions}
-                keyExtractor={(item, index) =>
-                {
+                keyExtractor={(item, index) => {
                   if (typeof item === 'object' && item.id) {
                     return item.id.toString()
                   }
                   return index.toString()
                 }}
-                renderItem={({ item }) =>
-                {
+                renderItem={({item}) => {
                   const itemValue =
                     typeof item === 'object' && item.id ? item.id : item
                   const itemLabel = typeof item === 'object' ? item.name : item
@@ -141,7 +141,10 @@ const Dropdown = ({
 
                   return (
                     <TouchableOpacity
-                      style={[styles.option, isSelected && styles.selectedOption]}
+                      style={[
+                        styles.option,
+                        isSelected && styles.selectedOption,
+                      ]}
                       onPress={() => handleSelect(item)}
                     >
                       <Text
@@ -240,7 +243,7 @@ const styles = StyleSheet.create({
     borderWidth: 3,
     marginHorizontal: 0,
     marginVertical: 0,
-    padding: 0
+    padding: 0,
   },
   option: {
     flexDirection: 'row',

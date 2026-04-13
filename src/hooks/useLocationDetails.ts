@@ -1,8 +1,5 @@
 import {useEffect, useState} from 'react'
-import {
-  getDistricts,
-  getWards,
-} from '../services/newCaseLocationDetailsService'
+import {getDistricts, getWards} from '../services/newCaseLocationDetailsService'
 import {getEncryptedData, storeEncryptedData} from '../utils/storageManager'
 
 type Error = {
@@ -10,11 +7,11 @@ type Error = {
 }
 
 type Region = {
-  id: number,
-  administrative_level: number,
-  created_date: string,
-  name: string,
-  parent: number,
+  id: number
+  administrative_level: number
+  created_date: string
+  name: string
+  parent: number
   updated_date: string
 }
 
@@ -27,7 +24,7 @@ export function useLocationDetails() {
 
   const fetchDistricts = async () => {
     const result: any[] | undefined = await getDistricts()
-    
+
     setAreDistrictsLoading(false)
     if (!result) {
       setError({message: 'Could not retrieve form parameters.'})

@@ -1,8 +1,5 @@
 import request from '../utils/request'
-import {
-  getDistricts,
-  getWards,
-} from './newCaseLocationDetailsService'
+import {getDistricts, getWards} from './newCaseLocationDetailsService'
 
 jest.mock('../utils/request', () => jest.fn())
 
@@ -60,9 +57,9 @@ describe('newCaseLocationDetailsService', () => {
     const mockRequest = request as jest.MockedFunction<any>
     mockRequest.mockResolvedValueOnce({
       data: [
-        { id: 11, name: 'Ward 1', administrative_level: 2 },
-        { id: 12, name: 'Ward 2', administrative_level: 2 },
-      ]
+        {id: 11, name: 'Ward 1', administrative_level: 2},
+        {id: 12, name: 'Ward 2', administrative_level: 2},
+      ],
     })
 
     const result = await getWards(1)
@@ -84,4 +81,3 @@ describe('newCaseLocationDetailsService', () => {
     expect(result).toBeUndefined()
   })
 })
-

@@ -36,7 +36,11 @@ export default function CustomCamera({
         <Text style={styles.message}>
           We need your permission to show the camera
         </Text>
-        <Button color={colors.primary} onPress={requestPermission} title="grant permission" />
+        <Button
+          color={colors.primary}
+          onPress={requestPermission}
+          title="grant permission"
+        />
       </View>
     )
   }
@@ -167,7 +171,7 @@ export const styles = StyleSheet.create({
     paddingBottom: 10,
     color: 'white',
     fontWeight: '800',
-    fontSize: 14
+    fontSize: 14,
   },
   camera: {
     flex: 1,
