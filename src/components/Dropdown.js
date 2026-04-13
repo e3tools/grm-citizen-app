@@ -9,6 +9,7 @@ import {
 } from 'react-native'
 import {colors} from '../utils/colors'
 import {i18n} from '../translations/i18n'
+import {IconSymbol} from '@/components/ui/icon-symbol'
 
 const Dropdown = ({
   label,
@@ -68,7 +69,12 @@ const Dropdown = ({
             {displayValue || placeholder}
           </Text>
         </View>
-        <Text style={styles.arrow}>▼</Text>
+        <IconSymbol
+          name={'chevron.right'}
+          size={20}
+          color={colors.darkGrey}
+          style={{transform: [{rotate: isVisible ? '0deg' : '90deg'}]}}
+        />
       </TouchableOpacity>
       {error && <Text style={styles.errorText}>{error}</Text>}
 
@@ -132,7 +138,6 @@ const styles = StyleSheet.create({
     fontWeight: '500',
     marginBottom: 8,
     color: '#333',
-    fontFamily: 'Poppins_500Medium',
   },
   dropdown: {
     flexDirection: 'row',
@@ -153,7 +158,6 @@ const styles = StyleSheet.create({
     flex: 1,
     fontSize: 16,
     color: colors.darkGrey || '#333333',
-    fontFamily: 'Poppins_400Regular',
   },
   placeholder: {
     color: colors.secondary || '#999999',
@@ -167,7 +171,6 @@ const styles = StyleSheet.create({
     color: '#DC2626',
     fontSize: 12,
     marginTop: 4,
-    fontFamily: 'Poppins_400Regular',
   },
   modalOverlay: {
     flex: 1,
@@ -197,7 +200,6 @@ const styles = StyleSheet.create({
   optionText: {
     fontSize: 16,
     color: '#333333',
-    fontFamily: 'Poppins_400Regular',
     flex: 1,
   },
   selectedOptionText: {

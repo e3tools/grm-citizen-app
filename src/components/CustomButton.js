@@ -10,6 +10,9 @@ const CustomButton = ({
   backgroundColor,
   iconName,
   onPress,
+  borderRadius = 10,
+  minWidth = 200,
+  style = {},
 }) => {
   const buttonStyle = {
     alignSelf: 'center',
@@ -17,12 +20,12 @@ const CustomButton = ({
     alignItems: 'center',
     flexDirection: 'row',
     height: 48,
-    minWidth: 200,
+    minWidth,
     borderWidth: 0,
-    borderRadius: 10,
+    borderRadius,
     backgroundColor: backgroundColor || colors.primary || '#24c38b',
     marginTop: 20,
-    paddingHorizontal: 20,
+    ...style,
   }
 
   const textStyle = {

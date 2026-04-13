@@ -9,6 +9,8 @@ const CheckboxCard = ({
   controllerValue,
   onValueUpdate,
   description,
+  canUncheck = true,
+  shadow = true,
 }) => {
   const [value, setValue] = React.useState(currentValue)
 
@@ -20,10 +22,13 @@ const CheckboxCard = ({
     <TouchableOpacity
       onPress={() => {
         const newValue = value === controllerValue ? null : controllerValue
+        if (!canUncheck && !newValue) {
+          return
+        }
         setValue(newValue)
         onValueUpdate(newValue)
       }}
-      style={styles.card}
+      style={[styles.card, {elevation: shadow ? 5 : 0}]}
     >
       <View
         style={[
@@ -43,7 +48,9 @@ const CheckboxCard = ({
               <Text style={styles.title} numberOfLines={2}>
                 {label}
               </Text>
-              <Text style={styles.subtitle}>{description}</Text>
+              {description && (
+                <Text style={styles.subtitle}>{description}</Text>
+              )}
             </View>
           </View>
         </View>
@@ -72,10 +79,15 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     alignItems: 'center',
   },
+  unchecked: {
+    borderWidth: 1,
+    borderRadius: 8,
+    borderColor: colors.lightgray,
+  },
   checked: {
     backgroundColor: colors.primary200,
     borderColor: colors.primary,
-    borderWidth: 2,
+    borderWidth: 1,
     borderRadius: 8,
   },
   leftSection: {

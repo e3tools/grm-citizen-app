@@ -1,11 +1,21 @@
-import * as React from 'react'
-import {View, Text, Dimensions, StyleSheet} from 'react-native'
-import {IconButton} from 'react-native-paper'
-const {width} = Dimensions.get('screen')
 import {Audio} from 'expo-av'
-import {useState, useEffect} from 'react'
+import * as React from 'react'
+import {useEffect, useState} from 'react'
+import {
+  Dimensions,
+  StyleProp,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+  ViewStyle,
+} from 'react-native'
+import {IconButton} from 'react-native-paper'
 import {i18n} from '../translations/i18n'
 import {colors} from '../utils/colors'
+import {IconSymbol} from '@/components/ui/icon-symbol'
+
+const {width} = Dimensions.get('screen')
 
 const milliSecondToHHMMSS = value => {
   const milliSecond = Number(value / 1000)
@@ -19,26 +29,37 @@ const milliSecondToHHMMSS = value => {
   return `${hrs}${mins}${scnds}`
 }
 
-const RecordingCard = ({mode = 'full', initialURI}) => {
-  const [recording, setRecording] = useState(null)
-  const [recordingURI, setRecordingURI] = useState(null)
+type RecordingCardProps = {
+  mode?: 'full' | 'playback'
+  initialURI: string
+  cardContainerStyle?: StyleProp<ViewStyle>
+  onRemove?: () => void
+}
+
+const RecordingCard: React.FC<RecordingCardProps> = ({
+  mode = 'full',
+  initialURI,
+  cardContainerStyle = {width: width - 45},
+  onRemove,
+}) => {
+  const [recordingURI, setRecordingURI] = useState<string | null>(null)
   const [current, setCurrent] = useState('00:00')
   const [duration, setDuration] = useState('00:00')
-  const [sound, setSound] = useState(null)
+  const [sound, setSound] = useState<Audio.Sound | null>(null)
   const [playing, setPlaying] = useState(false)
   const [isRecording, setIsRecording] = useState(false)
 
-  const onPlaybackStatusUpdate = playbackStatus => {
+  const onPlaybackStatusUpdate = (playbackStatus: any) => {
     if (playbackStatus.didJustFinish) {
       setPlaying(false)
-      setCurrent(duration) // Reset to duration after playback
-    } else {
+      setCurrent(duration)
+    } else if (playbackStatus.positionMillis !== undefined) {
       setCurrent(milliSecondToHHMMSS(playbackStatus.positionMillis))
     }
   }
 
   useEffect(() => {
-    let tempSound
+    let tempSound: Audio.Sound | undefined
     async function loadDuration() {
       if (mode === 'playback' && initialURI) {
         setRecordingURI(initialURI)
@@ -53,7 +74,7 @@ const RecordingCard = ({mode = 'full', initialURI}) => {
             setDuration(formatted)
             setCurrent(formatted)
           }
-        } catch (e) {
+        } catch {
           setDuration('00:00')
           setCurrent('00:00')
         } finally {
@@ -68,8 +89,8 @@ const RecordingCard = ({mode = 'full', initialURI}) => {
   useEffect(() => {
     return () => {
       if (sound) sound.unloadAsync()
-      if (recording) recording.stopAndUnloadAsync()
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const playRecording = async () => {
@@ -97,14 +118,18 @@ const RecordingCard = ({mode = 'full', initialURI}) => {
     if (sound) {
       await sound.stopAsync()
       setPlaying(false)
-      setCurrent(duration) // Show duration when paused
+      setCurrent(duration)
     }
   }
 
   return (
-    <View style={[styles.post]}>
+    <View style={[styles.cardContainer, cardContainerStyle]}>
       <View
-        style={[styles.play, styles.alignCenter, {flexDirection: 'column'}]}
+        style={[
+          styles.iconContainer,
+          styles.alignCenter,
+          {flexDirection: 'column'},
+        ]}
       >
         {recordingURI && !playing && (
           <IconButton
@@ -112,6 +137,7 @@ const RecordingCard = ({mode = 'full', initialURI}) => {
             color={colors.primary}
             icon="play"
             onPress={playRecording}
+            accessibilityLabel={i18n.t('play_recording')}
           />
         )}
         {recordingURI && playing && (
@@ -120,6 +146,7 @@ const RecordingCard = ({mode = 'full', initialURI}) => {
             color={colors.primary}
             icon="pause"
             onPress={pausePlayback}
+            accessibilityLabel={i18n.t('pause_playback')}
           />
         )}
       </View>
@@ -138,6 +165,11 @@ const RecordingCard = ({mode = 'full', initialURI}) => {
           </Text>
         )}
       </View>
+      {onRemove && (
+        <TouchableOpacity onPress={onRemove}>
+          <IconSymbol name={'xmark'} color={colors.secondary} />
+        </TouchableOpacity>
+      )}
       <View />
     </View>
   )
@@ -152,10 +184,11 @@ const styles = StyleSheet.create({
     color: 'white',
     textAlign: 'center',
   },
-  play: {
+  iconContainer: {
     borderWidth: 0.5,
     borderColor: '#c0c0c0',
     width: '15%',
+    height: '100%',
     color: colors.primary,
   },
   remove: {
@@ -185,16 +218,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  posts: {
-    display: 'flex',
-    flexDirection: 'column',
-  },
-  post: {
-    width: width - 45,
+  cardContainer: {
     borderWidth: 1,
+    alignItems: 'center',
     borderRadius: 8,
     borderColor: '#c0c0c0',
-    display: 'flex',
     flex: 1,
     flexDirection: 'row',
     justifyContent: 'space-between',

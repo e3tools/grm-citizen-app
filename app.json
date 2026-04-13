@@ -39,6 +39,16 @@
             "backgroundColor": "#000000"
           }
         }
+      ],
+      [
+        "@react-native-community/datetimepicker",
+        {
+          "android": {
+            "datePicker": {
+              "colorAccent": {"light": "#24c38b"}
+            }
+          }
+        }
       ]
     ],
     "experiments": {

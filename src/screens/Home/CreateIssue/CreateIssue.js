@@ -9,6 +9,7 @@ import CheckboxCard from '../../../components/CheckboxCard'
 import posed from 'react-native-pose'
 import {Feather} from '@expo/vector-icons'
 import Stepper from '../../../components/Stepper'
+import {useNavigation} from '@react-navigation/native'
 
 const iconConfig = {
   focused: {
@@ -33,6 +34,7 @@ function CreateIssue() {
     citizen_group_2: true,
   })
   const [step, setStep] = useState(1)
+  const navigation = useNavigation()
 
   const updateConfidentiality = value => {
     setConfidentialityValue(value)
@@ -167,6 +169,7 @@ function CreateIssue() {
               textColor="white"
               label={saving ? i18n.t('saving') : i18n.t('save_and_continue')}
               disabled={saving}
+              onPress={() => navigation.navigate('new_case_details')}
             />
           </View>
         </View>

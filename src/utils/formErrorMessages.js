@@ -1,5 +1,8 @@
+import {i18n} from '../translations/i18n'
+
 const MESSAGES = {
-  required: 'This field is required',
+  required: i18n.t('this_field_is_required'),
+  // required: 'This field is required',
   min: min => `This value should be above ${min}`,
   max: max => `This value should be below ${max}`,
   minLength: min =>

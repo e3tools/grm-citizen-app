@@ -13,6 +13,8 @@ A React Native mobile application built with Expo for managing grievances and ci
 - [CI/CD](#cicd)
 - [Configuration](#configuration)
 
+<a id="project-structure"></a>
+
 ## 📁 Project Structure
 
 ```
@@ -56,6 +58,8 @@ grm-citizen-app/
 └── package.json               # Dependencies and scripts
 ```
 
+<a id="getting-started"></a>
+
 ## 🚀 Getting Started
 
 ### Prerequisites
@@ -93,6 +97,7 @@ grm-citizen-app/
    ```bash
    npm run prepare
    ```
+   <a id="development"></a>
 
 ## 💻 Development
 
@@ -135,6 +140,8 @@ npm run build:android:local     # Build Android APK locally
 npm run build:android:bundle    # Build Android AAB locally
 ```
 
+<a id="building"></a>
+
 ## 🏗️ Building
 
 ### Local Android Build
@@ -163,6 +170,8 @@ The app automatically builds on every push to `main` branch via GitHub Actions.
 - AAB: `android/app/build/outputs/bundle/release/app-release.aab`
 
 Download from: **GitHub Actions → Workflow run → Artifacts**
+
+<a id="code-quality"></a>
 
 ## 🎨 Code Quality
 
@@ -194,6 +203,8 @@ npm run lint:fix      # Auto-fix linting errors
 ```
 
 **Configuration:** `eslint.config.js`
+
+<a id="testing"></a>
 
 ## 🧪 Testing
 
@@ -233,6 +244,8 @@ npm run test:ci
 
 ```
 
+<a id="cicd"></a>
+
 ## 🔄 CI/CD
 
 GitHub Actions automatically runs on every push and pull request:
@@ -250,6 +263,8 @@ GitHub Actions automatically runs on every push and pull request:
 ### Manual Trigger
 
 You can manually trigger builds from: **Actions → Build React Native App → Run workflow**
+
+<a id="configuration"></a>
 
 ## ⚙️ Configuration
 

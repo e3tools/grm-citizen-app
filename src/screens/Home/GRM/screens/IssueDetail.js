@@ -169,7 +169,9 @@ const IssueDetail = () => {
                     color: colors.primary,
                   }}
                   onPress={() =>
-                    navigation.navigate('All issue attachments', {id: issue.id})
+                    navigation.navigate('All issue attachments', {
+                      id: issue.id,
+                    })
                   }
                 >
                   {i18n.t('view_all')}
@@ -206,7 +208,11 @@ const IssueDetail = () => {
                 }}
               >
                 <Text
-                  style={{fontSize: 16, color: '#747985', textAlign: 'center'}}
+                  style={{
+                    fontSize: 16,
+                    color: '#747985',
+                    textAlign: 'center',
+                  }}
                 >
                   {i18n.t('no_attachments_yet')}
                 </Text>
@@ -256,7 +262,11 @@ const IssueDetail = () => {
                 }}
               >
                 <Text
-                  style={{fontSize: 16, color: '#747985', textAlign: 'center'}}
+                  style={{
+                    fontSize: 16,
+                    color: '#747985',
+                    textAlign: 'center',
+                  }}
                 >
                   {i18n.t('no_comments_yet')}
                 </Text>

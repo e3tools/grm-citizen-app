@@ -41,7 +41,10 @@ function Login({route}) {
 
   const [value, setValue] = React.useState('')
   const ref = useBlurOnFulfill({value, cellCount: CELL_COUNT})
-  const [props, getCellOnLayoutHandler] = useClearByFocusCell({value, setValue})
+  const [props, getCellOnLayoutHandler] = useClearByFocusCell({
+    value,
+    setValue,
+  })
 
   const onLogin = async data => {
     setLoading(true)

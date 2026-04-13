@@ -1,5 +1,3 @@
-import React from 'react'
-
 import {Feather} from '@expo/vector-icons'
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs'
 import {createStackNavigator} from '@react-navigation/stack'
@@ -15,6 +13,7 @@ import AllIssues from './GRM/screens/AllIssues'
 import IssueDetail from './GRM/screens/IssueDetail'
 import AllIssueAttachments from './GRM/screens/AllIssueAttachments'
 import CreateIssue from './CreateIssue'
+import NewCaseDetails from './NewCaseDetails/NewCaseDetails'
 
 const iconConfig = {
   focused: {
@@ -33,7 +32,11 @@ const customHeaderOptions = label => ({
         <View>
           <Text>{label}</Text>
           <Text
-            style={{color: colors.secondary, fontSize: 12, textAlign: 'center'}}
+            style={{
+              color: colors.secondary,
+              fontSize: 12,
+              textAlign: 'center',
+            }}
           >
             v {version}
           </Text>
@@ -78,10 +81,14 @@ const customHeaderLeftIcon = ({navigation, pageToNavigate}) => ({
     <View style={styles.iconContainer}>
       <Pressable
         onPress={() => {
-          navigation.reset({
-            index: 0,
-            routes: [{name: pageToNavigate}],
-          })
+          if (pageToNavigate) {
+            navigation.reset({
+              index: 0,
+              routes: [{name: pageToNavigate}],
+            })
+          } else {
+            navigation.goBack()
+          }
         }}
       >
         <Icon
@@ -159,8 +166,19 @@ function DashboardStackScreen() {
         })}
       />
       <HomeStack.Screen
-        name="Issue create"
+        name="issue_create"
         component={CreateIssue}
+        options={({navigation, route}) => ({
+          ...customHeaderOptions(i18n.t('create_issue')),
+          ...customHeaderLeftIcon({
+            navigation,
+            route,
+          }),
+        })}
+      />
+      <HomeStack.Screen
+        name={'new_case_details'}
+        component={NewCaseDetails}
         options={({navigation, route}) => ({
           ...customHeaderOptions(i18n.t('create_issue')),
           ...customHeaderLeftIcon({
@@ -174,7 +192,6 @@ function DashboardStackScreen() {
 }
 
 function HomeRouter() {
-  a
   return (
     <Tab.Navigator
       tabBarOptions={{

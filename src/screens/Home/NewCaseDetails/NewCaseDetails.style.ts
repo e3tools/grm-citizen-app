@@ -1,0 +1,177 @@
+import {colors} from '../../../utils/colors'
+import {StyleSheet} from 'react-native'
+
+export default StyleSheet.create({
+  containerView: {
+    flex: 1,
+    paddingTop: 10,
+  },
+  errorText: {
+    marginTop: 5,
+    color: '#DC2626',
+    fontSize: 12,
+  },
+  addPhotoButton: {
+    borderStyle: 'dashed',
+    borderRadius: 5,
+    borderWidth: 2,
+    borderColor: colors.lightgray,
+    width: '46%',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  addMediaContainer: {
+    flexDirection: 'row',
+    width: '100%',
+    height: 120,
+    justifyContent: 'space-between',
+    marginBottom: 25,
+  },
+  mediaPreviewCardLeftContent: {
+    backgroundColor: colors.white,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    flex: 1,
+  },
+  mediaPreviewCardIconContainer: {
+    backgroundColor: colors.primary200,
+    borderRadius: 5,
+    padding: 5,
+    marginRight: 10,
+  },
+  lineSeparator: {
+    marginTop: 20,
+    width: '100%',
+    height: 1,
+    backgroundColor: colors.lightgray,
+  },
+  cameraModal: {
+    height: '100%',
+    alignItems: 'center',
+    marginTop: 0,
+    paddingTop: 0,
+  },
+  keyboardAvoidingViewContentContainer: {
+    flex: 1,
+    backgroundColor: '#f8fafc',
+  },
+  mainScrollView: {
+    backgroundColor: '#f8fafc',
+    flex: 1,
+    paddingBottom: 60,
+  },
+  scrollableContentContainer: {
+    flexGrow: 1,
+    paddingTop: 5,
+    paddingBottom: 20,
+  },
+  otherFilesContainer: {
+    borderStyle: 'dashed',
+    borderRadius: 5,
+    borderWidth: 2,
+    height: 200,
+    borderColor: colors.lightgray,
+    width: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  mediaPreviewCardContainer: {
+    backgroundColor: colors.white,
+    padding: 16,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    borderWidth: 1,
+    borderRadius: 5,
+    borderColor: colors.lightgray,
+    marginVertical: 7,
+  },
+  stepTitle: {
+    fontSize: 25,
+    fontWeight: 'bold',
+  },
+  loginFormTextInput: {
+    borderRadius: 10,
+    backgroundColor: 'white',
+    fontSize: 14,
+    color: '#707070',
+    paddingVertical: 10,
+    height: 40,
+    borderColor: colors.lightgray,
+    borderWidth: 1,
+  },
+  loginFormTextIcon: {
+    marginTop: 27,
+  },
+  caseDetailFormTextInput: {
+    borderRadius: 10,
+    backgroundColor: 'white',
+    fontSize: 14,
+    color: '#707070',
+    borderColor: colors.lightgray,
+    borderWidth: 1,
+  },
+  caseDetailFormTextIcon: {
+    marginTop: 27,
+  },
+  inputLabel: {
+    fontSize: 16,
+    marginBottom: 15,
+    fontWeight: 'bold',
+    width: '100%',
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  inputSubLabel: {
+    paddingBottom: 10,
+  },
+  textHint: {
+    fontFamily: 'Poppins_400Regular',
+    fontSize: 9,
+    fontWeight: 'bold',
+    fontStyle: 'normal',
+    letterSpacing: 0,
+    textAlign: 'left',
+    color: '#707070',
+  },
+  hintContainer: {
+    alignItems: 'center',
+  },
+  formContainer: {},
+  loginLinkContainer: {
+    width: '100%',
+    alignItems: 'center',
+    marginTop: 20,
+  },
+  loginText: {
+    fontSize: 14,
+    color: colors.darkGrey,
+  },
+  loginLink: {
+    color: colors.primary,
+    fontWeight: 'bold',
+    marginLeft: 5,
+  },
+
+  fieldContainer: {marginBottom: 16},
+  fieldPlaceholderText: {
+    fontWeight: '500',
+    color: colors.secondary,
+  },
+  addOtherFilesLabel: {
+    fontSize: 16,
+    color: colors.darkGrey,
+    marginBottom: 8,
+    fontWeight: 'bold',
+  },
+  addAttachmentsContainer: {marginTop: 36, marginBottom: 38},
+  mediaPreviewCardSubtitle: {
+    color: colors.secondary,
+    fontWeight: '500',
+  },
+  descriptionInputContent: {height: 160, paddingRight: 35},
+  keyboardAvoidingView: {flex: 1, backgroundColor: '#f8fafc'},
+})

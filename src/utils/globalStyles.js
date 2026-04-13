@@ -1,4 +1,4 @@
-import {StyleSheet, Platform, Dimensions} from 'react-native'
+import {Dimensions, Platform, StyleSheet} from 'react-native'
 import {getStatusBarHeight} from 'react-native-iphone-x-helper'
 
 export const screenHeight = Dimensions.get('window').height
@@ -12,6 +12,12 @@ export const shadow = {
   shadowRadius: 2.62,
 
   elevation: 4,
+}
+
+const screenContainer = {
+  flex: 1,
+  justifyContent: 'space-between',
+  paddingHorizontal: 30,
 }
 
 const shadowless = {
@@ -43,6 +49,7 @@ export default StyleSheet.create({
     ...shadowless,
     backgroundColor: '#142695',
   },
+  screenContainer,
   tabHeader: {
     ...shadowless,
     backgroundColor: '#36429f',
