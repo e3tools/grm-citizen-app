@@ -2,8 +2,7 @@ import Dropdown from '@/src/components/Dropdown'
 import Stepper from '@/src/components/Stepper'
 import {useColorScheme} from '@/src/hooks/use-color-scheme'
 import {useLocationDetails} from '@/src/hooks/useLocationDetails'
-import {useNavigation} from '@react-navigation/native'
-import {useFocusEffect} from '@react-navigation/native'
+import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import React, {useEffect, useRef} from 'react'
 import {Controller, useForm} from 'react-hook-form'
 import {
@@ -13,8 +12,9 @@ import {
   Text,
   TouchableOpacity,
   View,
+  ViewStyle,
 } from 'react-native'
-import {ActivityIndicator, Provider, TextInput} from 'react-native-paper'
+import {Provider, TextInput} from 'react-native-paper'
 import {useDispatch} from 'react-redux'
 import CustomButton from '../../../components/CustomButton'
 import {i18n} from '../../../translations/i18n'
@@ -23,11 +23,18 @@ import MESSAGES from '../../../utils/formErrorMessages'
 import globalStyles from '../../../utils/globalStyles'
 import {
   getEncryptedData,
+  removeEncryptedValue,
   storeEncryptedData,
 } from '../../../utils/storageManager'
 import styles from '../LocationDetails/LocationDetails.style'
 
-function LocationDetails({route}) {
+type LocationDetailsFormValues = {
+  case_district: string
+  detailed_location_description: string
+  [field: string]: any
+}
+
+function LocationDetails({route}: {route?: any}) {
   const theme = useColorScheme() ?? 'light'
   const dispatch = useDispatch()
   const navigation = useNavigation()
@@ -35,33 +42,64 @@ function LocationDetails({route}) {
   const {
     areDistrictsLoading,
     areWardsLoading,
+    areWardChildrenLoading,
     error,
     districts,
-    wards,
+    wardLevels,
     fetchWards,
+    fetchWardChildren,
+    clearWardLevelsFrom,
   } = useLocationDetails()
 
   const {
     control,
     handleSubmit,
-    errors,
     watch,
     formState,
     getValues,
     setError,
     setValue,
     reset,
-  } = useForm({
+  } = useForm<LocationDetailsFormValues>({
     criteriaMode: 'all',
     defaultValues: {
       case_district: '',
-      case_ward: '',
       detailed_location_description: '',
     },
     mode: 'all',
   })
 
   const watchedDistrict = watch('case_district')
+
+  const clearWardFieldsAfter = (level: number) => {
+    const values = getValues()
+    Object.keys(values)
+      .filter(key => key.startsWith('case_ward_'))
+      .forEach(key => {
+        const index = Number(key.replace('case_ward_', ''))
+        if (!Number.isNaN(index) && index > level) {
+          setValue(key, '')
+        }
+      })
+  }
+
+  const loadSavedWardLevels = async (savedData: LocationDetailsFormValues) => {
+    if (!savedData?.case_district) {
+      return
+    }
+
+    await fetchWards(Number(savedData.case_district))
+
+    let level = 0
+    while (savedData[`case_ward_${level}`]) {
+      const selectedId = Number(savedData[`case_ward_${level}`])
+      if (Number.isNaN(selectedId)) {
+        break
+      }
+      await fetchWardChildren(selectedId, level)
+      level += 1
+    }
+  }
 
   // Load persisted form data when screen comes into focus
   useFocusEffect(
@@ -70,14 +108,11 @@ function LocationDetails({route}) {
         const savedData = await getEncryptedData('locationFormData')
         if (savedData) {
           reset(savedData)
-          // If district is saved, fetch wards
-          if (savedData.case_district) {
-            fetchWards(savedData.case_district)
-          }
+          await loadSavedWardLevels(savedData)
         }
       }
       loadFormData()
-    }, [reset, fetchWards]),
+    }, [reset, fetchWards, fetchWardChildren]),
   )
 
   // Save form data whenever it changes
@@ -91,7 +126,9 @@ function LocationDetails({route}) {
   const Dropdowns = () => (
     <>
       <LocationDistrictDropdown />
-      {watchedDistrict && <LocationWardDropdown />}
+      {wardLevels.map((options, index) => (
+        <LocationWardDropdown key={index} level={index} options={options} />
+      ))}
     </>
   )
 
@@ -99,7 +136,6 @@ function LocationDetails({route}) {
     return (
       <Controller
         control={control}
-        formState={formState}
         render={({field: {onChange, value}}) => (
           <View>
             <Text style={styles.inputLabel}>
@@ -109,12 +145,13 @@ function LocationDetails({route}) {
             <Dropdown
               label={''}
               loading={areDistrictsLoading}
-              options={districts}
+              options={districts as any}
+              customOptionLabel={'hierarchical_name'}
               value={value}
               onSelect={(e: any) => {
                 console.log(e)
                 onChange(e)
-                setValue('case_ward', '')
+                clearWardFieldsAfter(-1)
                 fetchWards(e)
               }}
               placeholder={i18n.t('select_location_district')}
@@ -134,43 +171,55 @@ function LocationDetails({route}) {
     )
   }
 
-  const LocationWardDropdown = () => (
-    <Controller
-      control={control}
-      formState={formState}
-      render={({field: {onChange, value}}) => (
-        <View>
-          <Text style={styles.inputLabel}>
-            {i18n.t('location_ward_dropdown')}{' '}
-            <Text style={{color: colors.primary}}>*</Text>
-          </Text>
-          <Dropdown
-            label={''}
-            options={wards}
-            value={value}
-            loading={areWardsLoading}
-            onSelect={onChange}
-            placeholder={i18n.t('location_ward_dropdown_placeholder')}
-            error={formState?.errors?.case_ward?.message}
-            optional={false}
-            enableSearch={false}
-          />
-        </View>
-      )}
-      name="case_ward"
-      rules={{
-        required: {
-          value: true,
-          message: MESSAGES.required,
-        },
-      }}
-    />
-  )
+  const LocationWardDropdown = ({
+    level,
+    options,
+  }: {
+    level: number
+    options: any[]
+  }) => {
+    const fieldName = `case_ward_${level}`
+    return (
+      <Controller
+        control={control}
+        render={({field: {onChange, value}}) => (
+          <View>
+            <Text style={styles.inputLabel}>
+              {i18n.t('location_ward_dropdown')}{' '}
+              <Text style={{color: colors.primary}}>*</Text>
+            </Text>
+            <Dropdown
+              label={''}
+              options={options as any}
+              value={value}
+              customOptionLabel="hierarchical_name"
+              loading={level === 0 ? areWardsLoading : areWardChildrenLoading}
+              onSelect={(e: any) => {
+                onChange(e)
+                clearWardFieldsAfter(level)
+                fetchWardChildren(Number(e), level)
+              }}
+              placeholder={i18n.t('location_ward_dropdown_placeholder')}
+              error={formState?.errors?.[fieldName]?.message}
+              optional={false}
+              enableSearch={false}
+            />
+          </View>
+        )}
+        name={fieldName}
+        rules={{
+          required: {
+            value: false,
+            message: MESSAGES.required,
+          },
+        }}
+      />
+    )
+  }
 
   const DescriptionInput = () => (
     <Controller
       control={control}
-      formState={formState}
       render={({field: {onChange, onBlur, value}}) => (
         <View style={{marginTop: 16}}>
           <View style={styles.inputLabel}>
@@ -222,12 +271,13 @@ function LocationDetails({route}) {
 
   const Separator = () => <View style={styles.lineSeparator} />
 
-  const onSubmit = capturedData => {
+  const onSubmit = (capturedData: LocationDetailsFormValues) => {
     console.log('Successfully captured data: ', capturedData)
+    removeEncryptedValue('locationFormData')
     // navigation.navigate('summary', capturedData + previous data)
   }
 
-  const onInvalid = e => {
+  const onInvalid = (e: any) => {
     console.error('Invalid data. Reason: ', e)
   }
 
@@ -331,7 +381,7 @@ function LocationDetails({route}) {
               contentContainerStyle={styles.scrollableContentContainer}
               keyboardShouldPersistTaps="handled"
             >
-              <View style={globalStyles.screenContainer}>
+              <View style={globalStyles.screenContainer as ViewStyle}>
                 <View style={styles.formContainer}>
                   <View>
                     <Stepper currentStep={3} numberOfSteps={4} />

@@ -13,17 +13,20 @@ type Region = {
   name: string
   parent: number
   updated_date: string
+  hierarchical_name: string
 }
 
 export function useLocationDetails() {
   const [areDistrictsLoading, setAreDistrictsLoading] = useState(true)
-  const [areWardsLoading, setAreWardsLoading] = useState(true)
+  const [areWardsLoading, setAreWardsLoading] = useState(false)
+  const [areWardChildrenLoading, setAreWardChildrenLoading] = useState(false)
   const [error, setError] = useState<Error>()
   const [districts, setDistricts] = useState<Region[] | undefined>()
-  const [wards, setWards] = useState<Region[] | undefined>()
+  const [wardLevels, setWardLevels] = useState<Region[][]>([])
 
   const fetchDistricts = async () => {
     const result: any[] | undefined = await getDistricts()
+    console.log(result)
 
     setAreDistrictsLoading(false)
     if (!result) {
@@ -36,13 +39,34 @@ export function useLocationDetails() {
 
   const fetchWards = async (id: number) => {
     setAreWardsLoading(true)
+    setWardLevels([])
     const result: any[] | undefined = await getWards(id)
     setAreWardsLoading(false)
     if (!result) {
       setError({message: 'Could not retrieve form parameters.'})
       return
     }
-    setWards(result)
+    setWardLevels([result])
+  }
+
+  const clearWardLevelsFrom = (level: number) => {
+    setWardLevels(prev => prev.slice(0, level + 1))
+  }
+
+  const fetchWardChildren = async (id: number, level: number) => {
+    setAreWardChildrenLoading(true)
+    const result: any[] | undefined = await getWards(id)
+    setAreWardChildrenLoading(false)
+    if (!result || result.length === 0) {
+      setWardLevels(prev => prev.slice(0, level + 1))
+      return
+    }
+
+    setWardLevels(prev => {
+      const next = prev.slice(0, level + 1)
+      next[level + 1] = result
+      return next
+    })
   }
 
   useEffect(() => {
@@ -61,9 +85,12 @@ export function useLocationDetails() {
   return {
     areDistrictsLoading,
     areWardsLoading,
+    areWardChildrenLoading,
     error,
     districts,
-    wards,
+    wardLevels,
     fetchWards,
+    fetchWardChildren,
+    clearWardLevelsFrom,
   }
 }

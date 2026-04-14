@@ -21,6 +21,7 @@ const Dropdown = ({
   placeholder = 'Select an option',
   error,
   optional,
+  customOptionLabel = 'name',
   enableSearch = true,
   loading = false,
 }) => {
@@ -136,7 +137,10 @@ const Dropdown = ({
                 renderItem={({item}) => {
                   const itemValue =
                     typeof item === 'object' && item.id ? item.id : item
-                  const itemLabel = typeof item === 'object' ? item.name : item
+                  const itemLabel =
+                    typeof item === 'object'
+                      ? (item[customOptionLabel] ?? item.name)
+                      : item
                   const isSelected = itemValue === value
 
                   return (
