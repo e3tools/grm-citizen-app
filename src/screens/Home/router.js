@@ -1,20 +1,21 @@
-import {Feather} from '@expo/vector-icons'
-import {createBottomTabNavigator} from '@react-navigation/bottom-tabs'
-import {createStackNavigator} from '@react-navigation/stack'
-import {Platform, Pressable, StyleSheet, Text, View} from 'react-native'
-import {Icon} from 'react-native-elements'
+import { Feather } from '@expo/vector-icons'
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
+import { createStackNavigator } from '@react-navigation/stack'
+import { Platform, Pressable, StyleSheet, Text, View } from 'react-native'
+import { Icon } from 'react-native-elements'
 import posed from 'react-native-pose'
-import {version} from '../../../package.json'
-import {i18n} from '../../translations/i18n'
-import {colors} from '../../utils/colors'
-import Home from './GRM/screens/Home'
-import Profile from './Profile'
-import AllIssues from './GRM/screens/AllIssues'
-import IssueDetail from './GRM/screens/IssueDetail'
-import AllIssueAttachments from './GRM/screens/AllIssueAttachments'
+import { version } from '../../../package.json'
+import { i18n } from '../../translations/i18n'
+import { colors } from '../../utils/colors'
 import CreateIssue from './CreateIssue'
-import NewCaseDetails from './NewCaseDetails/NewCaseDetails'
+import ExistingCaseDetails from './ExistingCaseDetails'
+import AllIssueAttachments from './GRM/screens/AllIssueAttachments'
+import AllIssues from './GRM/screens/AllIssues'
+import Home from './GRM/screens/Home'
+import IssueDetail from './GRM/screens/IssueDetail'
 import LocationDetails from './LocationDetails/LocationDetails'
+import NewCaseDetails from './NewCaseDetails/NewCaseDetails'
+import Profile from './Profile'
 
 const iconConfig = {
   focused: {
@@ -37,8 +38,7 @@ const customHeaderOptions = label => ({
               color: colors.secondary,
               fontSize: 12,
               textAlign: 'center',
-            }}
-          >
+            }}>
             v {version}
           </Text>
         </View>
@@ -64,8 +64,7 @@ const customHeaderRightIcon = ({navigation}) => ({
       <Pressable
         onPress={() => {
           navigation.navigate('SearchBarGrm')
-        }}
-      >
+        }}>
         <Icon
           type="ionicon"
           color={colors.primary}
@@ -90,8 +89,7 @@ const customHeaderLeftIcon = ({navigation, pageToNavigate}) => ({
           } else {
             navigation.goBack()
           }
-        }}
-      >
+        }}>
         <Icon
           type="ionicon"
           color={colors.primary}
@@ -178,6 +176,17 @@ function DashboardStackScreen() {
         })}
       />
       <HomeStack.Screen
+        name="existing_case_details"
+        component={ExistingCaseDetails}
+        options={({navigation, route}) => ({
+          ...customHeaderOptions(i18n.t('existing_case_details')),
+          ...customHeaderLeftIcon({
+            navigation,
+            route,
+          }),
+        })}
+      />
+      <HomeStack.Screen
         name={'new_case_details'}
         component={NewCaseDetails}
         options={({navigation, route}) => ({
@@ -209,8 +218,7 @@ function HomeRouter() {
       tabBarOptions={{
         activeTintColor: colors.primary,
         inactiveTintColor: 'gray',
-      }}
-    >
+      }}>
       <Tab.Screen
         name="Home"
         options={{

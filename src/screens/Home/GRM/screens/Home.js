@@ -1,14 +1,13 @@
 import {Feather} from '@expo/vector-icons'
-import React from 'react'
+import {useNavigation} from '@react-navigation/native'
 import {ActivityIndicator, SafeAreaView, Text, View} from 'react-native'
 import posed from 'react-native-pose'
 import Button from '../../../../components/CustomButton'
 import {useIssueList} from '../../../../hooks/useIssueList'
 import {i18n} from '../../../../translations/i18n'
 import {colors} from '../../../../utils/colors'
-import {styles} from '../GRM.style'
 import IssueList from '../../components/IssueList'
-import {useNavigation} from '@react-navigation/native'
+import {styles} from '../GRM.style'
 
 const iconConfig = {
   focused: {
