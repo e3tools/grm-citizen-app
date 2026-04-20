@@ -106,5 +106,6 @@
   "press_to_stop": "PRESS TO STOP",
   "record_audio": "Record Audio",
   "case_description_input_label": "Describe the issue in detail",
+  "existing_case_details": "Case Details",
   "new_case": "New Case"
 }
