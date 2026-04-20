@@ -13,8 +13,9 @@ import AllIssueAttachments from './GRM/screens/AllIssueAttachments'
 import AllIssues from './GRM/screens/AllIssues'
 import Home from './GRM/screens/Home'
 import IssueDetail from './GRM/screens/IssueDetail'
-import LocationDetails from './LocationDetails/LocationDetails'
 import NewCaseDetails from './NewCaseDetails/NewCaseDetails'
+import NewCaseSummary from './NewCaseSummary'
+import NewLocationDetails from './NewLocationDetails/NewLocationDetails'
 import Profile from './Profile'
 
 const iconConfig = {
@@ -198,8 +199,19 @@ function DashboardStackScreen() {
         })}
       />
       <HomeStack.Screen
-        name={'location_details'}
-        component={LocationDetails}
+        name={'new_location_details'}
+        component={NewLocationDetails}
+        options={({navigation, route}) => ({
+          ...customHeaderOptions(i18n.t('create_issue')),
+          ...customHeaderLeftIcon({
+            navigation,
+            route,
+          }),
+        })}
+      />
+      <HomeStack.Screen
+        name={'new_case_summary'}
+        component={NewCaseSummary}
         options={({navigation, route}) => ({
           ...customHeaderOptions(i18n.t('create_issue')),
           ...customHeaderLeftIcon({
