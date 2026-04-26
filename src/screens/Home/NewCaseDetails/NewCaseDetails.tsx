@@ -1,12 +1,11 @@
-import {useNewCaseDetails} from '@/src/hooks/useNewCaseDetails'
-import {File} from 'expo-file-system'
-import {IconSymbol} from '@/components/ui/icon-symbol'
-import {Colors} from '@/constants/theme'
+import { IconSymbol } from '@/components/ui/icon-symbol'
+import { Colors } from '@/constants/theme'
 import CheckboxCard from '@/src/components/CheckboxCard'
 import Dropdown from '@/src/components/Dropdown'
 import RecordingCard from '@/src/components/RecordingCard'
 import Stepper from '@/src/components/Stepper'
-import {useColorScheme} from '@/src/hooks/use-color-scheme'
+import { useColorScheme } from '@/src/hooks/use-color-scheme'
+import { useNewCaseDetails } from '@/src/hooks/useNewCaseDetails'
 import {
   isAudioFormat,
   isImageFormat,
@@ -15,7 +14,7 @@ import {
 import RNDateTimePicker, {
   DateTimePickerEvent,
 } from '@react-native-community/datetimepicker'
-import {useNavigation} from '@react-navigation/native'
+import { useNavigation } from '@react-navigation/native'
 import {
   getRecordingPermissionsAsync,
   RecordingPresets,
@@ -23,10 +22,11 @@ import {
   requestRecordingPermissionsAsync,
   useAudioRecorder,
 } from 'expo-audio'
-import {CameraCapturedPicture} from 'expo-camera'
+import { CameraCapturedPicture } from 'expo-camera'
 import * as DocumentPicker from 'expo-document-picker'
-import React, {useEffect, useRef, useState} from 'react'
-import {Controller, useForm} from 'react-hook-form'
+import { File } from 'expo-file-system'
+import React, { useEffect, useRef, useState } from 'react'
+import { Controller, useForm } from 'react-hook-form'
 import {
   Image,
   KeyboardAvoidingView,
@@ -43,11 +43,11 @@ import {
   Provider,
   TextInput,
 } from 'react-native-paper'
-import {useDispatch} from 'react-redux'
+import { useDispatch } from 'react-redux'
 import CustomButton from '../../../components/CustomButton'
 import CustomCamera from '../../../components/CustomCamera'
-import {i18n} from '../../../translations/i18n'
-import {colors} from '../../../utils/colors'
+import { i18n } from '../../../translations/i18n'
+import { colors } from '../../../utils/colors'
 import MESSAGES from '../../../utils/formErrorMessages'
 import globalStyles from '../../../utils/globalStyles'
 import styles from '../../Home/NewCaseDetails/NewCaseDetails.style'
@@ -59,7 +59,11 @@ type Attachment = {
   isAudio: boolean
 }
 
-function NewCaseDetails({route}) {
+type NewCaseDetailsRouteParams = {
+  securityLevelDetails?: Record<string, any>
+}
+
+function NewCaseDetails({route}: {route?: any}) {
   const theme = useColorScheme() ?? 'light'
   const dispatch = useDispatch()
   const navigation = useNavigation()
@@ -141,8 +145,7 @@ function NewCaseDetails({route}) {
                     justifyContent: 'space-between',
                     paddingHorizontal: 15,
                   },
-                ]}
-              >
+                ]}>
                 <Text style={styles.fieldPlaceholderText}>
                   {selectedDate?.toLocaleDateString() ??
                     i18n.t('select_a_date')}
@@ -406,8 +409,7 @@ function NewCaseDetails({route}) {
         </TouchableOpacity>
         <TouchableOpacity
           onPress={toggleRecording}
-          style={styles.addPhotoButton}
-        >
+          style={styles.addPhotoButton}>
           <IconSymbol
             style={{paddingBottom: 6}}
             name={!isRecording ? 'mic' : 'stop.circle'}
@@ -499,8 +501,7 @@ function NewCaseDetails({route}) {
                     </View>
                   </View>
                   <TouchableOpacity
-                    onPress={() => removeAttachment(componentIndex)}
-                  >
+                    onPress={() => removeAttachment(componentIndex)}>
                     <IconSymbol name={'xmark'} color={colors.secondary} />
                   </TouchableOpacity>
                 </View>
@@ -571,6 +572,7 @@ function NewCaseDetails({route}) {
   const onSubmit = e => {
     console.log('Successfully captured data: ', e)
     navigation.navigate('new_location_details', {
+      securityLevelDetails: route?.params?.securityLevelDetails ?? {},
       caseDetails: {
         ...e,
         attachments,
@@ -653,8 +655,7 @@ function NewCaseDetails({route}) {
           justifyContent: 'center',
           alignItems: 'center',
           paddingHorizontal: 24,
-        }}
-      >
+        }}>
         <View style={{flex: 1}}>
           <Text style={{color: 'white'}}>{message}</Text>
         </View>
@@ -664,8 +665,7 @@ function NewCaseDetails({route}) {
               color: colors.primary,
               fontWeight: 'bold',
               fontSize: 18,
-            }}
-          >
+            }}>
             Retry
           </Text>
         </TouchableOpacity>
@@ -682,8 +682,7 @@ function NewCaseDetails({route}) {
           justifyContent: 'center',
           alignItems: 'center',
           paddingHorizontal: 24,
-        }}
-      >
+        }}>
         <View style={{alignItems: 'center', marginBottom: 50}}>
           <Text style={{color: colors.secondary}}>
             Oops, something went wrong.
@@ -693,15 +692,13 @@ function NewCaseDetails({route}) {
         <TouchableOpacity
           onPress={() => {
             navigation.goBack()
-          }}
-        >
+          }}>
           <Text
             style={{
               color: colors.primary,
               fontWeight: 'bold',
               fontSize: 18,
-            }}
-          >
+            }}>
             Go back
           </Text>
         </TouchableOpacity>
@@ -729,14 +726,12 @@ function NewCaseDetails({route}) {
           <KeyboardAvoidingView
             behavior={Platform.OS === 'ios' ? 'padding' : 'position'}
             style={styles.keyboardAvoidingView}
-            contentContainerStyle={styles.keyboardAvoidingViewContentContainer}
-          >
+            contentContainerStyle={styles.keyboardAvoidingViewContentContainer}>
             <ScrollView
               ref={scrollViewRef}
               style={styles.mainScrollView}
               contentContainerStyle={styles.scrollableContentContainer}
-              keyboardShouldPersistTaps="handled"
-            >
+              keyboardShouldPersistTaps="handled">
               <View style={globalStyles.screenContainer}>
                 <View style={styles.formContainer}>
                   <View>

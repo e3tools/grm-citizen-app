@@ -1,15 +1,31 @@
-import React, {useState} from 'react'
-import {ActivityIndicator, ScrollView, Text, View} from 'react-native'
-import {Provider} from 'react-native-paper'
-import CustomButton from '../../../components/CustomButton'
-import {i18n} from '../../../translations/i18n'
-import {colors} from '../../../utils/colors'
-import styles from './CreateIssue.style'
-import CheckboxCard from '../../../components/CheckboxCard'
+import { Feather } from '@expo/vector-icons'
+import { useNavigation } from '@react-navigation/native'
+import React, { useState } from 'react'
+import { ActivityIndicator, ScrollView, Text, View } from 'react-native'
+import { Provider } from 'react-native-paper'
 import posed from 'react-native-pose'
-import {Feather} from '@expo/vector-icons'
+import CheckboxCard from '../../../components/CheckboxCard'
+import CustomButton from '../../../components/CustomButton'
 import Stepper from '../../../components/Stepper'
-import {useNavigation} from '@react-navigation/native'
+import { i18n } from '../../../translations/i18n'
+import { colors } from '../../../utils/colors'
+import styles from './CreateIssue.style'
+
+export const ConfidentialityChoices = Object.freeze({
+  CONFIDENTIAL: 'keep_name_confidential',
+  INDIVIDUAL: 'on_behalf_of_someone',
+  ORGANIZATION: 'organization_behalf_someone',
+})
+
+const theme = {
+  roundness: 12,
+  colors: {
+    ...colors,
+    background: 'white',
+    placeholder: '#dedede',
+    text: '#707070',
+  },
+}
 
 const iconConfig = {
   focused: {
@@ -26,12 +42,23 @@ function CreateIssue() {
   const [saving, setSaving] = useState(false)
   const [confidentialityValue, setConfidentialityValue] =
     useState('non_confidential')
+  const [contactMethodError, setContactMethodError] = React.useState()
+  const [contactInfo, setContactInfo] = React.useState('')
+
+  const [items, setItems] = useState([
+    {label: i18n.t('step_1_method_1'), value: 'phone_number'},
+    {label: i18n.t('step_1_method_2'), value: 'whatsapp'},
+    {label: i18n.t('step_1_method_3'), value: 'email'},
+  ])
+  const [pickerValue, setPickerValue] = useState('phone_number')
+
   const [sharedValues, setSharedValues] = useState({
     name: true,
     age: true,
     gender: true,
     citizen_group_1: true,
     citizen_group_2: true,
+    type: ConfidentialityChoices.INDIVIDUAL,
   })
   const [step, setStep] = useState(1)
   const navigation = useNavigation()
@@ -46,6 +73,7 @@ function CreateIssue() {
           gender: true,
           citizen_group_1: true,
           citizen_group_2: true,
+          type: ConfidentialityChoices.INDIVIDUAL,
         })
         break
       case 'confidential':
@@ -55,6 +83,7 @@ function CreateIssue() {
           gender: true,
           citizen_group_1: true,
           citizen_group_2: true,
+          type: ConfidentialityChoices.CONFIDENTIAL,
         })
         break
       default:
@@ -64,6 +93,7 @@ function CreateIssue() {
           gender: false,
           citizen_group_1: false,
           citizen_group_2: false,
+          type: ConfidentialityChoices.CONFIDENTIAL,
         })
         break
     }
@@ -84,8 +114,7 @@ function CreateIssue() {
       <ScrollView
         style={styles.container}
         contentContainerStyle={styles.contentContainer}
-        keyboardShouldPersistTaps="handled"
-      >
+        keyboardShouldPersistTaps="handled">
         <View style={styles.formContainer}>
           <Stepper numberOfSteps={4} currentStep={step}></Stepper>
           <Text style={styles.title}> {i18n.t('create_issue_step_1')}</Text>
@@ -97,22 +126,19 @@ function CreateIssue() {
             currentValue={confidentialityValue}
             controllerValue={'non_confidential'}
             onValueUpdate={value => updateConfidentiality(value)}
-            description={i18n.t('non_confidential_description')}
-          ></CheckboxCard>
+            description={i18n.t('non_confidential_description')}></CheckboxCard>
           <CheckboxCard
             label={i18n.t('confidential')}
             currentValue={confidentialityValue}
             controllerValue={'confidential'}
             onValueUpdate={value => updateConfidentiality(value)}
-            description={i18n.t('confidential_description')}
-          ></CheckboxCard>
+            description={i18n.t('confidential_description')}></CheckboxCard>
           <CheckboxCard
             label={i18n.t('anonymous')}
             currentValue={confidentialityValue}
             controllerValue={'anonymous'}
             onValueUpdate={value => updateConfidentiality(value)}
-            description={i18n.t('anonymous_description')}
-          ></CheckboxCard>
+            description={i18n.t('anonymous_description')}></CheckboxCard>
           <View style={[styles.card, {marginTop: 20}]}>
             <Text style={styles.inputLabel}>
               {' '}
@@ -169,7 +195,11 @@ function CreateIssue() {
               textColor="white"
               label={saving ? i18n.t('saving') : i18n.t('save_and_continue')}
               disabled={saving}
-              onPress={() => navigation.navigate('new_case_details')}
+              onPress={() =>
+                navigation.navigate('new_case_details', {
+                  securityLevelDetails: sharedValues,
+                })
+              }
             />
           </View>
         </View>

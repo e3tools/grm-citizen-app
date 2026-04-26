@@ -1,9 +1,10 @@
 import config from '../../config'
+import
+  {
+    addTokenToHttpClient,
+    getSessionData,
+  } from '../store/ducks/authentication.duck'
 import request from '../utils/request'
-import {
-  addTokenToHttpClient,
-  getSessionData,
-} from '../store/ducks/authentication.duck'
 
 export const baseURL = config.API_AUTH_BASE_URL
 
@@ -39,7 +40,7 @@ export async function fetchUserProfile(data) {
   try {
     const session = await getSessionData()
     addTokenToHttpClient(session)
-    const url = `${baseURL}/authentication/citizen-detail/`
+    const url = `${baseURL}/authentication/citizen-detail`
     const response = await request({
       url,
       method: 'GET',

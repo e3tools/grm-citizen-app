@@ -1,7 +1,7 @@
 import config from '../../config'
 
 const baseURL = config.API_AUTH_BASE_URL || ''
-export {baseURL}
+export { baseURL }
 
 function handleErrors(response) {
   if (response.non_field_errors) {

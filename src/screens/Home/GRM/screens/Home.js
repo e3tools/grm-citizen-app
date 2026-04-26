@@ -1,13 +1,13 @@
-import {Feather} from '@expo/vector-icons'
-import {useNavigation} from '@react-navigation/native'
-import {ActivityIndicator, SafeAreaView, Text, View} from 'react-native'
+import { Feather } from '@expo/vector-icons'
+import { useNavigation } from '@react-navigation/native'
+import { ActivityIndicator, SafeAreaView, Text, View } from 'react-native'
 import posed from 'react-native-pose'
 import Button from '../../../../components/CustomButton'
-import {useIssueList} from '../../../../hooks/useIssueList'
-import {i18n} from '../../../../translations/i18n'
-import {colors} from '../../../../utils/colors'
+import { useIssueList } from '../../../../hooks/useIssueList'
+import { i18n } from '../../../../translations/i18n'
+import { colors } from '../../../../utils/colors'
 import IssueList from '../../components/IssueList'
-import {styles} from '../GRM.style'
+import { styles } from '../GRM.style'
 
 const iconConfig = {
   focused: {
@@ -40,8 +40,7 @@ const Home = () => {
             backgroundColor: 'rgba(0,0,0,0.6)',
             justifyContent: 'center',
             alignItems: 'center',
-          }}
-        >
+          }}>
           <ActivityIndicator color={colors.primary} />
         </View>
       )}
@@ -53,15 +52,13 @@ const Home = () => {
             justifyContent: 'center',
             alignItems: 'center',
             padding: 20,
-          }}
-        >
+          }}>
           <View
             style={{
               backgroundColor: '#f3f4f6',
               borderRadius: '50%',
               padding: '40',
-            }}
-          >
+            }}>
             <AnimatedFeatherIcon name="frown" size={50} color={'#9da3ae'} />
           </View>
           <Text style={{marginTop: 10, fontSize: 20, fontWeight: 'bold'}}>
@@ -73,8 +70,7 @@ const Home = () => {
               fontSize: 16,
               color: '#747985',
               textAlign: 'center',
-            }}
-          >
+            }}>
             {i18n.t('no_grievances')}
           </Text>
           <Button
@@ -84,6 +80,15 @@ const Home = () => {
             label={i18n.t('report_grievance')}
             onPress={() => navigation.navigate('issue_create')}
           />
+          {/* <Button
+            backgroundColor="#24c38b"
+            textColor="white"
+            color="white"
+            label={'IDV'}
+            onPress={() =>
+              navigation.navigate('existing_case_details', {id: 3})
+            }
+          /> */}
         </View>
       ) : (
         <View style={{flex: 1}}>
@@ -95,8 +100,7 @@ const Home = () => {
               fontWeight: 'bold',
               marginLeft: 15,
               marginRight: 15,
-            }}
-          >
+            }}>
             {i18n.t('welcome')}
           </Text>
           <Button
@@ -105,7 +109,7 @@ const Home = () => {
             color="white"
             label={i18n.t('report_new_grievance')}
             iconName="plus-circle"
-            onPress={() => navigation.navigate('Issue create')}
+            onPress={() => navigation.navigate('issue_create')}
           />
           <View style={{flex: 1, marginTop: 30, paddingHorizontal: 16}}>
             <View
@@ -116,11 +120,9 @@ const Home = () => {
                 justifyContent: 'space-between',
                 alignItems: 'center',
                 marginBottom: 16,
-              }}
-            >
+              }}>
               <Text
-                style={{fontSize: 18, fontWeight: 'bold', color: '#1f2937'}}
-              >
+                style={{fontSize: 18, fontWeight: 'bold', color: '#1f2937'}}>
                 {i18n.t('my_recent_grievance')}
               </Text>
               <Text
@@ -134,8 +136,7 @@ const Home = () => {
                     index: 0,
                     routes: [{name: 'All issues'}],
                   })
-                }
-              >
+                }>
                 {i18n.t('view_all')}
               </Text>
             </View>
@@ -143,8 +144,7 @@ const Home = () => {
               loadingMore={loadingMore}
               issues={issues}
               hasNextPage={hasNextPage}
-              loadMoreIssues={loadMoreIssues}
-            ></IssueList>
+              loadMoreIssues={loadMoreIssues}></IssueList>
           </View>
         </View>
       )}

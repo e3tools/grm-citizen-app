@@ -276,6 +276,7 @@ function NewLocationDetails({route}: {route?: any}) {
     removeEncryptedValue('locationFormData')
     navigation.navigate('new_case_summary', {
       caseDetails: route?.params?.caseDetails ?? {},
+      securityLevelDetails: route?.params?.securityLevelDetails ?? {},
       locationDetails: capturedData,
     })
   }

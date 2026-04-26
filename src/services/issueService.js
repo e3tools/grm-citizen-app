@@ -1,7 +1,8 @@
-import {
-  addTokenToHttpClient,
-  getSessionData,
-} from '@/src/store/ducks/authentication.duck'
+import
+  {
+    addTokenToHttpClient,
+    getSessionData,
+  } from '@/src/store/ducks/authentication.duck'
 import config from '../../config'
 import request from '../utils/request'
 
@@ -22,6 +23,7 @@ export async function fetchIssueList(page = 1) {
     console.error('Error syncing issues:', error)
   }
 }
+
 export async function getIssues(page = 1) {
   const session = await getSessionData()
   addTokenToHttpClient(session)
@@ -61,6 +63,32 @@ export async function getIssueDetail(id) {
     return response.data
   } catch (error) {
     console.error('Error at fetching issue from remote', error.message)
+  }
+}
+
+export async function createIssue(payload) {
+  const session = await getSessionData()
+  addTokenToHttpClient(session)
+  const url = `${baseURL}/issues/create/`
+
+  console.log(payload)
+
+  const requestOptions = {
+    url,
+    method: 'POST',
+    data: JSON.stringify(payload),
+    headers: {'Content-Type': 'application/json'},
+  }
+
+  try {
+    const response = await request({
+      ...requestOptions,
+    })
+
+    return response.data
+  } catch (error) {
+    console.error('Error creating issue', error.message)
+    throw new Error(`Error creating issue ${error.message}`)
   }
 }
 
