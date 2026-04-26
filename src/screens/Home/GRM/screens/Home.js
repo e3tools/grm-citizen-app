@@ -106,7 +106,7 @@ const Home = () => {
             color="white"
             label={i18n.t('report_new_grievance')}
             iconName="plus-circle"
-            onPress={() => navigation.navigate('Issue create')}
+            onPress={() => navigation.navigate('issue_create')}
           />
           <View style={{flex: 1, marginTop: 30, paddingHorizontal: 16}}>
             <View

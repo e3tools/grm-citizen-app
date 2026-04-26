@@ -67,6 +67,7 @@
   "case_detail": "Case detail",
   "attachments": "Attachments",
   "case_timeline": "Case timeline",
+  "no_description": "There is no description provided",
   "no_comments": "You haven't reported any comments. Let's get started",
   "no_comments_yet": "No comments yet",
   "no_comments_to_load": "No more comments to load",
@@ -106,5 +107,9 @@
   "press_to_stop": "PRESS TO STOP",
   "record_audio": "Record Audio",
   "case_description_input_label": "Describe the issue in detail",
-  "new_case": "New Case"
+  "new_case": "New Case",
+  "retry": "Retry",
+  "error_generic_message": "Oops, something went wrong.",
+  "error_code": "Error Code",
+  "go_back": "Go back"
 }

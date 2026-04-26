@@ -67,6 +67,7 @@
   "case_detail": "Détails de l'affaire",
   "attachments": "Pièces jointes",
   "case_timeline": "Chronologie de l'affaire",
+  "no_description": "Aucune description n'est fournie",
   "no_comments": "Vous n'avez signalé aucun commentaire. Commençons.",
   "no_comments_yet": "Aucun commentaire pour l'instant.",
   "no_comments_to_load": "Plus aucun commentaire à charger",
@@ -106,5 +107,9 @@
   "press_to_stop": "APPUYER POUR ARRÊTER",
   "record_audio": "Enregistrer l'audio",
   "case_description_input_label": "Décrivez le problème en détail",
-  "new_case": "Nouveau cas"
+  "new_case": "Nouveau cas",
+  "retry": "Réessayer",
+  "error_generic_message": "Oups, une erreur s'est produite.",
+  "error_code": "Code d'erreur",
+  "go_back": "Retour"
 }

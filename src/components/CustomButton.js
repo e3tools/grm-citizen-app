@@ -19,6 +19,7 @@ const CustomButton = ({
     justifyContent: 'center',
     alignItems: 'center',
     flexDirection: 'row',
+    paddingHorizontal: 10,
     height: 48,
     minWidth,
     borderWidth: 0,
