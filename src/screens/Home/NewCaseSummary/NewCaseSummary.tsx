@@ -1,4 +1,7 @@
-import { createIssue } from '@/src/services/issueService'
+import {
+  addIssueAttachment,
+  createIssue,
+} from '@/src/services/issueService'
 import { Feather } from '@expo/vector-icons'
 import { useNavigation, useRoute } from '@react-navigation/native'
 import React, { useMemo, useState } from 'react'
@@ -31,6 +34,27 @@ type NewCaseSummaryRouteParams = {
   securityLevelDetails?: Record<string, any>
 }
 
+function guessMimeType(filename: string) {
+  const lower = (filename || '').toLowerCase()
+  if (lower.endsWith('.jpg') || lower.endsWith('.jpeg')) return 'image/jpeg'
+  if (lower.endsWith('.png')) return 'image/png'
+  if (lower.endsWith('.gif')) return 'image/gif'
+  if (lower.endsWith('.webp')) return 'image/webp'
+  if (lower.endsWith('.heic')) return 'image/heic'
+  if (lower.endsWith('.mp4')) return 'video/mp4'
+  if (lower.endsWith('.mov')) return 'video/quicktime'
+  if (lower.endsWith('.m4a')) return 'audio/mp4'
+  if (lower.endsWith('.mp3')) return 'audio/mpeg'
+  if (lower.endsWith('.wav')) return 'audio/wav'
+  if (lower.endsWith('.pdf')) return 'application/pdf'
+  return 'application/octet-stream'
+}
+
+function filenameFromPath(path: string) {
+  const parts = (path || '').split('/')
+  return parts[parts.length - 1] || 'attachment'
+}
+
 function generateTrackingCode(): string {
   const randomWord =
     SAMPLE_WORDS[Math.floor(Math.random() * SAMPLE_WORDS.length)]
@@ -58,12 +82,12 @@ function formatFallbackDate(input: any) {
 export default function NewCaseSummary() {
   const route = useRoute<any>()
   const params = (route?.params ?? {}) as NewCaseSummaryRouteParams
-  const navigator = useNavigation()
+  const navigator = useNavigation<any>()
   const [certified, setCertified] = useState(false)
   const [isCaseCreated, setIsCaseCreated] = useState(false)
   const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState<unknown>()
-  const {session, profile} = useSelector(state => {
+  const {session, profile} = useSelector((state: any) => {
     return state.get('authentication').toObject()
   }, shallowEqual)
 
@@ -156,15 +180,10 @@ export default function NewCaseSummary() {
           profile.phone_number || profile.email
             ? ('channel-alert' as const)
             : ('anonymous' as const),
-        // 'facilitator' When ?
         contact_information: profile.phone_number ?? profile.email ?? '',
         contact_method: profile.phone_number
           ? ('phone_number' as const)
-          : profile.email
-            ? ('email' as const)
-            : 'whatsapp',
-        // : ('whatsapp' as const),
-        // : ('sms' as const),
+          : ('email' as const),
         citizen: {
           name: securityLevelDetails.name
             ? `${profile.first_name} ${profile.last_name}`
@@ -182,7 +201,33 @@ export default function NewCaseSummary() {
         },
       }
 
-      await createIssue(payload)
+      const createdIssue = await createIssue({
+        ...payload,
+        // Files are uploaded after creation via /add-attachment
+        attachments: undefined,
+      })
+
+      const createdIssueId = createdIssue?.id
+      if (!createdIssueId) {
+        throw new Error('Issue created but no id returned')
+      }
+
+      const attachments: Attachment[] = Array.isArray(caseDetails.attachments)
+        ? caseDetails.attachments
+        : []
+
+      for (const attachment of attachments) {
+        const uri = attachment.path
+        const name = attachment.name || filenameFromPath(uri)
+        const type = guessMimeType(name)
+
+        const formData = new FormData()
+        // Most DRF backends expect "file"; adjust if API expects a different key.
+        formData.append('file', {uri, name, type} as any)
+
+        await addIssueAttachment(createdIssueId, formData)
+      }
+
       setIsCaseCreated(true)
     } catch (error) {
       console.error('Error creating case: ', error)
@@ -203,9 +248,6 @@ export default function NewCaseSummary() {
         <View style={styles.card}>
           <View style={styles.cardHeaderRow}>
             <Text style={styles.cardHeaderLabel}>SECURITY LEVEL</Text>
-            <Pressable hitSlop={10}>
-              <Text style={styles.editLink}>EDIT</Text>
-            </Pressable>
           </View>
 
           <View style={styles.securityRow}>
@@ -226,9 +268,6 @@ export default function NewCaseSummary() {
         <View style={styles.card}>
           <View style={styles.cardHeaderRow}>
             <Text style={styles.cardHeaderLabel}>INFORMATION LEDGER</Text>
-            <Pressable hitSlop={10}>
-              <Text style={styles.editLink}>EDIT</Text>
-            </Pressable>
           </View>
 
           <View style={styles.table}>
@@ -277,9 +316,6 @@ export default function NewCaseSummary() {
         <View style={styles.card}>
           <View style={styles.cardHeaderRow}>
             <Text style={styles.cardHeaderLabel}>GEO-LOCATION</Text>
-            <Pressable hitSlop={10}>
-              <Text style={styles.editLink}>EDIT</Text>
-            </Pressable>
           </View>
 
           <Text style={styles.geoText}>{viewModel.locationLine}</Text>

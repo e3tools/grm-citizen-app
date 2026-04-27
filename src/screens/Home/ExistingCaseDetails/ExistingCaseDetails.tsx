@@ -1,7 +1,7 @@
-import {i18n} from '@/src/translations/i18n'
-import {Feather} from '@expo/vector-icons'
-import {useNavigation} from '@react-navigation/native'
-import React, {useMemo, useState} from 'react'
+import { i18n } from '@/src/translations/i18n'
+import { Feather } from '@expo/vector-icons'
+import { useNavigation, useRoute } from '@react-navigation/native'
+import React, { useEffect, useMemo, useState } from 'react'
 import {
   Pressable,
   SafeAreaView,
@@ -10,24 +10,37 @@ import {
   TextInput,
   View,
 } from 'react-native'
-import {colors} from '../../../utils/colors'
+import {
+  addIssueComment,
+  getIssueDetail,
+  listIssueAttachments,
+  listIssueComments,
+} from '../../../services/issueService'
+import { colors } from '../../../utils/colors'
 import styles from './ExistingCaseDetails.style'
 
 export default function ExistingCaseDetails() {
   const navigation = useNavigation<any>()
+  const route = useRoute<any>()
+  const issueId = route?.params?.id
   const [comment, setComment] = useState('')
   const s = styles as any
+  const [loading, setLoading] = useState(false)
+  const [issue, setIssue] = useState<any>(null)
+  const [attachments, setAttachments] = useState<any[]>([])
+  const [comments, setComments] = useState<any[]>([])
 
   const data = useMemo(
     () => ({
-      status: 'RESOLVED',
-      title: 'Unresolved Pothole Issue',
-      caseNumberLabel: 'Case #GR-',
-      caseNumber: '9920',
-      dateOfSubmission: 'Oct 24, 2023',
-      caseType: 'Grievance',
-      description:
-        'A large, deep pothole has developed near the intersection of Main St and 5th Ave. It is causing significant traffic delays and poses a danger to cyclists and motorcyclists. Multiple vehicles have sustained tire damage.',
+      status: issue?.status ?? '—',
+      title: issue?.title ?? issue?.issue_type?.name ?? '—',
+      caseNumberLabel: 'Case #',
+      caseNumber: issue?.id ? String(issue.id) : '—',
+      dateOfSubmission: issue?.intake_date
+        ? new Date(issue.intake_date).toLocaleDateString()
+        : '—',
+      caseType: issue?.issue_type?.name ?? '—',
+      description: issue?.description ?? '—',
       progress: [
         {
           key: 'resolved',
@@ -54,35 +67,81 @@ export default function ExistingCaseDetails() {
           active: false,
         },
       ],
-      attachmentsCount: 3,
-      updates: [
-        {
-          key: 'u1',
-          author: 'Officer Sarah Jenkins',
-          role: 'Officer',
-          text: 'Verification complete. Maintenance crew has been scheduled for repair on Nov 2nd.',
-          when: '2d ago',
-          side: 'left' as const,
-        },
-        {
-          key: 'u2',
-          author: 'You',
-          role: 'You',
-          text: 'Thank you for the quick update.\nLooking forward to the fix.',
-          when: '3d ago',
-          side: 'right' as const,
-        },
-      ],
+      attachmentsCount: attachments?.length ?? 0,
+      updates: (comments || []).map((c: any) => {
+        const isMine = Boolean(c?.is_mine)
+        const author =
+          c?.author_name || (isMine ? 'You' : c?.author || 'Officer')
+        return {
+          key: String(c?.id ?? `${author}-${c?.created_date ?? Math.random()}`),
+          author,
+          role: isMine ? 'You' : 'Officer',
+          text: String(c?.comment ?? c?.text ?? ''),
+          when: c?.created_date
+            ? new Date(c.created_date).toLocaleDateString()
+            : '',
+          side: isMine ? 'right' : 'left',
+        }
+      }),
     }),
-    [],
+    [issue, attachments, comments],
   )
+
+  useEffect(() => {
+    const run = async () => {
+      if (!issueId) return
+      setLoading(true)
+      try {
+        const [issueRes, attachmentsRes, commentsRes] = await Promise.all([
+          getIssueDetail(issueId),
+          listIssueAttachments(issueId),
+          listIssueComments(issueId),
+        ])
+
+        setIssue(issueRes)
+        setAttachments(attachmentsRes?.results ?? attachmentsRes ?? [])
+        setComments(commentsRes?.results ?? commentsRes ?? [])
+      } finally {
+        setLoading(false)
+      }
+    }
+    run()
+  }, [issueId])
+
+  const sendComment = async () => {
+    const text = comment.trim()
+    if (!text || !issueId) return
+    setComment('')
+    try {
+      await addIssueComment(issueId, {comment: text})
+      const commentsRes = await listIssueComments(issueId)
+      setComments(commentsRes?.results ?? commentsRes ?? [])
+    } catch {
+      setComment(text)
+    }
+  }
 
   return (
     <SafeAreaView style={s.screen}>
+      {loading && (
+        <View
+          style={{
+            zIndex: 20,
+            position: 'absolute',
+            left: 0,
+            right: 0,
+            top: 0,
+            bottom: 0,
+            backgroundColor: 'rgba(0,0,0,0.2)',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}>
+          <Text style={{color: '#111827'}}>Loading…</Text>
+        </View>
+      )}
       <ScrollView
         contentContainerStyle={s.scrollContent}
-        showsVerticalScrollIndicator={false}
-      >
+        showsVerticalScrollIndicator={false}>
         <View style={s.card}>
           <View style={s.cardHeaderRow}>
             <View style={s.statusPill}>
@@ -107,7 +166,7 @@ export default function ExistingCaseDetails() {
 
           <View style={s.metaGrid}>
             <View style={s.metaCell}>
-              <Text style={s.metaLabel}>{i18n.t('dateOfSubmission')}</Text>
+              <Text style={s.metaLabel}>{i18n.t('date_of_submission')}</Text>
               <Text style={s.metaValue}>{data.dateOfSubmission}</Text>
             </View>
             <View style={s.metaCell}>
@@ -140,8 +199,7 @@ export default function ExistingCaseDetails() {
                       style={[
                         s.timelineDot,
                         item.active && s.timelineDotActive,
-                      ]}
-                    >
+                      ]}>
                       <Feather
                         name={item.icon as any}
                         size={14}
@@ -174,9 +232,8 @@ export default function ExistingCaseDetails() {
                 // Keep navigation optional; if route isn't wired yet, this is a no-op.
                 try {
                   navigation.navigate('All issue attachments')
-                } catch (e) {}
-              }}
-            >
+                } catch {}
+              }}>
               <Text style={s.viewAllLink}>View All</Text>
             </Pressable>
           </View>
@@ -184,10 +241,9 @@ export default function ExistingCaseDetails() {
           <ScrollView
             horizontal
             showsHorizontalScrollIndicator={false}
-            contentContainerStyle={s.attachmentsRow}
-          >
-            {[0, 1, 2].map(i => (
-              <View key={i} style={s.attachmentThumb}>
+            contentContainerStyle={s.attachmentsRow}>
+            {(attachments || []).slice(0, 6).map((a, idx) => (
+              <View key={a?.id ?? idx} style={s.attachmentThumb}>
                 <View style={s.attachmentThumbInner}>
                   <Feather name="image" size={18} color={colors.secondary} />
                 </View>
@@ -205,8 +261,7 @@ export default function ExistingCaseDetails() {
               return (
                 <View
                   key={msg.key}
-                  style={[s.chatRow, isRight ? s.chatRowRight : s.chatRowLeft]}
-                >
+                  style={[s.chatRow, isRight ? s.chatRowRight : s.chatRowLeft]}>
                   {!isRight && (
                     <View style={s.avatar}>
                       <Feather name="shield" size={16} color={colors.primary} />
@@ -217,20 +272,17 @@ export default function ExistingCaseDetails() {
                     style={[
                       s.chatBubble,
                       isRight ? s.chatBubbleRight : s.chatBubbleLeft,
-                    ]}
-                  >
+                    ]}>
                     <View
                       style={[
                         s.chatMetaRow,
                         isRight ? {flexDirection: 'row-reverse'} : {},
-                      ]}
-                    >
+                      ]}>
                       <Text
                         style={[
                           s.chatAuthor,
-                          isRight ? {color: colors.tertiary} : {},
-                        ]}
-                      >
+                          isRight ? {color: colors.primary} : {},
+                        ]}>
                         {msg.author}
                       </Text>
                       <Text style={s.chatWhen}>{msg.when}</Text>
@@ -258,10 +310,9 @@ export default function ExistingCaseDetails() {
               multiline
             />
             <Pressable
-              onPress={() => setComment('')}
+              onPress={sendComment}
               style={s.sendBtn}
-              hitSlop={10}
-            >
+              hitSlop={10}>
               <Feather name="send" size={18} color={colors.white} />
             </Pressable>
           </View>

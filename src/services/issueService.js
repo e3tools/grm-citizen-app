@@ -92,10 +92,54 @@ export async function createIssue(payload) {
   }
 }
 
-export async function getIssueComments(id, page = 1) {
+export async function addIssueAttachment(id, formData) {
   const session = await getSessionData()
   addTokenToHttpClient(session)
-  const url = `${baseURL}/issues/${id}/comments`
+  const url = `${baseURL}/issues/${id}/add-attachment/`
+  const requestOptions = {
+    url,
+    method: 'POST',
+    data: formData,
+    headers: {'Content-Type': 'multipart/form-data'},
+  }
+
+  try {
+    const response = await request({
+      ...requestOptions,
+    })
+    return response.data
+  } catch (error) {
+    console.error('Error adding issue attachment', error.message)
+    throw new Error(`Error adding issue attachment ${error.message}`)
+  }
+}
+
+export async function addIssueComment(id, payload) {
+  const session = await getSessionData()
+  addTokenToHttpClient(session)
+  const url = `${baseURL}/issues/${id}/add-comment/`
+  const requestOptions = {
+    url,
+    method: 'POST',
+    data: JSON.stringify(payload),
+    headers: {'Content-Type': 'application/json'},
+  }
+
+  try {
+    const response = await request({
+      ...requestOptions,
+    })
+    return response.data
+  } catch (error) {
+    console.error('Error adding issue comment', error.message)
+    throw new Error(`Error adding issue comment ${error.message}`)
+  }
+}
+
+export async function listIssueComments(id, page = 1) {
+  const session = await getSessionData()
+  addTokenToHttpClient(session)
+  const url = `${baseURL}/issues/${id}/comments/`
   const requestOptions = {
     url,
     method: 'GET',
@@ -113,13 +157,14 @@ export async function getIssueComments(id, page = 1) {
   }
 }
 
-export async function getIssueAttachments(id, page = 1) {
+export async function listIssueAttachments(id, page = 1) {
   const session = await getSessionData()
   addTokenToHttpClient(session)
-  const url = `${baseURL}/issues/${id}/attachments`
+  const url = `${baseURL}/issues/${id}/attachments/`
   const requestOptions = {
     url,
     method: 'GET',
+    params: {page: page.toString(), page_size: '10'},
   }
 
   try {
@@ -133,4 +178,13 @@ export async function getIssueAttachments(id, page = 1) {
       error.message,
     )
   }
+}
+
+// Backwards compatible aliases
+export async function getIssueComments(id, page = 1) {
+  return listIssueComments(id, page)
+}
+
+export async function getIssueAttachments(id, page = 1) {
+  return listIssueAttachments(id, page)
 }
