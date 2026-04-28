@@ -1,7 +1,7 @@
-import {Feather} from '@expo/vector-icons'
+import { Feather } from '@expo/vector-icons'
 import React from 'react'
-import {Text, TouchableOpacity} from 'react-native'
-import {colors} from '../utils/colors'
+import { ActivityIndicator, Text, TouchableOpacity } from 'react-native'
+import { colors } from '../utils/colors'
 
 const CustomButton = ({
   label,
@@ -9,6 +9,8 @@ const CustomButton = ({
   textColor,
   backgroundColor,
   iconName,
+  loading = false,
+  disabled = false,
   onPress,
   borderRadius = 10,
   minWidth = 200,
@@ -35,16 +37,26 @@ const CustomButton = ({
   }
 
   return (
-    <TouchableOpacity style={buttonStyle} onPress={onPress} activeOpacity={0.8}>
-      {iconName && (
-        <Feather
-          name={iconName.replace(/'/g, '')}
-          size={20}
-          color={textColor || color || 'white'}
-          style={{marginRight: 8, marginTop: -1}}
-        />
+    <TouchableOpacity
+      disabled={disabled}
+      style={buttonStyle}
+      onPress={onPress}
+      activeOpacity={0.8}>
+      {loading ? (
+        <ActivityIndicator size={'large'}></ActivityIndicator>
+      ) : (
+        <>
+          {iconName && (
+            <Feather
+              name={iconName.replace(/'/g, '')}
+              size={20}
+              color={textColor || color || 'white'}
+              style={{marginRight: 8, marginTop: -1}}
+            />
+          )}
+          <Text style={textStyle}>{label}</Text>
+        </>
       )}
-      <Text style={textStyle}>{label}</Text>
     </TouchableOpacity>
   )
 }

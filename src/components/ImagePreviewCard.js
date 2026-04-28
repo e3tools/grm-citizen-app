@@ -1,5 +1,5 @@
 import React from 'react'
-import {ImageBackground, StyleSheet} from 'react-native'
+import { ImageBackground, StyleSheet } from 'react-native'
 
 const ImagePreviewCard = ({uri, id}) => {
   if (!uri) return null
@@ -7,8 +7,7 @@ const ImagePreviewCard = ({uri, id}) => {
     <ImageBackground
       key={id}
       source={{uri}}
-      style={styles.image}
-    ></ImageBackground>
+      style={styles.image}></ImageBackground>
   )
 }
 
@@ -17,7 +16,6 @@ const styles = StyleSheet.create({
     height: 100,
     width: 100,
     margin: 5,
-    marginTop: 20,
     alignSelf: 'center',
     justifyContent: 'flex-end',
   },

@@ -74,21 +74,13 @@ const Home = () => {
             {i18n.t('no_grievances')}
           </Text>
           <Button
+            style={{paddingHorizontal: 10}}
             backgroundColor="#24c38b"
             textColor="white"
             color="white"
             label={i18n.t('report_grievance')}
             onPress={() => navigation.navigate('issue_create')}
           />
-          {/* <Button
-            backgroundColor="#24c38b"
-            textColor="white"
-            color="white"
-            label={'IDV'}
-            onPress={() =>
-              navigation.navigate('existing_case_details', {id: 3})
-            }
-          /> */}
         </View>
       ) : (
         <View style={{flex: 1}}>
@@ -104,6 +96,7 @@ const Home = () => {
             {i18n.t('welcome')}
           </Text>
           <Button
+            style={{paddingHorizontal: 10}}
             backgroundColor="#24c38b"
             textColor="white"
             color="white"

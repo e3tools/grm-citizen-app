@@ -1,7 +1,4 @@
-import {
-  addIssueAttachment,
-  createIssue,
-} from '@/src/services/issueService'
+import { addIssueAttachment, createIssue } from '@/src/services/issueService'
 import { Feather } from '@expo/vector-icons'
 import { useNavigation, useRoute } from '@react-navigation/native'
 import React, { useMemo, useState } from 'react'
@@ -163,6 +160,7 @@ export default function NewCaseSummary() {
         component: caseDetails.case_component,
         issue_type: caseDetails.case_type,
         issue_sub_type: caseDetails.case_sub_type,
+        status: 1, // Initial status
         description: caseDetails.case_description,
         intake_date: caseDetails.case_occurrence_date.toISOString(),
         sub_component: caseDetails.case_sub_component,
@@ -207,7 +205,7 @@ export default function NewCaseSummary() {
         attachments: undefined,
       })
 
-      const createdIssueId = createdIssue?.id
+      const createdIssueId = createdIssue?.data?.id ?? null
       if (!createdIssueId) {
         throw new Error('Issue created but no id returned')
       }
@@ -347,6 +345,8 @@ export default function NewCaseSummary() {
             style={{width: '100%'}}
             borderRadius={24}
             backgroundColor={colors.primary}
+            loading={submitting}
+            disabled={submitting}
             textColor="white"
             color="white"
             label={'Submit Case'}

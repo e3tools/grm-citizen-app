@@ -13,7 +13,7 @@ import
     fetchUserProfile,
     updateUserProfile,
   } from '../../../services/profileService'
-import { storeProfile } from '../../../store/ducks/authentication.duck'
+import { logout, storeProfile } from '../../../store/ducks/authentication.duck'
 import { i18n } from '../../../translations/i18n'
 import { colors } from '../../../utils/colors'
 import MESSAGES from '../../../utils/formErrorMessages'
@@ -116,6 +116,10 @@ function Profile() {
       index: 0,
       routes: [{name: 'Main'}],
     })
+  }
+
+  const onLogout = () => {
+    dispatch(logout())
   }
 
   const onSubmit = async data => {
@@ -471,6 +475,12 @@ function Profile() {
               label={saving ? i18n.t('saving') : i18n.t('save_and_continue')}
               onPress={handleSubmit(onSubmit)}
               disabled={saving}
+            />
+            <CustomButton
+              backgroundColor={colors.error}
+              textColor="white"
+              label={saving ? i18n.t('logout') : i18n.t('logout')}
+              onPress={onLogout}
             />
           </View>
         </View>

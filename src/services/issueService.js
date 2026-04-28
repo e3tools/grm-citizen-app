@@ -95,7 +95,7 @@ export async function createIssue(payload) {
 export async function addIssueAttachment(id, formData) {
   const session = await getSessionData()
   addTokenToHttpClient(session)
-  const url = `${baseURL}/issues/${id}/add-attachment/`
+  const url = `${baseURL}/issues/${id}/add-attachment`
   const requestOptions = {
     url,
     method: 'POST',
@@ -117,7 +117,7 @@ export async function addIssueAttachment(id, formData) {
 export async function addIssueComment(id, payload) {
   const session = await getSessionData()
   addTokenToHttpClient(session)
-  const url = `${baseURL}/issues/${id}/add-comment/`
+  const url = `${baseURL}/issues/${id}/add-comment`
   const requestOptions = {
     url,
     method: 'POST',

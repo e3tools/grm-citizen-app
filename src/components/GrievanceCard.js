@@ -1,11 +1,11 @@
-import {Feather} from '@expo/vector-icons'
-import {useNavigation} from '@react-navigation/native'
+import { Feather } from '@expo/vector-icons'
+import { useNavigation } from '@react-navigation/native'
 import React from 'react'
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
-import {i18n} from '../translations/i18n'
-import {colors} from '../utils/colors'
-import {formatDate} from '../utils/date'
-import {getStatusInfo} from '../utils/issue'
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { i18n } from '../translations/i18n'
+import { colors } from '../utils/colors'
+import { formatDate } from '../utils/date'
+import { getStatusInfo } from '../utils/issue'
 
 const GrievanceCard = ({issue}) => {
   const getCategoryInfo = category => {
@@ -33,18 +33,16 @@ const GrievanceCard = ({issue}) => {
   return (
     <TouchableOpacity
       onPress={() => {
-        navigation.navigate('Issue detail', {id: issue.id})
+        navigation.navigate('existing_case_details', {id: issue.id})
       }}
-      style={styles.card}
-    >
+      style={styles.card}>
       <View style={styles.cardContent}>
         <View style={styles.leftSection}>
           <View
             style={[
               styles.iconContainer,
               {backgroundColor: categoryInfo.color},
-            ]}
-          >
+            ]}>
             <Feather
               name={categoryInfo.icon}
               size={20}

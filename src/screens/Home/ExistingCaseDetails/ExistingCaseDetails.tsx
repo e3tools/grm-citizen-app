@@ -48,7 +48,7 @@ export default function ExistingCaseDetails() {
           subtitle: 'Maintenance crew repaired the site.',
           date: 'Nov 02',
           icon: 'check-circle',
-          active: true,
+          active: issue?.status?.final_status ?? true,
         },
         {
           key: 'under_review',
@@ -56,7 +56,7 @@ export default function ExistingCaseDetails() {
           subtitle: 'Assigned to Road Maintenance Dept.',
           date: 'Oct 26',
           icon: 'clipboard',
-          active: false,
+          active: issue?.status?.open_status ?? false,
         },
         {
           key: 'reported',
@@ -64,7 +64,7 @@ export default function ExistingCaseDetails() {
           subtitle: 'Case successfully submitted.',
           date: 'Oct 24',
           icon: 'flag',
-          active: false,
+          active: issue?.status?.initial_status ?? false,
         },
       ],
       attachmentsCount: attachments?.length ?? 0,
@@ -86,6 +86,17 @@ export default function ExistingCaseDetails() {
     }),
     [issue, attachments, comments],
   )
+
+  // function getStatus() {
+  //   let a
+  //   for (const key in data.status) {
+  //     if (Object.prototype.hasOwnProperty.call(data.status, key)) {
+  //       const element = data.status[key]
+  //       if (element == true) a = key
+  //       break
+  //     }
+  //   }
+  // }
 
   useEffect(() => {
     const run = async () => {
@@ -145,7 +156,7 @@ export default function ExistingCaseDetails() {
         <View style={s.card}>
           <View style={s.cardHeaderRow}>
             <View style={s.statusPill}>
-              <Text style={s.statusPillText}>{data.status}</Text>
+              <Text style={s.statusPillText}>{data.status?.name ?? ''}</Text>
             </View>
             <Pressable hitSlop={12} style={s.moreIconBtn}>
               <Feather
@@ -227,11 +238,12 @@ export default function ExistingCaseDetails() {
               Attachments ({data.attachmentsCount})
             </Text>
             <Pressable
+              disabled={!issueId}
               hitSlop={10}
               onPress={() => {
                 // Keep navigation optional; if route isn't wired yet, this is a no-op.
                 try {
-                  navigation.navigate('All issue attachments')
+                  navigation.navigate('All issue attachments', {id: issueId})
                 } catch {}
               }}>
               <Text style={s.viewAllLink}>View All</Text>
@@ -309,10 +321,7 @@ export default function ExistingCaseDetails() {
               style={s.commentInput}
               multiline
             />
-            <Pressable
-              onPress={sendComment}
-              style={s.sendBtn}
-              hitSlop={10}>
+            <Pressable onPress={sendComment} style={s.sendBtn} hitSlop={10}>
               <Feather name="send" size={18} color={colors.white} />
             </Pressable>
           </View>

@@ -12,7 +12,12 @@ import React, { useEffect, useRef, useState } from 'react'
 import { AppState, View } from 'react-native'
 import { shallowEqual, useDispatch, useSelector } from 'react-redux'
 import { fetchUserProfile } from '../services/profileService'
-import { storeProfile } from '../store/ducks/authentication.duck'
+import
+  {
+    getSessionData,
+    login,
+    storeProfile,
+  } from '../store/ducks/authentication.duck'
 import PrivateRoutes from './privateRoutes'
 import PublicRoutes from './publicRoutes'
 
@@ -51,6 +56,10 @@ const Router = ({theme}) => {
       'change',
       handleAppStateChange,
     )
+
+    getSessionData().then(session => {
+      if (session) dispatch(login(session))
+    })
 
     return () => {
       subscription.remove()

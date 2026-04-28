@@ -1,14 +1,14 @@
-import {IconSymbol} from '@/components/ui/icon-symbol'
+import { IconSymbol } from '@/components/ui/icon-symbol'
 import {
-  CameraView,
-  CameraType,
-  useCameraPermissions,
-  CameraMode,
   CameraCapturedPicture,
+  CameraMode,
+  CameraType,
+  CameraView,
+  useCameraPermissions,
 } from 'expo-camera'
-import React, {PropsWithChildren, useRef, useState} from 'react'
-import {View, Text, Button, TouchableOpacity, StyleSheet} from 'react-native'
-import {colors} from '../utils/colors'
+import React, { PropsWithChildren, useRef, useState } from 'react'
+import { Button, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { colors } from '../utils/colors'
 
 type Props = PropsWithChildren<{
   onTakeCameraMedia: (media: any) => void
@@ -108,8 +108,7 @@ export default function CustomCamera({
       <View style={styles.buttonContainer}>
         <TouchableOpacity
           style={styles.iconButton}
-          onPress={toggleCameraFacing}
-        >
+          onPress={toggleCameraFacing}>
           <IconSymbol
             name={'camera.rotate.fill'}
             size={34}
@@ -120,8 +119,7 @@ export default function CustomCamera({
 
         <TouchableOpacity
           style={styles.captureButton}
-          onPress={takeImageOrVideo}
-        >
+          onPress={takeImageOrVideo}>
           {cameraMode === 'video' ? (
             <View
               style={[
