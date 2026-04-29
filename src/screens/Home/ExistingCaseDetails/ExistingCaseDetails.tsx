@@ -137,10 +137,7 @@ export default function ExistingCaseDetails() {
     }
   }
 
-  async function updateIssueService(arg0: {
-    rate?: number
-    appealReason?: string
-  }) {
+  async function updateIssue(arg0: {rate?: number; appealReason?: string}) {
     if (!rate && !appealReason) return
     console.log(rate)
     console.log(appealReason)
@@ -396,7 +393,7 @@ export default function ExistingCaseDetails() {
                 </Pressable>
                 <Pressable
                   onPress={async () => {
-                    await updateIssueService({rate}) // Call your update method here
+                    await updateIssue({rate}) // Call your update method here
                     setRateModalVisible(false)
                   }}
                   style={[
@@ -440,7 +437,7 @@ export default function ExistingCaseDetails() {
                 </Pressable>
                 <Pressable
                   onPress={async () => {
-                    await updateIssueService({appealReason})
+                    await updateIssue({appealReason})
                     setAppealModalVisible(false)
                   }}
                   style={[
