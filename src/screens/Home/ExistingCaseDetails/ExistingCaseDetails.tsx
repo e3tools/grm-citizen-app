@@ -50,25 +50,31 @@ export default function ExistingCaseDetails() {
       progress: [
         {
           key: 'resolved',
-          title: 'Resolved',
+          title: i18n.t('progress_title_3'),
           subtitle: 'Maintenance crew repaired the site.',
-          date: 'Nov 02',
+          date: issue?.status?.open_status
+            ? new Date(issue?.updated_date).toDateString()
+            : '-',
           icon: 'check-circle',
           active: issue?.status?.final_status ?? true,
         },
         {
           key: 'under_review',
-          title: 'Under Review',
+          title: i18n.t('progress_title_2'),
           subtitle: 'Assigned to Road Maintenance Dept.',
-          date: 'Oct 26',
+          date: issue?.status?.open_status
+            ? new Date(issue?.updated_date).toDateString()
+            : '-',
           icon: 'clipboard',
           active: issue?.status?.open_status ?? false,
         },
         {
           key: 'reported',
-          title: 'Reported',
+          title: i18n.t('progress_title_1'),
           subtitle: 'Case successfully submitted.',
-          date: 'Oct 24',
+          date: issue?.status?.initial_status
+            ? new Date(issue?.updated_date).toDateString()
+            : '-',
           icon: 'flag',
           active: issue?.status?.initial_status ?? false,
         },
@@ -140,11 +146,10 @@ export default function ExistingCaseDetails() {
 
   async function onIssueSave({rate, appealReason}) {
     if (!rate && !appealReason) return
-    const payload = {}
+    const payload: {rating?: number; appeal_status?: boolean} = {}
     if (rate) payload.rating = rate
     if (appealReason) {
-      payload.escalation_reason = appealReason
-      // payload.status = 2
+      payload.appeal_status = true
     }
     const issueId = route?.params?.id
     if (!issueId) return
@@ -155,30 +160,6 @@ export default function ExistingCaseDetails() {
       console.error('Error updating issue', error.message)
     }
   }
-
-  // const updateIssueApi = async (id, payload) => {
-  //   const session = await getSessionData()
-  //   addTokenToHttpClient(session)
-  //   const url = `${baseURL}/issues/${id}/update/`
-
-  //   const requestOptions = {
-  //     url,
-  //     method: 'PATCH',
-  //     data: JSON.stringify(payload),
-  //     headers: {'Content-Type': 'application/json'},
-  //   }
-
-  //   try {
-  //     const response = await request({
-  //       ...requestOptions,
-  //     })
-
-  //     return response.data
-  //   } catch (error) {
-  //     console.error('Error updating issue', error.message)
-  //     throw new Error(`Error updating issue ${error.message}`)
-  //   }
-  // }
 
   return (
     <SafeAreaView style={s.screen}>
@@ -195,7 +176,7 @@ export default function ExistingCaseDetails() {
             justifyContent: 'center',
             alignItems: 'center',
           }}>
-          <Text style={{color: '#111827'}}>Loading…</Text>
+          <Text style={{color: '#111827'}}>{i18n.t('loading')}</Text>
         </View>
       )}
       <ScrollView
@@ -229,14 +210,16 @@ export default function ExistingCaseDetails() {
               <Text style={s.metaValue}>{data.dateOfSubmission}</Text>
             </View>
             <View style={s.metaCell}>
-              <Text style={s.metaLabel}>CASE TYPE</Text>
+              <Text style={s.metaLabel}>{i18n.t('case_type')}</Text>
               <Text style={s.metaValue}>{data.caseType}</Text>
             </View>
           </View>
 
           <View style={s.divider} />
 
-          <Text style={s.sectionLabel}>DESCRIPTION</Text>
+          <Text style={s.sectionLabel}>
+            {i18n.t('description').toLocaleUpperCase()}
+          </Text>
           <Text style={s.description}>{data.description}</Text>
         </View>
 
@@ -244,7 +227,9 @@ export default function ExistingCaseDetails() {
           <View style={s.sectionHeaderRow}>
             <View style={s.sectionHeaderLeft}>
               <Feather name="activity" size={16} color={colors.primary} />
-              <Text style={s.sectionHeaderTitle}>Case Progress</Text>
+              <Text style={s.sectionHeaderTitle}>
+                {i18n.t('case_progress')}
+              </Text>
             </View>
           </View>
 
@@ -283,7 +268,7 @@ export default function ExistingCaseDetails() {
         <View style={s.card}>
           <View style={s.sectionHeaderRow}>
             <Text style={s.sectionHeaderTitlePlain}>
-              Attachments ({data.attachmentsCount})
+              {i18n.t('attachments')} ({data.attachmentsCount})
             </Text>
             <Pressable
               disabled={!issueId}
@@ -294,7 +279,7 @@ export default function ExistingCaseDetails() {
                   navigation.navigate('All issue attachments', {id: issueId})
                 } catch {}
               }}>
-              <Text style={s.viewAllLink}>View All</Text>
+              <Text style={s.viewAllLink}>{i18n.t('view_all')}</Text>
             </Pressable>
           </View>
 
@@ -313,7 +298,9 @@ export default function ExistingCaseDetails() {
         </View>
 
         <View style={s.card}>
-          <Text style={s.sectionHeaderTitlePlain}>Updates &amp; Comments</Text>
+          <Text style={s.sectionHeaderTitlePlain}>
+            {i18n.t('updates_and_comments')}
+          </Text>
 
           <View style={s.chatList}>
             {data.updates.map(msg => {
@@ -362,7 +349,7 @@ export default function ExistingCaseDetails() {
 
           <View style={s.commentComposer}>
             <TextInput
-              placeholder="Add a comment..."
+              placeholder={i18n.t('add_a_comment')}
               placeholderTextColor="#9ca3af"
               value={comment}
               onChangeText={setComment}
@@ -382,14 +369,18 @@ export default function ExistingCaseDetails() {
           onPress={() => setRateModalVisible(true)}
           style={[s.bottomBtn, s.bottomBtnPrimary]}>
           <Feather name="star" size={18} color={colors.white} />
-          <Text style={[s.bottomBtnText, s.bottomBtnTextPrimary]}>Rate</Text>
+          <Text style={[s.bottomBtnText, s.bottomBtnTextPrimary]}>
+            {i18n.t('rate')}
+          </Text>
         </Pressable>
         {/* Appeal Button */}
         <Pressable
           onPress={() => setAppealModalVisible(true)}
           style={[s.bottomBtn, s.bottomBtnDangerOutline]}>
           <Feather name="flag" size={18} color={'#9d3224'} />
-          <Text style={[s.bottomBtnText, s.bottomBtnTextDanger]}>Appeal</Text>
+          <Text style={[s.bottomBtnText, s.bottomBtnTextDanger]}>
+            {i18n.t('appeal')}
+          </Text>
         </Pressable>
 
         {/* Rate Modal */}
@@ -402,7 +393,7 @@ export default function ExistingCaseDetails() {
           <View style={s.modalBackdrop}>
             <View style={s.modalContent}>
               <Text style={[s.modalTitle, {fontSize: 18, fontWeight: 'bold'}]}>
-                Rate your experience
+                {i18n.t('rate_your_experience')}
               </Text>
               {/* Simple integer rating, e.g., from 1 to 5 */}
               <View style={s.rateStarsRow}>
@@ -426,7 +417,7 @@ export default function ExistingCaseDetails() {
                   onPress={() => setRateModalVisible(false)}
                   style={s.modalCancelBtn}>
                   <Text style={[s.modalCancelText, {color: '#666666'}]}>
-                    Cancel
+                    {i18n.t('cancel')}
                   </Text>
                 </Pressable>
                 <Pressable
@@ -447,7 +438,7 @@ export default function ExistingCaseDetails() {
                   ]}
                   disabled={!rate}>
                   <Text style={[s.modalConfirmText, {color: '#ffffff'}]}>
-                    Confirm
+                    {i18n.t('confirm')}
                   </Text>
                 </Pressable>
               </View>
@@ -464,9 +455,9 @@ export default function ExistingCaseDetails() {
           style={{backgroundColor: 'rgba(0,0,0,0.4)'}}>
           <View style={[s.modalBackdrop]}>
             <View style={s.modalContent}>
-              <Text style={s.modalTitle}>Appeal Decision</Text>
+              <Text style={s.modalTitle}>{i18n.t('appeal_decision')}</Text>
               <TextInput
-                placeholder="Enter your appeal reason…"
+                placeholder={i18n.t('appeal_reason_placeholder')}
                 value={appealReason}
                 onChangeText={setAppealReason}
                 style={s.modalTextInput}
@@ -476,7 +467,7 @@ export default function ExistingCaseDetails() {
                 <Pressable
                   onPress={() => setAppealModalVisible(false)}
                   style={s.modalCancelBtn}>
-                  <Text style={s.modalCancelText}>Cancel</Text>
+                  <Text style={s.modalCancelText}>{i18n.t('cancel')}</Text>
                 </Pressable>
                 <Pressable
                   onPress={async () => {
@@ -490,7 +481,7 @@ export default function ExistingCaseDetails() {
                     },
                   ]}
                   disabled={!appealReason}>
-                  <Text style={s.modalConfirmText}>Confirm</Text>
+                  <Text style={s.modalConfirmText}>{i18n.t('confirm')}</Text>
                 </Pressable>
               </View>
             </View>
