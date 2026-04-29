@@ -34,6 +34,7 @@
   "password_hint": "Your password must be at least 8 characters long, including uppercase, lowercase, numbers, and symbols.",
   "account_create_success": "Your account has been successfully created",
   "already_have_account": "Already have an account?",
+  "draft": "Draft",
   "login": "Login",
   "dont_have_account": "Don't have an account?",
   "welcome_login": "Welcome! To access your account, please log in",
@@ -131,5 +132,18 @@
   "record_audio": "Record Audio",
   "case_description_input_label": "Describe the issue in detail",
   "existing_case_details": "Case Details",
-  "new_case": "New Case"
+  "new_case": "New Case",
+  "step_4_case_summary": "STEP 4: CASE SUMMARY",
+  "security_level": "SECURITY LEVEL",
+  "confidential_report": "Confidential Report",
+  "confidential_report_subtitle": "Your identity will remain hidden from public view but visible to case officers",
+  "information_ledger": "INFORMATION LEDGER",
+  "category": "Category",
+  "date_and_time": "Date & Time",
+  "geo_location": "GEO-LOCATION",
+  "certify_information_true": "I certify that the information provided is true and accurate to the best of my knowledge.",
+  "submit_case": "Submit Case",
+  "case_created_successfully": "Case Created Successfully!",
+  "tracking_code": "Tracking Code",
+  "ok": "Ok"
 }

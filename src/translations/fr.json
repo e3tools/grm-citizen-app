@@ -74,6 +74,7 @@
   "no_comments_yet": "Aucun commentaire pour l'instant.",
   "no_comments_to_load": "Plus aucun commentaire à charger",
   "updates_and_comments": "Mises à jour et commentaires",
+  "draft": "Brouillon",
   "add_a_comment": "Ajouter un commentaire...",
   "rate_your_experience": "Évaluez votre expérience",
   "rate": "Évaluer",
@@ -130,5 +131,18 @@
   "record_audio": "Enregistrer l'audio",
   "case_description_input_label": "Décrivez le problème en détail",
   "existing_case_details": "Détails de l'affaire",
-  "new_case": "Nouveau cas"
+  "new_case": "Nouveau cas",
+  "step_4_case_summary": "ÉTAPE 4 : RÉSUMÉ DU CAS",
+  "security_level": "NIVEAU DE SÉCURITÉ",
+  "confidential_report": "Rapport confidentiel",
+  "confidential_report_subtitle": "Votre identité restera cachée du public mais visible pour les agents de cas",
+  "information_ledger": "REGISTRE D'INFORMATION",
+  "category": "Catégorie",
+  "date_and_time": "Date et heure",
+  "geo_location": "GÉOLOCALISATION",
+  "certify_information_true": "Je certifie que les informations fournies sont vraies et exactes au meilleur de ma connaissance.",
+  "submit_case": "Soumettre le cas",
+  "case_created_successfully": "Cas créé avec succès!",
+  "tracking_code": "Code de suivi",
+  "ok": "Ok"
 }

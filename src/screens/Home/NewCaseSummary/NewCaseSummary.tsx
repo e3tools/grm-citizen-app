@@ -1,4 +1,5 @@
 import { addIssueAttachment, createIssue } from '@/src/services/issueService'
+import { i18n } from '@/src/translations/i18n'
 import { Feather } from '@expo/vector-icons'
 import { useNavigation, useRoute } from '@react-navigation/native'
 import React, { useMemo, useState } from 'react'
@@ -52,14 +53,6 @@ function filenameFromPath(path: string) {
   return parts[parts.length - 1] || 'attachment'
 }
 
-function generateTrackingCode(): string {
-  const randomWord =
-    SAMPLE_WORDS[Math.floor(Math.random() * SAMPLE_WORDS.length)]
-  const randomNumber = Math.floor(Math.random() * 10000)
-  const code = `${randomWord}${randomNumber}`
-  return code
-}
-
 function formatFallbackDate(input: any) {
   if (!input) return ''
   if (typeof input === 'string') return input
@@ -84,6 +77,7 @@ export default function NewCaseSummary() {
   const [isCaseCreated, setIsCaseCreated] = useState(false)
   const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState<unknown>()
+  const [trackingCode, setTrackingCode] = useState('')
   const {session, profile} = useSelector((state: any) => {
     return state.get('authentication').toObject()
   }, shallowEqual)
@@ -130,7 +124,7 @@ export default function NewCaseSummary() {
         'Your identity will remain hidden from public view but visible to case officers',
       category: category ? String(category) : '—',
       dateTime: dateTime || '—',
-      status: 'Draft',
+      status: i18n.t('draft'),
       description: description ? String(description) : '—',
       attachments,
       locationLine: locationLineParts.length
@@ -138,6 +132,15 @@ export default function NewCaseSummary() {
         : '—',
     }
   }, [params.caseDetails, params.locationDetails])
+
+  const generateTrackingCode = () => {
+    const randomWord =
+      SAMPLE_WORDS[Math.floor(Math.random() * SAMPLE_WORDS.length)]
+    const randomNumber = Math.floor(Math.random() * 10000)
+    const code = `${randomWord}${randomNumber}`
+    setTrackingCode(code)
+    return code
+  }
 
   const createCase = async () => {
     setSubmitting(true)
@@ -241,11 +244,13 @@ export default function NewCaseSummary() {
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.scrollContent}>
-        <Text style={styles.stepKicker}>STEP 4: CASE SUMMARY</Text>
+        <Text style={styles.stepKicker}>{i18n.t('step_4_case_summary')}</Text>
 
         <View style={styles.card}>
           <View style={styles.cardHeaderRow}>
-            <Text style={styles.cardHeaderLabel}>SECURITY LEVEL</Text>
+            <Text style={styles.cardHeaderLabel}>
+              {i18n.t('security_level')}
+            </Text>
           </View>
 
           <View style={styles.securityRow}>
@@ -254,10 +259,10 @@ export default function NewCaseSummary() {
             </View>
             <View style={{flex: 1}}>
               <Text style={styles.securityTitle}>
-                {viewModel.securityTitle}
+                {i18n.t('confidential_report')}
               </Text>
               <Text style={styles.securitySubtitle}>
-                {viewModel.securitySubtitle}
+                {i18n.t('confidential_report_subtitle')}
               </Text>
             </View>
           </View>
@@ -265,23 +270,27 @@ export default function NewCaseSummary() {
 
         <View style={styles.card}>
           <View style={styles.cardHeaderRow}>
-            <Text style={styles.cardHeaderLabel}>INFORMATION LEDGER</Text>
+            <Text style={styles.cardHeaderLabel}>
+              {i18n.t('information_ledger')}
+            </Text>
           </View>
 
           <View style={styles.table}>
             <View style={styles.tableRow}>
               <View style={styles.tableCell}>
-                <Text style={styles.tableLabel}>CATEGORY</Text>
+                <Text style={styles.tableLabel}>{i18n.t('category')}</Text>
                 <Text style={styles.tableValue}>{viewModel.category}</Text>
               </View>
               <View style={styles.tableCell}>
-                <Text style={styles.tableLabel}>DATE &amp; TIME</Text>
+                <Text style={styles.tableLabel}>{i18n.t('date_and_time')}</Text>
                 <Text style={styles.tableValue}>{viewModel.dateTime}</Text>
               </View>
             </View>
 
             <View style={styles.tableRowSingle}>
-              <Text style={styles.tableLabel}>STATUS</Text>
+              <Text style={styles.tableLabel}>
+                {i18n.t('status').toLocaleUpperCase()}
+              </Text>
               <View style={styles.statusRow}>
                 <View style={styles.statusDot} />
                 <Text style={styles.statusText}>{viewModel.status}</Text>
@@ -290,13 +299,16 @@ export default function NewCaseSummary() {
 
             <View style={styles.divider} />
 
-            <Text style={styles.sectionLabel}>DESCRIPTION</Text>
+            <Text style={styles.sectionLabel}>
+              {i18n.t('description').toUpperCase()}
+            </Text>
             <Text style={styles.bodyText}>{viewModel.description}</Text>
 
             <View style={styles.divider} />
 
             <Text style={styles.sectionLabel}>
-              ATTACHMENTS ({viewModel.attachments.length})
+              {i18n.t('attachments').toUpperCase()} (
+              {viewModel.attachments.length})
             </Text>
             <View style={styles.attachmentsRow}>
               {viewModel.attachments.slice(0, 2).map((a, idx) => (
@@ -313,7 +325,7 @@ export default function NewCaseSummary() {
 
         <View style={styles.card}>
           <View style={styles.cardHeaderRow}>
-            <Text style={styles.cardHeaderLabel}>GEO-LOCATION</Text>
+            <Text style={styles.cardHeaderLabel}>{i18n.t('geo_location')}</Text>
           </View>
 
           <Text style={styles.geoText}>{viewModel.locationLine}</Text>
@@ -335,8 +347,7 @@ export default function NewCaseSummary() {
             )}
           </View>
           <Text style={styles.certText}>
-            I certify that the information provided is true and accurate to the
-            best of my knowledge.
+            {i18n.t('certify_information_true')}
           </Text>
         </Pressable>
 
@@ -349,7 +360,7 @@ export default function NewCaseSummary() {
             disabled={submitting}
             textColor="white"
             color="white"
-            label={'Submit Case'}
+            label={i18n.t('submit_case')}
             iconName={'send'}
             onPress={() => {
               if (!certified) return
@@ -399,7 +410,19 @@ export default function NewCaseSummary() {
                     marginBottom: 12,
                     textAlign: 'center',
                   }}>
-                  Case Created Successfully!
+                  {i18n.t('case_created_successfully')}
+                </Text>
+                {/* Add tracking code display here */}
+                <Text
+                  style={{
+                    fontSize: 16,
+                    fontWeight: '400',
+                    color: colors.secondary,
+                    marginBottom: 8,
+                    textAlign: 'center',
+                  }}>
+                  {i18n.t('tracking_code')}:{' '}
+                  <Text style={{fontWeight: '700'}}>{trackingCode}</Text>
                 </Text>
                 <TouchableOpacity
                   style={{
@@ -421,7 +444,7 @@ export default function NewCaseSummary() {
                       fontWeight: '700',
                       fontSize: 16,
                     }}>
-                    Ok
+                    {i18n.t('ok')}
                   </Text>
                 </TouchableOpacity>
               </View>
