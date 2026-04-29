@@ -1,5 +1,5 @@
-import {StyleSheet} from 'react-native'
-import {colors} from '../../../utils/colors'
+import { StyleSheet } from 'react-native'
+import { colors } from '../../../utils/colors'
 
 export default StyleSheet.create({
   screen: {
@@ -10,7 +10,27 @@ export default StyleSheet.create({
     padding: 16,
     paddingBottom: 120,
   },
-
+  modalBackdrop: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.4)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  modalContent: {
+    backgroundColor: colors.white,
+    padding: 32,
+    borderRadius: 20,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {width: 0, height: 2},
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    elevation: 5,
+    minWidth: 240,
+  },
+  modalTitle: {},
+  modalTextInput: {},
+  rateStarsRow: {flexDirection: 'row'},
   card: {
     backgroundColor: colors.white,
     borderRadius: 14,

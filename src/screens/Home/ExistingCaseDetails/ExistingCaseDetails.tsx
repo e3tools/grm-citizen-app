@@ -3,6 +3,7 @@ import { Feather } from '@expo/vector-icons'
 import { useNavigation, useRoute } from '@react-navigation/native'
 import React, { useEffect, useMemo, useState } from 'react'
 import {
+  Modal,
   Pressable,
   SafeAreaView,
   ScrollView,
@@ -29,6 +30,10 @@ export default function ExistingCaseDetails() {
   const [issue, setIssue] = useState<any>(null)
   const [attachments, setAttachments] = useState<any[]>([])
   const [comments, setComments] = useState<any[]>([])
+  const [appealModalVisible, setAppealModalVisible] = useState(false)
+  const [appealReason, setAppealReason] = useState('')
+  const [rateModalVisible, setRateModalVisible] = useState(false)
+  const [rate, setRate] = useState(5)
 
   const data = useMemo(
     () => ({
@@ -130,6 +135,17 @@ export default function ExistingCaseDetails() {
     } catch {
       setComment(text)
     }
+  }
+
+  async function updateIssueService(arg0: {
+    rate?: number
+    appealReason?: string
+  }) {
+    if (!rate && !appealReason) return
+    console.log(rate)
+    console.log(appealReason)
+
+    // throw new Error('Function not implemented.')
   }
 
   return (
@@ -329,14 +345,115 @@ export default function ExistingCaseDetails() {
       </ScrollView>
 
       <View style={s.bottomBar}>
-        <Pressable style={[s.bottomBtn, s.bottomBtnPrimary]}>
+        {/* Rate Button */}
+        <Pressable
+          onPress={() => setRateModalVisible(true)}
+          style={[s.bottomBtn, s.bottomBtnPrimary]}>
           <Feather name="star" size={18} color={colors.white} />
           <Text style={[s.bottomBtnText, s.bottomBtnTextPrimary]}>Rate</Text>
         </Pressable>
-        <Pressable style={[s.bottomBtn, s.bottomBtnDangerOutline]}>
+        {/* Appeal Button */}
+        <Pressable
+          onPress={() => setAppealModalVisible(true)}
+          style={[s.bottomBtn, s.bottomBtnDangerOutline]}>
           <Feather name="flag" size={18} color={'#9d3224'} />
           <Text style={[s.bottomBtnText, s.bottomBtnTextDanger]}>Appeal</Text>
         </Pressable>
+
+        {/* Rate Modal */}
+        <Modal
+          transparent
+          visible={rateModalVisible}
+          animationType="fade"
+          onRequestClose={() => setRateModalVisible(false)}>
+          <View style={s.modalBackdrop}>
+            <View style={s.modalContent}>
+              <Text style={s.modalTitle}>Rate your experience</Text>
+              {/* Simple integer rating, e.g., from 1 to 5 */}
+              <View style={s.rateStarsRow}>
+                {[1, 2, 3, 4, 5].map(val => (
+                  <Pressable key={val} onPress={() => setRate(val)}>
+                    <Feather
+                      name={rate >= val ? 'star' : 'star'}
+                      size={32}
+                      color={rate >= val ? colors.primary : '#ccc'}
+                      style={{marginHorizontal: 4}}
+                      solid={rate >= val}
+                    />
+                  </Pressable>
+                ))}
+              </View>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'flex-end',
+                  marginTop: 24,
+                }}>
+                <Pressable
+                  onPress={() => setRateModalVisible(false)}
+                  style={s.modalCancelBtn}>
+                  <Text style={s.modalCancelText}>Cancel</Text>
+                </Pressable>
+                <Pressable
+                  onPress={async () => {
+                    await updateIssueService({rate}) // Call your update method here
+                    setRateModalVisible(false)
+                  }}
+                  style={[
+                    s.modalConfirmBtn,
+                    {marginLeft: 12, opacity: rate ? 1 : 0.5},
+                  ]}
+                  disabled={!rate}>
+                  <Text style={s.modalConfirmText}>Confirm</Text>
+                </Pressable>
+              </View>
+            </View>
+          </View>
+        </Modal>
+
+        {/* Appeal Modal */}
+        <Modal
+          transparent
+          visible={appealModalVisible}
+          animationType="fade"
+          onRequestClose={() => setAppealModalVisible(false)}>
+          <View style={s.modalBackdrop}>
+            <View style={s.modalContent}>
+              <Text style={s.modalTitle}>Appeal Decision</Text>
+              <TextInput
+                placeholder="Enter your appeal reason…"
+                value={appealReason}
+                onChangeText={setAppealReason}
+                style={s.modalTextInput}
+                multiline
+              />
+              <View
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'flex-end',
+                  marginTop: 24,
+                }}>
+                <Pressable
+                  onPress={() => setAppealModalVisible(false)}
+                  style={s.modalCancelBtn}>
+                  <Text style={s.modalCancelText}>Cancel</Text>
+                </Pressable>
+                <Pressable
+                  onPress={async () => {
+                    await updateIssueService({appealReason})
+                    setAppealModalVisible(false)
+                  }}
+                  style={[
+                    s.modalConfirmBtn,
+                    {marginLeft: 12, opacity: appealReason ? 1 : 0.5},
+                  ]}
+                  disabled={!appealReason}>
+                  <Text style={s.modalConfirmText}>Confirm</Text>
+                </Pressable>
+              </View>
+            </View>
+          </View>
+        </Modal>
       </View>
     </SafeAreaView>
   )
