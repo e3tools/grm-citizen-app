@@ -16,6 +16,7 @@ import {
   getIssueDetail,
   listIssueAttachments,
   listIssueComments,
+  updateIssue,
 } from '../../../services/issueService'
 import { colors } from '../../../utils/colors'
 import styles from './ExistingCaseDetails.style'
@@ -137,13 +138,47 @@ export default function ExistingCaseDetails() {
     }
   }
 
-  async function updateIssue(arg0: {rate?: number; appealReason?: string}) {
+  async function onIssueSave({rate, appealReason}) {
     if (!rate && !appealReason) return
-    console.log(rate)
-    console.log(appealReason)
-
-    // throw new Error('Function not implemented.')
+    const payload = {}
+    if (rate) payload.rating = rate
+    if (appealReason) {
+      payload.escalation_reason = appealReason
+      // payload.status = 2
+    }
+    const issueId = route?.params?.id
+    if (!issueId) return
+    try {
+      await updateIssue(issueId, payload)
+      setAppealReason('')
+    } catch (error) {
+      console.error('Error updating issue', error.message)
+    }
   }
+
+  // const updateIssueApi = async (id, payload) => {
+  //   const session = await getSessionData()
+  //   addTokenToHttpClient(session)
+  //   const url = `${baseURL}/issues/${id}/update/`
+
+  //   const requestOptions = {
+  //     url,
+  //     method: 'PATCH',
+  //     data: JSON.stringify(payload),
+  //     headers: {'Content-Type': 'application/json'},
+  //   }
+
+  //   try {
+  //     const response = await request({
+  //       ...requestOptions,
+  //     })
+
+  //     return response.data
+  //   } catch (error) {
+  //     console.error('Error updating issue', error.message)
+  //     throw new Error(`Error updating issue ${error.message}`)
+  //   }
+  // }
 
   return (
     <SafeAreaView style={s.screen}>
@@ -362,14 +397,36 @@ export default function ExistingCaseDetails() {
           transparent
           visible={rateModalVisible}
           animationType="fade"
-          onRequestClose={() => setRateModalVisible(false)}>
-          <View style={s.modalBackdrop}>
-            <View style={s.modalContent}>
-              <Text style={s.modalTitle}>Rate your experience</Text>
+          onRequestClose={() => setRateModalVisible(false)}
+          style={{backgroundColor: 'rgba(0,0,0,0.4)'}}>
+          <View
+            style={[
+              s.modalBackdrop,
+              {justifyContent: 'center', alignItems: 'center'},
+            ]}>
+            <View
+              style={[
+                s.modalContent,
+                {padding: 24, borderRadius: 12, backgroundColor: '#ffffff'},
+              ]}>
+              <Text style={[s.modalTitle, {fontSize: 18, fontWeight: 'bold'}]}>
+                Rate your experience
+              </Text>
               {/* Simple integer rating, e.g., from 1 to 5 */}
-              <View style={s.rateStarsRow}>
+              <View
+                style={[
+                  s.rateStarsRow,
+                  {
+                    marginTop: 12,
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                  },
+                ]}>
                 {[1, 2, 3, 4, 5].map(val => (
-                  <Pressable key={val} onPress={() => setRate(val)}>
+                  <Pressable
+                    key={val}
+                    onPress={() => setRate(val)}
+                    style={{marginRight: 8}}>
                     <Feather
                       name={rate >= val ? 'star' : 'star'}
                       size={32}
@@ -385,23 +442,43 @@ export default function ExistingCaseDetails() {
                   flexDirection: 'row',
                   justifyContent: 'flex-end',
                   marginTop: 24,
+                  marginBottom: 12,
                 }}>
                 <Pressable
                   onPress={() => setRateModalVisible(false)}
-                  style={s.modalCancelBtn}>
-                  <Text style={s.modalCancelText}>Cancel</Text>
+                  style={[
+                    s.modalCancelBtn,
+                    {
+                      backgroundColor: '#cccccc',
+                      paddingHorizontal: 16,
+                      paddingVertical: 8,
+                      borderRadius: 8,
+                    },
+                  ]}>
+                  <Text style={[s.modalCancelText, {color: '#666666'}]}>
+                    Cancel
+                  </Text>
                 </Pressable>
                 <Pressable
                   onPress={async () => {
-                    await updateIssue({rate}) // Call your update method here
+                    await onIssueSave({rate}) // Call your update method here
                     setRateModalVisible(false)
                   }}
                   style={[
                     s.modalConfirmBtn,
-                    {marginLeft: 12, opacity: rate ? 1 : 0.5},
+                    {
+                      marginLeft: 12,
+                      opacity: rate ? 1 : 0.5,
+                      backgroundColor: colors.primary,
+                      paddingHorizontal: 16,
+                      paddingVertical: 8,
+                      borderRadius: 8,
+                    },
                   ]}
                   disabled={!rate}>
-                  <Text style={s.modalConfirmText}>Confirm</Text>
+                  <Text style={[s.modalConfirmText, {color: '#ffffff'}]}>
+                    Confirm
+                  </Text>
                 </Pressable>
               </View>
             </View>
@@ -413,15 +490,36 @@ export default function ExistingCaseDetails() {
           transparent
           visible={appealModalVisible}
           animationType="fade"
-          onRequestClose={() => setAppealModalVisible(false)}>
-          <View style={s.modalBackdrop}>
-            <View style={s.modalContent}>
-              <Text style={s.modalTitle}>Appeal Decision</Text>
+          onRequestClose={() => setAppealModalVisible(false)}
+          style={{backgroundColor: 'rgba(0,0,0,0.4)'}}>
+          <View
+            style={[
+              s.modalBackdrop,
+              {justifyContent: 'center', alignItems: 'center'},
+            ]}>
+            <View
+              style={[
+                s.modalContent,
+                {padding: 24, borderRadius: 12, backgroundColor: '#ffffff'},
+              ]}>
+              <Text style={[s.modalTitle, {fontSize: 18, fontWeight: 'bold'}]}>
+                Appeal Decision
+              </Text>
               <TextInput
                 placeholder="Enter your appeal reason…"
                 value={appealReason}
                 onChangeText={setAppealReason}
-                style={s.modalTextInput}
+                style={[
+                  s.modalTextInput,
+                  {
+                    borderColor: '#cccccc',
+                    borderWidth: 1,
+                    paddingHorizontal: 12,
+                    paddingVertical: 8,
+                    borderRadius: 8,
+                    margin: 10,
+                  },
+                ]}
                 multiline
               />
               <View
@@ -429,23 +527,43 @@ export default function ExistingCaseDetails() {
                   flexDirection: 'row',
                   justifyContent: 'flex-end',
                   marginTop: 24,
+                  marginBottom: 12,
                 }}>
                 <Pressable
                   onPress={() => setAppealModalVisible(false)}
-                  style={s.modalCancelBtn}>
-                  <Text style={s.modalCancelText}>Cancel</Text>
+                  style={[
+                    s.modalCancelBtn,
+                    {
+                      backgroundColor: '#cccccc',
+                      paddingHorizontal: 16,
+                      paddingVertical: 8,
+                      borderRadius: 8,
+                    },
+                  ]}>
+                  <Text style={[s.modalCancelText, {color: '#666666'}]}>
+                    Cancel
+                  </Text>
                 </Pressable>
                 <Pressable
                   onPress={async () => {
-                    await updateIssue({appealReason})
+                    await onIssueSave({appealReason})
                     setAppealModalVisible(false)
                   }}
                   style={[
                     s.modalConfirmBtn,
-                    {marginLeft: 12, opacity: appealReason ? 1 : 0.5},
+                    {
+                      marginLeft: 12,
+                      opacity: appealReason ? 1 : 0.5,
+                      backgroundColor: colors.primary,
+                      paddingHorizontal: 16,
+                      paddingVertical: 8,
+                      borderRadius: 8,
+                    },
                   ]}
                   disabled={!appealReason}>
-                  <Text style={s.modalConfirmText}>Confirm</Text>
+                  <Text style={[s.modalConfirmText, {color: '#ffffff'}]}>
+                    Confirm
+                  </Text>
                 </Pressable>
               </View>
             </View>

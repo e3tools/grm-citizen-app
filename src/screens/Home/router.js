@@ -161,7 +161,6 @@ function DashboardStackScreen() {
           ...customHeaderLeftIcon({
             navigation,
             route,
-            pageToNavigate: 'All issues',
           }),
         })}
       />

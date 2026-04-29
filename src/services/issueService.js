@@ -188,3 +188,28 @@ export async function getIssueComments(id, page = 1) {
 export async function getIssueAttachments(id, page = 1) {
   return listIssueAttachments(id, page)
 }
+export async function updateIssue(id, payload) {
+  const session = await getSessionData()
+  addTokenToHttpClient(session)
+  const url = `${baseURL}/issues/${id}/update/`
+
+  const requestOptions = {
+    url,
+    method: 'PATCH',
+    data: JSON.stringify(payload),
+    headers: {'Content-Type': 'application/json'},
+  }
+
+  try {
+    const response = await request({
+      ...requestOptions,
+    })
+
+    console.log(response)
+
+    return response.data
+  } catch (error) {
+    console.error('Error updating issue', error.message)
+    throw new Error(`Error updating issue ${error.message}`)
+  }
+}
