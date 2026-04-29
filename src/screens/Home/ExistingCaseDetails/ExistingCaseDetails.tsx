@@ -399,29 +399,13 @@ export default function ExistingCaseDetails() {
           animationType="fade"
           onRequestClose={() => setRateModalVisible(false)}
           style={{backgroundColor: 'rgba(0,0,0,0.4)'}}>
-          <View
-            style={[
-              s.modalBackdrop,
-              {justifyContent: 'center', alignItems: 'center'},
-            ]}>
-            <View
-              style={[
-                s.modalContent,
-                {padding: 24, borderRadius: 12, backgroundColor: '#ffffff'},
-              ]}>
+          <View style={s.modalBackdrop}>
+            <View style={s.modalContent}>
               <Text style={[s.modalTitle, {fontSize: 18, fontWeight: 'bold'}]}>
                 Rate your experience
               </Text>
               {/* Simple integer rating, e.g., from 1 to 5 */}
-              <View
-                style={[
-                  s.rateStarsRow,
-                  {
-                    marginTop: 12,
-                    flexDirection: 'row',
-                    justifyContent: 'space-between',
-                  },
-                ]}>
+              <View style={s.rateStarsRow}>
                 {[1, 2, 3, 4, 5].map(val => (
                   <Pressable
                     key={val}
@@ -437,24 +421,10 @@ export default function ExistingCaseDetails() {
                   </Pressable>
                 ))}
               </View>
-              <View
-                style={{
-                  flexDirection: 'row',
-                  justifyContent: 'flex-end',
-                  marginTop: 24,
-                  marginBottom: 12,
-                }}>
+              <View style={s.modalButtonsContainer}>
                 <Pressable
                   onPress={() => setRateModalVisible(false)}
-                  style={[
-                    s.modalCancelBtn,
-                    {
-                      backgroundColor: '#cccccc',
-                      paddingHorizontal: 16,
-                      paddingVertical: 8,
-                      borderRadius: 8,
-                    },
-                  ]}>
+                  style={s.modalCancelBtn}>
                   <Text style={[s.modalCancelText, {color: '#666666'}]}>
                     Cancel
                   </Text>
@@ -492,57 +462,21 @@ export default function ExistingCaseDetails() {
           animationType="fade"
           onRequestClose={() => setAppealModalVisible(false)}
           style={{backgroundColor: 'rgba(0,0,0,0.4)'}}>
-          <View
-            style={[
-              s.modalBackdrop,
-              {justifyContent: 'center', alignItems: 'center'},
-            ]}>
-            <View
-              style={[
-                s.modalContent,
-                {padding: 24, borderRadius: 12, backgroundColor: '#ffffff'},
-              ]}>
-              <Text style={[s.modalTitle, {fontSize: 18, fontWeight: 'bold'}]}>
-                Appeal Decision
-              </Text>
+          <View style={[s.modalBackdrop]}>
+            <View style={s.modalContent}>
+              <Text style={s.modalTitle}>Appeal Decision</Text>
               <TextInput
                 placeholder="Enter your appeal reason…"
                 value={appealReason}
                 onChangeText={setAppealReason}
-                style={[
-                  s.modalTextInput,
-                  {
-                    borderColor: '#cccccc',
-                    borderWidth: 1,
-                    paddingHorizontal: 12,
-                    paddingVertical: 8,
-                    borderRadius: 8,
-                    margin: 10,
-                  },
-                ]}
+                style={s.modalTextInput}
                 multiline
               />
-              <View
-                style={{
-                  flexDirection: 'row',
-                  justifyContent: 'flex-end',
-                  marginTop: 24,
-                  marginBottom: 12,
-                }}>
+              <View style={s.modalButtonsContainer}>
                 <Pressable
                   onPress={() => setAppealModalVisible(false)}
-                  style={[
-                    s.modalCancelBtn,
-                    {
-                      backgroundColor: '#cccccc',
-                      paddingHorizontal: 16,
-                      paddingVertical: 8,
-                      borderRadius: 8,
-                    },
-                  ]}>
-                  <Text style={[s.modalCancelText, {color: '#666666'}]}>
-                    Cancel
-                  </Text>
+                  style={s.modalCancelBtn}>
+                  <Text style={s.modalCancelText}>Cancel</Text>
                 </Pressable>
                 <Pressable
                   onPress={async () => {
@@ -552,18 +486,11 @@ export default function ExistingCaseDetails() {
                   style={[
                     s.modalConfirmBtn,
                     {
-                      marginLeft: 12,
                       opacity: appealReason ? 1 : 0.5,
-                      backgroundColor: colors.primary,
-                      paddingHorizontal: 16,
-                      paddingVertical: 8,
-                      borderRadius: 8,
                     },
                   ]}
                   disabled={!appealReason}>
-                  <Text style={[s.modalConfirmText, {color: '#ffffff'}]}>
-                    Confirm
-                  </Text>
+                  <Text style={s.modalConfirmText}>Confirm</Text>
                 </Pressable>
               </View>
             </View>
