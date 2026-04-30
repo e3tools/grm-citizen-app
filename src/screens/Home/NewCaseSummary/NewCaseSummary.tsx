@@ -90,10 +90,10 @@ export default function NewCaseSummary() {
       : []
 
     const category =
-      caseDetails.case_category ||
-      caseDetails.case_sub_component ||
-      caseDetails.case_component ||
-      caseDetails.case_type ||
+      caseDetails.case_category?.name ||
+      caseDetails.case_sub_component?.name ||
+      caseDetails.case_component?.name ||
+      caseDetails.case_type?.name ||
       ''
 
     const date = formatFallbackDate(caseDetails.case_occurrence_date)
@@ -101,7 +101,7 @@ export default function NewCaseSummary() {
 
     const description = caseDetails.case_description || ''
 
-    const district = locationDetails.case_district
+    const district = locationDetails.case_district.name
     const wards = Object.keys(locationDetails)
       .filter(k => k.startsWith('case_ward_'))
       .sort(
@@ -114,8 +114,8 @@ export default function NewCaseSummary() {
 
     const locationLineParts = [
       locationDetails.detailed_location_description,
-      district ? `District ${district}` : undefined,
-      wards.length ? `Ward ${wards.join(' / ')}` : undefined,
+      district ? `${district}` : undefined,
+      wards.length ? `${wards.map(i => i.name).join(', ')}` : undefined,
     ].filter(Boolean)
 
     return {
@@ -159,21 +159,21 @@ export default function NewCaseSummary() {
         .reverse()[0]
 
       const payload = {
-        category: caseDetails.case_category,
-        component: caseDetails.case_component,
-        issue_type: caseDetails.case_type,
-        issue_sub_type: caseDetails.case_sub_type,
+        category: caseDetails.case_category.id,
+        component: caseDetails.case_component.id,
+        issue_type: caseDetails.case_type.id,
+        issue_sub_type: caseDetails.case_sub_type.id,
         status: 1, // Initial status
         description: caseDetails.case_description,
         intake_date: caseDetails.case_occurrence_date.toISOString(),
-        sub_component: caseDetails.case_sub_component,
+        sub_component: caseDetails.case_sub_component.id,
         location_description: locationDetails.detailed_location_description,
         tracking_code: generateTrackingCode(),
         reporter: session.user_id,
         administrative_region:
-          locationDetails[`${ward}`] && locationDetails[`${ward}`].length > 0
-            ? locationDetails[`${ward}`]
-            : locationDetails.case_district,
+          locationDetails[`_id_${ward}`] && locationDetails[`_id_${ward}`] > 0
+            ? locationDetails[`_id_${ward}`]
+            : locationDetails.case_district.id,
         attachments: caseDetails.attachments,
         case_occurrence_frequency:
           caseDetails.case_occurrence_frequency ?? 'one-time-event',
@@ -329,12 +329,14 @@ export default function NewCaseSummary() {
           </View>
 
           <Text style={styles.geoText}>{viewModel.locationLine}</Text>
-
-          <View style={styles.mapPreview}>
+          {/* <View style={styles.mapPreview}>
+            <StaticMap
+              regionName={viewModel.locationLine || 'Your Default Region'}
+            /> 
             <View style={styles.mapPin}>
               <Feather name="map-pin" size={18} color={colors.primary} />
             </View>
-          </View>
+          </View> */}
         </View>
 
         <Pressable

@@ -272,12 +272,38 @@ function NewLocationDetails({route}: {route?: any}) {
   const Separator = () => <View style={styles.lineSeparator} />
 
   const onSubmit = (capturedData: LocationDetailsFormValues) => {
-    console.log('Successfully captured data: ', capturedData)
     removeEncryptedValue('locationFormData')
+
+    // Transform id-based fields in capturedData into corresponding object references for payload
+    const payload = {...capturedData}
+    // Replace case_district with the actual district object
+    if (payload.case_district && Array.isArray(districts)) {
+      payload.case_district =
+        districts.find((d: any) => d.id === capturedData.case_district) ??
+        capturedData.case_district
+    }
+
+    // Replace all case_ward_x keys with their actual ward object
+    Object.keys(payload).forEach(key => {
+      if (key.startsWith('case_ward_') && Array.isArray(districts)) {
+        payload[`_id_${key}`] = capturedData[key]
+        payload[key] =
+          districts.find((w: any) => {
+            // for (const element of w) {
+            //   console.log(element.name)
+            return w.id === capturedData[key]
+            // }
+          }) ?? capturedData[key]
+      }
+    })
+
+    payload.detailed_location_description =
+      capturedData.detailed_location_description
+
     navigation.navigate('new_case_summary', {
       caseDetails: route?.params?.caseDetails ?? {},
       securityLevelDetails: route?.params?.securityLevelDetails ?? {},
-      locationDetails: capturedData,
+      locationDetails: payload,
     })
   }
 
@@ -361,8 +387,6 @@ function NewLocationDetails({route}: {route?: any}) {
       </View>
     )
   }
-
-  console.log(error)
 
   return (
     <Provider>

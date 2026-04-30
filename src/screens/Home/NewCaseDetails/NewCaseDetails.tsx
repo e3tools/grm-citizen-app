@@ -571,10 +571,29 @@ function NewCaseDetails({route}: {route?: any}) {
 
   const onSubmit = e => {
     console.log('Successfully captured data: ', e)
+    const payload = {}
+    payload.case_description = e.case_description
+    payload.case_occurrence_frequency = e.case_occurrence_frequency
+    payload.case_occurrence_date = e.case_occurrence_date
+
+    payload.case_category = data?.categories.results.find(
+      i => i.id == e.case_category,
+    )
+    payload.case_component = data?.components.results.find(
+      i => i.id == e.case_component,
+    )
+    payload.case_sub_component = data?.subcomponents.results.find(
+      i => i.id == e.case_sub_component,
+    )
+    payload.case_sub_type = data?.subtypes.results.find(
+      i => i.id == e.case_sub_type,
+    )
+    payload.case_type = data?.types.results.find(i => i.id == e.case_type)
+
     navigation.navigate('new_location_details', {
       securityLevelDetails: route?.params?.securityLevelDetails ?? {},
       caseDetails: {
-        ...e,
+        ...payload,
         attachments,
       },
     })

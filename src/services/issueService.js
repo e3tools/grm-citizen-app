@@ -16,22 +16,21 @@ function handleErrors(response) {
   return response
 }
 
-export async function fetchIssueList(page = 1) {
+export async function fetchIssueList(nextPage) {
   try {
-    return await getIssues(page)
+    return await getIssues(nextPage)
   } catch (error) {
     console.error('Error syncing issues:', error)
   }
 }
 
-export async function getIssues(page = 1) {
+export async function getIssues(nextPage) {
   const session = await getSessionData()
   addTokenToHttpClient(session)
-  const url = `${baseURL}/issues/reporter/`
+  const url = nextPage ?? `${baseURL}/issues/reporter?page=1&page_size=10`
   const requestOptions = {
     url,
     method: 'GET',
-    params: {page: page.toString(), page_size: '10'},
   }
 
   try {
