@@ -6,6 +6,7 @@ import { useFocusEffect, useNavigation } from '@react-navigation/native'
 import React, { useEffect, useRef } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import {
+  ActivityIndicator,
   KeyboardAvoidingView,
   Platform,
   ScrollView,
@@ -123,14 +124,18 @@ function NewLocationDetails({route}: {route?: any}) {
     return () => subscription.unsubscribe()
   }, [watch])
 
-  const Dropdowns = () => (
-    <>
-      <LocationDistrictDropdown />
-      {wardLevels.map((options, index) => (
-        <LocationWardDropdown key={index} level={index} options={options} />
-      ))}
-    </>
-  )
+  const Dropdowns = () => {
+    return (
+      <>
+        <LocationDistrictDropdown />
+        {wardLevels[0] &&
+          wardLevels[0].length > 0 &&
+          wardLevels.map((options, index) => (
+            <LocationWardDropdown key={index} level={index} options={options} />
+          ))}
+      </>
+    )
+  }
 
   const LocationDistrictDropdown = () => {
     return (
@@ -405,6 +410,13 @@ function NewLocationDetails({route}: {route?: any}) {
                 <View style={styles.formContainer}>
                   <View>
                     <Stepper currentStep={3} numberOfSteps={4} />
+                    {areDistrictsLoading && (
+                      <ActivityIndicator
+                        size={'large'}
+                        color={colors.primary}
+                        style={{marginBottom: 10}}
+                      />
+                    )}
                     <View style={{paddingBottom: 30}}>
                       <Text style={styles.stepTitle}>
                         {i18n.t('case_details_step_3_title')}
