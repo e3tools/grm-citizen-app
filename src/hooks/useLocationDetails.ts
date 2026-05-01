@@ -1,6 +1,6 @@
-import {useEffect, useState} from 'react'
-import {getDistricts, getWards} from '../services/newCaseLocationDetailsService'
-import {getEncryptedData, storeEncryptedData} from '../utils/storageManager'
+import { useEffect, useState } from 'react'
+import { getDistricts, getWards } from '../services/newCaseLocationDetailsService'
+import { getEncryptedData, storeEncryptedData } from '../utils/storageManager'
 
 type Error = {
   message: string
@@ -26,7 +26,6 @@ export function useLocationDetails() {
 
   const fetchDistricts = async () => {
     const result: any[] | undefined = await getDistricts()
-    console.log(result)
 
     setAreDistrictsLoading(false)
     if (!result) {

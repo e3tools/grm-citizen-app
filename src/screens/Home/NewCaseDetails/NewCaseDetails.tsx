@@ -95,7 +95,6 @@ function NewCaseDetails({route}: {route?: any}) {
 
   function onTakeCameraMedia(media: CameraCapturedPicture): void {
     addToAttachments(media)
-    console.log('media outside', media)
     setAttachments([
       ...attachments,
       {

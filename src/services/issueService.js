@@ -70,8 +70,6 @@ export async function createIssue(payload) {
   addTokenToHttpClient(session)
   const url = `${baseURL}/issues/create/`
 
-  console.log(payload)
-
   const requestOptions = {
     url,
     method: 'POST',
@@ -203,8 +201,6 @@ export async function updateIssue(id, payload) {
     const response = await request({
       ...requestOptions,
     })
-
-    console.log(response)
 
     return response.data
   } catch (error) {

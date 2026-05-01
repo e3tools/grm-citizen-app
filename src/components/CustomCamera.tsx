@@ -82,7 +82,6 @@ export default function CustomCamera({
     setIsRecording(true)
     try {
       const video = await cameraRef.current.recordAsync({maxDuration: 3})
-      console.log(video)
     } catch (e) {
       console.error(e)
     }

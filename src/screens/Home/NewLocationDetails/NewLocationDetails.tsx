@@ -149,7 +149,6 @@ function NewLocationDetails({route}: {route?: any}) {
               customOptionLabel={'hierarchical_name'}
               value={value}
               onSelect={(e: any) => {
-                console.log(e)
                 onChange(e)
                 clearWardFieldsAfter(-1)
                 fetchWards(e)

@@ -13,7 +13,6 @@ const IssueList = ({issues, hasNextPage, loadingMore, loadMoreIssues}) => {
       const isCloseToBottom =
         layoutMeasurement.height + contentOffset.y >=
         contentSize.height - paddingToBottom
-      console.log(hasNextPage)
       if (isCloseToBottom && hasNextPage && !loadingMore) {
         loadMoreIssues()
       }
