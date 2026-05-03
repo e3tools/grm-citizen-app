@@ -205,6 +205,6 @@ export async function updateIssue(id, payload) {
     return response.data
   } catch (error) {
     console.error('Error updating issue', error.message)
-    throw new Error(`Error updating issue ${error.message}`)
+    throw error
   }
 }

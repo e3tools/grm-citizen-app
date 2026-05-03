@@ -33,6 +33,7 @@ export default function ExistingCaseDetails() {
   const [comments, setComments] = useState<any[]>([])
   const [appealModalVisible, setAppealModalVisible] = useState(false)
   const [appealReason, setAppealReason] = useState('')
+  const [appealError, setAppealError] = useState()
   const [rateModalVisible, setRateModalVisible] = useState(false)
   const [rate, setRate] = useState(5)
 
@@ -144,20 +145,20 @@ export default function ExistingCaseDetails() {
     }
   }
 
-  async function onIssueSave({rate, appealReason}) {
-    if (!rate && !appealReason) return
+  async function onIssueSave({rate, isAppeal}) {
+    if (!rate && !isAppeal) return
     const payload: {rating?: number; appeal_status?: boolean} = {}
     if (rate) payload.rating = rate
-    if (appealReason) {
+    if (isAppeal) {
       payload.appeal_status = true
     }
     const issueId = route?.params?.id
     if (!issueId) return
     try {
       await updateIssue(issueId, payload)
-      setAppealReason('')
     } catch (error) {
       console.error('Error updating issue', error.message)
+      throw error
     }
   }
 
@@ -455,14 +456,17 @@ export default function ExistingCaseDetails() {
           style={{backgroundColor: 'rgba(0,0,0,0.4)'}}>
           <View style={[s.modalBackdrop]}>
             <View style={s.modalContent}>
-              <Text style={s.modalTitle}>{i18n.t('appeal_decision')}</Text>
-              <TextInput
-                placeholder={i18n.t('appeal_reason_placeholder')}
-                value={appealReason}
-                onChangeText={setAppealReason}
-                style={s.modalTextInput}
-                multiline
-              />
+              <Text style={s.modalTitle}>{i18n.t('appeal_confirmation')}</Text>
+              {appealError && (
+                <Text
+                  style={{
+                    color: colors.error,
+                    textAlign: 'center',
+                    marginTop: 5,
+                  }}>
+                  {appealError}
+                </Text>
+              )}
               <View style={s.modalButtonsContainer}>
                 <Pressable
                   onPress={() => setAppealModalVisible(false)}
@@ -471,16 +475,19 @@ export default function ExistingCaseDetails() {
                 </Pressable>
                 <Pressable
                   onPress={async () => {
-                    await onIssueSave({appealReason})
-                    setAppealModalVisible(false)
+                    try {
+                      await onIssueSave({isAppeal: true})
+                      setAppealError(undefined)
+                      setAppealModalVisible(false)
+                    } catch (error) {
+                      setAppealError(
+                        error?.error?.status == 405
+                          ? i18n.t('appeal_error_unavailable')
+                          : i18n.t('technical_difficulty_error'),
+                      )
+                    }
                   }}
-                  style={[
-                    s.modalConfirmBtn,
-                    {
-                      opacity: appealReason ? 1 : 0.5,
-                    },
-                  ]}
-                  disabled={!appealReason}>
+                  style={s.modalConfirmBtn}>
                   <Text style={s.modalConfirmText}>{i18n.t('confirm')}</Text>
                 </Pressable>
               </View>
