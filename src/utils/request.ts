@@ -15,6 +15,7 @@ const request = ({...options}) => {
       console.log(error.response.headers)
       return Promise.reject({
         message: `${error.status} Error - ${error.response.data}`,
+        error: error.response,
       })
       // Reject the promise to handle it in the calling code
     } else if (error.request) {

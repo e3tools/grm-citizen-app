@@ -8,6 +8,7 @@
   "email": "Email",
   "password": "Mot de passe",
   "login": "Se connecter",
+  "logout": "Se déconnecter",
   "enter_your_full_name": "Entrez votre prénom",
   "enter_your_last_name": "Entrez votre nom de famille",
   "enter_your_username": "Entrez votre nom d'utilisateur",
