@@ -1,12 +1,12 @@
-import { Feather } from '@expo/vector-icons'
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
-import { createStackNavigator } from '@react-navigation/stack'
-import { Platform, Pressable, StyleSheet, Text, View } from 'react-native'
-import { Icon } from 'react-native-elements'
+import {Feather} from '@expo/vector-icons'
+import {createBottomTabNavigator} from '@react-navigation/bottom-tabs'
+import {createStackNavigator} from '@react-navigation/stack'
+import {Platform, Pressable, StyleSheet, Text, View} from 'react-native'
+import {Icon} from 'react-native-elements'
 import posed from 'react-native-pose'
-import { version } from '../../../package.json'
-import { i18n } from '../../translations/i18n'
-import { colors } from '../../utils/colors'
+import {version} from '../../../package.json'
+import {i18n} from '../../translations/i18n'
+import {colors} from '../../utils/colors'
 import CreateIssue from './CreateIssue'
 import ExistingCaseDetails from './ExistingCaseDetails'
 import AllIssueAttachments from './GRM/screens/AllIssueAttachments'
@@ -39,7 +39,8 @@ const customHeaderOptions = label => ({
               color: colors.secondary,
               fontSize: 12,
               textAlign: 'center',
-            }}>
+            }}
+          >
             v {version}
           </Text>
         </View>
@@ -65,7 +66,8 @@ const customHeaderRightIcon = ({navigation}) => ({
       <Pressable
         onPress={() => {
           navigation.navigate('SearchBarGrm')
-        }}>
+        }}
+      >
         <Icon
           type="ionicon"
           color={colors.primary}
@@ -90,7 +92,8 @@ const customHeaderLeftIcon = ({navigation, pageToNavigate}) => ({
           } else {
             navigation.goBack()
           }
-        }}>
+        }}
+      >
         <Icon
           type="ionicon"
           color={colors.primary}
@@ -229,7 +232,8 @@ function HomeRouter() {
       tabBarOptions={{
         activeTintColor: colors.primary,
         inactiveTintColor: 'gray',
-      }}>
+      }}
+    >
       <Tab.Screen
         name="Home"
         options={{

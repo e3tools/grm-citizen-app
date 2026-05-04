@@ -1,8 +1,8 @@
-import React, { useCallback } from 'react'
-import { ActivityIndicator, ScrollView, Text, View } from 'react-native'
+import React, {useCallback} from 'react'
+import {ActivityIndicator, ScrollView, Text, View} from 'react-native'
 import GrievanceCard from '../../../components/GrievanceCard'
-import { i18n } from '../../../translations/i18n'
-import { colors } from '../../../utils/colors'
+import {i18n} from '../../../translations/i18n'
+import {colors} from '../../../utils/colors'
 
 const IssueList = ({issues, hasNextPage, loadingMore, loadMoreIssues}) => {
   const handleScroll = useCallback(
@@ -24,7 +24,8 @@ const IssueList = ({issues, hasNextPage, loadingMore, loadMoreIssues}) => {
       onMomentumScrollBegin={handleScroll}
       showsVerticalScrollIndicator={false}
       scrollEventThrottle={16}
-      contentContainerStyle={{paddingBottom: 20}}>
+      contentContainerStyle={{paddingBottom: 20}}
+    >
       {issues &&
         issues.map((issue, index) => (
           <GrievanceCard key={issue.id || index} issue={issue} />

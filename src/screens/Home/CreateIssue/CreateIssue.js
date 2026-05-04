@@ -1,14 +1,14 @@
-import { Feather } from '@expo/vector-icons'
-import { useNavigation } from '@react-navigation/native'
-import React, { useState } from 'react'
-import { ActivityIndicator, ScrollView, Text, View } from 'react-native'
-import { Provider } from 'react-native-paper'
+import {Feather} from '@expo/vector-icons'
+import {useNavigation} from '@react-navigation/native'
+import React, {useState} from 'react'
+import {ActivityIndicator, ScrollView, Text, View} from 'react-native'
+import {Provider} from 'react-native-paper'
 import posed from 'react-native-pose'
 import CheckboxCard from '../../../components/CheckboxCard'
 import CustomButton from '../../../components/CustomButton'
 import Stepper from '../../../components/Stepper'
-import { i18n } from '../../../translations/i18n'
-import { colors } from '../../../utils/colors'
+import {i18n} from '../../../translations/i18n'
+import {colors} from '../../../utils/colors'
 import styles from './CreateIssue.style'
 
 export const ConfidentialityChoices = Object.freeze({
@@ -114,7 +114,8 @@ function CreateIssue() {
       <ScrollView
         style={styles.container}
         contentContainerStyle={styles.contentContainer}
-        keyboardShouldPersistTaps="handled">
+        keyboardShouldPersistTaps="handled"
+      >
         <View style={styles.formContainer}>
           <Stepper numberOfSteps={4} currentStep={step}></Stepper>
           <Text style={styles.title}> {i18n.t('create_issue_step_1')}</Text>
@@ -126,19 +127,22 @@ function CreateIssue() {
             currentValue={confidentialityValue}
             controllerValue={'non_confidential'}
             onValueUpdate={value => updateConfidentiality(value)}
-            description={i18n.t('non_confidential_description')}></CheckboxCard>
+            description={i18n.t('non_confidential_description')}
+          ></CheckboxCard>
           <CheckboxCard
             label={i18n.t('confidential')}
             currentValue={confidentialityValue}
             controllerValue={'confidential'}
             onValueUpdate={value => updateConfidentiality(value)}
-            description={i18n.t('confidential_description')}></CheckboxCard>
+            description={i18n.t('confidential_description')}
+          ></CheckboxCard>
           <CheckboxCard
             label={i18n.t('anonymous')}
             currentValue={confidentialityValue}
             controllerValue={'anonymous'}
             onValueUpdate={value => updateConfidentiality(value)}
-            description={i18n.t('anonymous_description')}></CheckboxCard>
+            description={i18n.t('anonymous_description')}
+          ></CheckboxCard>
           <View style={[styles.card, {marginTop: 20}]}>
             <Text style={styles.inputLabel}>
               {' '}

@@ -1,13 +1,12 @@
-import { Map } from 'immutable'
-import { createActions, handleActions } from 'redux-actions'
+import {Map} from 'immutable'
+import {createActions, handleActions} from 'redux-actions'
 import config from '../../../config'
-import { client } from '../../utils/request'
-import
-  {
-    getEncryptedData,
-    removeEncryptedValue,
-    storeEncryptedData,
-  } from '../../utils/storageManager'
+import {client} from '../../utils/request'
+import {
+  getEncryptedData,
+  removeEncryptedValue,
+  storeEncryptedData,
+} from '../../utils/storageManager'
 
 const defaultState = Map({
   session: null,

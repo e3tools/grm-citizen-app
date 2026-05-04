@@ -1,23 +1,21 @@
-import
-  {
-    Poppins_400Regular,
-    Poppins_400Regular_Italic,
-    Poppins_500Medium,
-    Poppins_700Bold,
-    useFonts,
-  } from '@expo-google-fonts/poppins'
-import { DefaultTheme, NavigationContainer } from '@react-navigation/native'
+import {
+  Poppins_400Regular,
+  Poppins_400Regular_Italic,
+  Poppins_500Medium,
+  Poppins_700Bold,
+  useFonts,
+} from '@expo-google-fonts/poppins'
+import {DefaultTheme, NavigationContainer} from '@react-navigation/native'
 import * as SplashScreen from 'expo-splash-screen'
-import React, { useEffect, useRef, useState } from 'react'
-import { AppState, View } from 'react-native'
-import { shallowEqual, useDispatch, useSelector } from 'react-redux'
-import { fetchUserProfile } from '../services/profileService'
-import
-  {
-    getSessionData,
-    login,
-    storeProfile,
-  } from '../store/ducks/authentication.duck'
+import React, {useEffect, useRef, useState} from 'react'
+import {AppState, View} from 'react-native'
+import {shallowEqual, useDispatch, useSelector} from 'react-redux'
+import {fetchUserProfile} from '../services/profileService'
+import {
+  getSessionData,
+  login,
+  storeProfile,
+} from '../store/ducks/authentication.duck'
 import PrivateRoutes from './privateRoutes'
 import PublicRoutes from './publicRoutes'
 

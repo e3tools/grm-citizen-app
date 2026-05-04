@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react'
-import { Image } from 'react-native'
+import {useEffect, useState} from 'react'
+import {Image} from 'react-native'
 
 export default function StaticMap({regionName}: {regionName: string}) {
   const [mapUrl, setMapUrl] = useState<string | null>(null)

@@ -1,11 +1,11 @@
-import { IconSymbol } from '@/components/ui/icon-symbol'
-import { Colors } from '@/constants/theme'
+import {IconSymbol} from '@/components/ui/icon-symbol'
+import {Colors} from '@/constants/theme'
 import CheckboxCard from '@/src/components/CheckboxCard'
 import Dropdown from '@/src/components/Dropdown'
 import RecordingCard from '@/src/components/RecordingCard'
 import Stepper from '@/src/components/Stepper'
-import { useColorScheme } from '@/src/hooks/use-color-scheme'
-import { useNewCaseDetails } from '@/src/hooks/useNewCaseDetails'
+import {useColorScheme} from '@/src/hooks/use-color-scheme'
+import {useNewCaseDetails} from '@/src/hooks/useNewCaseDetails'
 import {
   isAudioFormat,
   isImageFormat,
@@ -14,7 +14,7 @@ import {
 import RNDateTimePicker, {
   DateTimePickerEvent,
 } from '@react-native-community/datetimepicker'
-import { useNavigation } from '@react-navigation/native'
+import {useNavigation} from '@react-navigation/native'
 import {
   getRecordingPermissionsAsync,
   RecordingPresets,
@@ -22,11 +22,11 @@ import {
   requestRecordingPermissionsAsync,
   useAudioRecorder,
 } from 'expo-audio'
-import { CameraCapturedPicture } from 'expo-camera'
+import {CameraCapturedPicture} from 'expo-camera'
 import * as DocumentPicker from 'expo-document-picker'
-import { File } from 'expo-file-system'
-import React, { useEffect, useRef, useState } from 'react'
-import { Controller, useForm } from 'react-hook-form'
+import {File} from 'expo-file-system'
+import React, {useEffect, useRef, useState} from 'react'
+import {Controller, useForm} from 'react-hook-form'
 import {
   Image,
   KeyboardAvoidingView,
@@ -43,11 +43,11 @@ import {
   Provider,
   TextInput,
 } from 'react-native-paper'
-import { useDispatch } from 'react-redux'
+import {useDispatch} from 'react-redux'
 import CustomButton from '../../../components/CustomButton'
 import CustomCamera from '../../../components/CustomCamera'
-import { i18n } from '../../../translations/i18n'
-import { colors } from '../../../utils/colors'
+import {i18n} from '../../../translations/i18n'
+import {colors} from '../../../utils/colors'
 import MESSAGES from '../../../utils/formErrorMessages'
 import globalStyles from '../../../utils/globalStyles'
 import styles from '../../Home/NewCaseDetails/NewCaseDetails.style'
@@ -144,7 +144,8 @@ function NewCaseDetails({route}: {route?: any}) {
                     justifyContent: 'space-between',
                     paddingHorizontal: 15,
                   },
-                ]}>
+                ]}
+              >
                 <Text style={styles.fieldPlaceholderText}>
                   {selectedDate?.toLocaleDateString() ??
                     i18n.t('select_a_date')}
@@ -408,7 +409,8 @@ function NewCaseDetails({route}: {route?: any}) {
         </TouchableOpacity>
         <TouchableOpacity
           onPress={toggleRecording}
-          style={styles.addPhotoButton}>
+          style={styles.addPhotoButton}
+        >
           <IconSymbol
             style={{paddingBottom: 6}}
             name={!isRecording ? 'mic' : 'stop.circle'}
@@ -500,7 +502,8 @@ function NewCaseDetails({route}: {route?: any}) {
                     </View>
                   </View>
                   <TouchableOpacity
-                    onPress={() => removeAttachment(componentIndex)}>
+                    onPress={() => removeAttachment(componentIndex)}
+                  >
                     <IconSymbol name={'xmark'} color={colors.secondary} />
                   </TouchableOpacity>
                 </View>
@@ -673,7 +676,8 @@ function NewCaseDetails({route}: {route?: any}) {
           justifyContent: 'center',
           alignItems: 'center',
           paddingHorizontal: 24,
-        }}>
+        }}
+      >
         <View style={{flex: 1}}>
           <Text style={{color: 'white'}}>{message}</Text>
         </View>
@@ -683,7 +687,8 @@ function NewCaseDetails({route}: {route?: any}) {
               color: colors.primary,
               fontWeight: 'bold',
               fontSize: 18,
-            }}>
+            }}
+          >
             Retry
           </Text>
         </TouchableOpacity>
@@ -700,7 +705,8 @@ function NewCaseDetails({route}: {route?: any}) {
           justifyContent: 'center',
           alignItems: 'center',
           paddingHorizontal: 24,
-        }}>
+        }}
+      >
         <View style={{alignItems: 'center', marginBottom: 50}}>
           <Text style={{color: colors.secondary}}>
             Oops, something went wrong.
@@ -710,13 +716,15 @@ function NewCaseDetails({route}: {route?: any}) {
         <TouchableOpacity
           onPress={() => {
             navigation.goBack()
-          }}>
+          }}
+        >
           <Text
             style={{
               color: colors.primary,
               fontWeight: 'bold',
               fontSize: 18,
-            }}>
+            }}
+          >
             Go back
           </Text>
         </TouchableOpacity>
@@ -744,12 +752,14 @@ function NewCaseDetails({route}: {route?: any}) {
           <KeyboardAvoidingView
             behavior={Platform.OS === 'ios' ? 'padding' : 'position'}
             style={styles.keyboardAvoidingView}
-            contentContainerStyle={styles.keyboardAvoidingViewContentContainer}>
+            contentContainerStyle={styles.keyboardAvoidingViewContentContainer}
+          >
             <ScrollView
               ref={scrollViewRef}
               style={styles.mainScrollView}
               contentContainerStyle={styles.scrollableContentContainer}
-              keyboardShouldPersistTaps="handled">
+              keyboardShouldPersistTaps="handled"
+            >
               <View style={globalStyles.screenContainer}>
                 <View style={styles.formContainer}>
                   <View>

@@ -1,6 +1,6 @@
-import { useEffect, useState } from 'react'
-import { getDistricts, getWards } from '../services/newCaseLocationDetailsService'
-import { getEncryptedData, storeEncryptedData } from '../utils/storageManager'
+import {useEffect, useState} from 'react'
+import {getDistricts, getWards} from '../services/newCaseLocationDetailsService'
+import {getEncryptedData, storeEncryptedData} from '../utils/storageManager'
 
 type Error = {
   message: string

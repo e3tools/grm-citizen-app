@@ -1,9 +1,9 @@
 import Stepper from '@/src/components/Stepper'
-import { addIssueAttachment, createIssue } from '@/src/services/issueService'
-import { i18n } from '@/src/translations/i18n'
-import { Feather } from '@expo/vector-icons'
-import { useNavigation, useRoute } from '@react-navigation/native'
-import React, { useMemo, useState } from 'react'
+import {addIssueAttachment, createIssue} from '@/src/services/issueService'
+import {i18n} from '@/src/translations/i18n'
+import {Feather} from '@expo/vector-icons'
+import {useNavigation, useRoute} from '@react-navigation/native'
+import React, {useMemo, useState} from 'react'
 import {
   Image,
   Modal,
@@ -14,9 +14,9 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native'
-import { shallowEqual, useSelector } from 'react-redux'
+import {shallowEqual, useSelector} from 'react-redux'
 import CustomButton from '../../../components/CustomButton'
-import { colors } from '../../../utils/colors'
+import {colors} from '../../../utils/colors'
 import styles from './NewCaseSummary.style'
 
 const SAMPLE_WORDS = ['lac', 'plaine', 'savane', 'colline']
@@ -245,7 +245,8 @@ export default function NewCaseSummary() {
     <SafeAreaView style={styles.screen}>
       <ScrollView
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={styles.scrollContent}>
+        contentContainerStyle={styles.scrollContent}
+      >
         <Stepper currentStep={4} numberOfSteps={4} />
         <Text style={styles.stepTitle}> {i18n.t('step_4_case_summary')}</Text>
 
@@ -352,7 +353,8 @@ export default function NewCaseSummary() {
         <Pressable
           style={styles.certRow}
           onPress={() => setCertified(v => !v)}
-          hitSlop={10}>
+          hitSlop={10}
+        >
           <View style={[styles.checkbox, certified && styles.checkboxChecked]}>
             {certified && (
               <Feather name="check" size={14} color={colors.white} />
@@ -387,14 +389,16 @@ export default function NewCaseSummary() {
             visible={isCaseCreated}
             onRequestClose={() => {
               navigator.navigate('GRM')
-            }}>
+            }}
+          >
             <View
               style={{
                 flex: 1,
                 backgroundColor: 'rgba(0,0,0,0.4)',
                 justifyContent: 'center',
                 alignItems: 'center',
-              }}>
+              }}
+            >
               <View
                 style={{
                   backgroundColor: colors.white,
@@ -407,7 +411,8 @@ export default function NewCaseSummary() {
                   shadowRadius: 4,
                   elevation: 5,
                   minWidth: 240,
-                }}>
+                }}
+              >
                 <Feather
                   name="check-circle"
                   size={48}
@@ -421,7 +426,8 @@ export default function NewCaseSummary() {
                     color: colors.primary,
                     marginBottom: 12,
                     textAlign: 'center',
-                  }}>
+                  }}
+                >
                   {i18n.t('case_created_successfully')}
                 </Text>
                 {/* Add tracking code display here */}
@@ -432,7 +438,8 @@ export default function NewCaseSummary() {
                     color: colors.secondary,
                     marginBottom: 8,
                     textAlign: 'center',
-                  }}>
+                  }}
+                >
                   {i18n.t('tracking_code')}:{' '}
                   <Text style={{fontWeight: '700'}}>{trackingCode}</Text>
                 </Text>
@@ -449,13 +456,15 @@ export default function NewCaseSummary() {
                       index: 0,
                       routes: [{name: 'Main'}],
                     })
-                  }}>
+                  }}
+                >
                   <Text
                     style={{
                       color: 'white',
                       fontWeight: '700',
                       fontSize: 16,
-                    }}>
+                    }}
+                  >
                     {i18n.t('ok')}
                   </Text>
                 </TouchableOpacity>

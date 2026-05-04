@@ -1,5 +1,5 @@
 import React from 'react'
-import { ImageBackground, StyleSheet } from 'react-native'
+import {ImageBackground, StyleSheet} from 'react-native'
 
 const ImagePreviewCard = ({uri, id}) => {
   if (!uri) return null
@@ -7,7 +7,8 @@ const ImagePreviewCard = ({uri, id}) => {
     <ImageBackground
       key={id}
       source={{uri}}
-      style={styles.image}></ImageBackground>
+      style={styles.image}
+    ></ImageBackground>
   )
 }
 

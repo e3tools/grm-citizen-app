@@ -1,21 +1,20 @@
-import { useNavigation } from '@react-navigation/native'
-import React, { useEffect, useState } from 'react'
-import { Controller, useForm } from 'react-hook-form'
-import { ActivityIndicator, ScrollView, Text, View } from 'react-native'
-import { Provider } from 'react-native-paper'
-import { useDispatch } from 'react-redux'
+import {useNavigation} from '@react-navigation/native'
+import React, {useEffect, useState} from 'react'
+import {Controller, useForm} from 'react-hook-form'
+import {ActivityIndicator, ScrollView, Text, View} from 'react-native'
+import {Provider} from 'react-native-paper'
+import {useDispatch} from 'react-redux'
 import CustomButton from '../../../components/CustomButton'
 import Dropdown from '../../../components/Dropdown'
-import
-  {
-    fetchCitizenAgeGroups,
-    fetchCitizenGroups,
-    fetchUserProfile,
-    updateUserProfile,
-  } from '../../../services/profileService'
-import { logout } from '../../../store/ducks/authentication.duck'
-import { i18n } from '../../../translations/i18n'
-import { colors } from '../../../utils/colors'
+import {
+  fetchCitizenAgeGroups,
+  fetchCitizenGroups,
+  fetchUserProfile,
+  updateUserProfile,
+} from '../../../services/profileService'
+import {logout} from '../../../store/ducks/authentication.duck'
+import {i18n} from '../../../translations/i18n'
+import {colors} from '../../../utils/colors'
 import styles from './CompleteProfile.style'
 
 const GENDER_OPTIONS = [
@@ -160,7 +159,8 @@ function CompleteProfile() {
       <ScrollView
         style={styles.container}
         contentContainerStyle={styles.contentContainer}
-        keyboardShouldPersistTaps="handled">
+        keyboardShouldPersistTaps="handled"
+      >
         <View style={styles.formContainer}>
           <Text style={styles.subtitle}>
             {i18n.t('complete_profile_subtitle')}

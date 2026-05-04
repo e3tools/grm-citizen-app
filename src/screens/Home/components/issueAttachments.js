@@ -1,23 +1,22 @@
-import React, { useCallback, useState } from 'react'
-import
-  {
-    ActivityIndicator,
-    Image,
-    ScrollView,
-    Text,
-    TouchableOpacity,
-    View,
-  } from 'react-native'
-import { Gesture, GestureDetector } from 'react-native-gesture-handler'
+import React, {useCallback, useState} from 'react'
+import {
+  ActivityIndicator,
+  Image,
+  ScrollView,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native'
+import {Gesture, GestureDetector} from 'react-native-gesture-handler'
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
 } from 'react-native-reanimated'
 import ImagePreviewCard from '../../../components/ImagePreviewCard'
 import RecordingCard from '../../../components/RecordingCard'
-import { i18n } from '../../../translations/i18n'
-import { colors } from '../../../utils/colors'
-import { isImageFormat } from '../../../utils/formUtils'
+import {i18n} from '../../../translations/i18n'
+import {colors} from '../../../utils/colors'
+import {isImageFormat} from '../../../utils/formUtils'
 
 const IssueAttachments = ({
   issueId,
@@ -82,7 +81,8 @@ const IssueAttachments = ({
             width: '100%',
             height: '100%',
             backgroundColor: colors.white,
-          }}>
+          }}
+        >
           <GestureDetector gesture={pinchGesture}>
             <Animated.View
               style={[
@@ -96,7 +96,8 @@ const IssueAttachments = ({
                   alignItems: 'center',
                 },
                 animatedStyle,
-              ]}>
+              ]}
+            >
               <Image
                 resizeMode="contain"
                 style={{width: '100%', height: '100%'}}
@@ -113,9 +114,11 @@ const IssueAttachments = ({
                   padding: 8,
                   zIndex: 20,
                 }}
-                onPress={() => setMaximizedImage(undefined)}>
+                onPress={() => setMaximizedImage(undefined)}
+              >
                 <Text
-                  style={{color: 'white', fontSize: 18, fontWeight: 'bold'}}>
+                  style={{color: 'white', fontSize: 18, fontWeight: 'bold'}}
+                >
                   ×
                 </Text>
               </TouchableOpacity>
@@ -127,7 +130,8 @@ const IssueAttachments = ({
         showsVerticalScrollIndicator={false}
         scrollEventThrottle={16}
         onScroll={handleScroll}
-        style={{flex: 1}}>
+        style={{flex: 1}}
+      >
         {attachments &&
           attachments.length > 0 &&
           attachments.map((attachment, index) => {
@@ -145,7 +149,8 @@ const IssueAttachments = ({
                   marginBottom: 20,
                   alignItems: 'center',
                 }}
-                key={index}>
+                key={index}
+              >
                 {/* Also using the improved check for 'file' property,
                                       which is also necessary and uses .includes() and .toLowerCase() */}
                 {attachment.file &&
@@ -157,7 +162,8 @@ const IssueAttachments = ({
                     style={{flex: 1}}
                     onPress={() => {
                       setMaximizedImage(attachment)
-                    }}>
+                    }}
+                  >
                     <ImagePreviewCard
                       uri={attachment.file}
                       id={attachment.id}

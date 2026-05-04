@@ -1,10 +1,10 @@
 import Dropdown from '@/src/components/Dropdown'
 import Stepper from '@/src/components/Stepper'
-import { useColorScheme } from '@/src/hooks/use-color-scheme'
-import { useLocationDetails } from '@/src/hooks/useLocationDetails'
-import { useFocusEffect, useNavigation } from '@react-navigation/native'
-import React, { useEffect, useRef } from 'react'
-import { Controller, useForm } from 'react-hook-form'
+import {useColorScheme} from '@/src/hooks/use-color-scheme'
+import {useLocationDetails} from '@/src/hooks/useLocationDetails'
+import {useFocusEffect, useNavigation} from '@react-navigation/native'
+import React, {useEffect, useRef} from 'react'
+import {Controller, useForm} from 'react-hook-form'
 import {
   ActivityIndicator,
   KeyboardAvoidingView,
@@ -15,11 +15,11 @@ import {
   View,
   ViewStyle,
 } from 'react-native'
-import { Provider, TextInput } from 'react-native-paper'
-import { useDispatch } from 'react-redux'
+import {Provider, TextInput} from 'react-native-paper'
+import {useDispatch} from 'react-redux'
 import CustomButton from '../../../components/CustomButton'
-import { i18n } from '../../../translations/i18n'
-import { colors } from '../../../utils/colors'
+import {i18n} from '../../../translations/i18n'
+import {colors} from '../../../utils/colors'
 import MESSAGES from '../../../utils/formErrorMessages'
 import globalStyles from '../../../utils/globalStyles'
 import {
@@ -341,7 +341,8 @@ function NewLocationDetails({route}: {route?: any}) {
           justifyContent: 'center',
           alignItems: 'center',
           paddingHorizontal: 24,
-        }}>
+        }}
+      >
         <View style={{flex: 1}}>
           <Text style={{color: 'white'}}>{message}</Text>
         </View>
@@ -351,7 +352,8 @@ function NewLocationDetails({route}: {route?: any}) {
               color: colors.primary,
               fontWeight: 'bold',
               fontSize: 18,
-            }}>
+            }}
+          >
             Retry
           </Text>
         </TouchableOpacity>
@@ -368,7 +370,8 @@ function NewLocationDetails({route}: {route?: any}) {
           justifyContent: 'center',
           alignItems: 'center',
           paddingHorizontal: 24,
-        }}>
+        }}
+      >
         <View style={{alignItems: 'center', marginBottom: 50}}>
           <Text style={{color: colors.secondary}}>
             Oops, something went wrong.
@@ -378,13 +381,15 @@ function NewLocationDetails({route}: {route?: any}) {
         <TouchableOpacity
           onPress={() => {
             navigation.goBack()
-          }}>
+          }}
+        >
           <Text
             style={{
               color: colors.primary,
               fontWeight: 'bold',
               fontSize: 18,
-            }}>
+            }}
+          >
             Go back
           </Text>
         </TouchableOpacity>
@@ -400,12 +405,14 @@ function NewLocationDetails({route}: {route?: any}) {
           <KeyboardAvoidingView
             behavior={Platform.OS === 'ios' ? 'padding' : 'position'}
             style={styles.keyboardAvoidingView}
-            contentContainerStyle={styles.keyboardAvoidingViewContentContainer}>
+            contentContainerStyle={styles.keyboardAvoidingViewContentContainer}
+          >
             <ScrollView
               ref={scrollViewRef}
               style={styles.mainScrollView}
               contentContainerStyle={styles.scrollableContentContainer}
-              keyboardShouldPersistTaps="handled">
+              keyboardShouldPersistTaps="handled"
+            >
               <View style={globalStyles.screenContainer as ViewStyle}>
                 <View style={styles.formContainer}>
                   <View>

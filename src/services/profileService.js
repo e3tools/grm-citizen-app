@@ -1,9 +1,8 @@
 import config from '../../config'
-import
-  {
-    addTokenToHttpClient,
-    getSessionData,
-  } from '../store/ducks/authentication.duck'
+import {
+  addTokenToHttpClient,
+  getSessionData,
+} from '../store/ducks/authentication.duck'
 import request from '../utils/request'
 
 export const baseURL = config.API_AUTH_BASE_URL

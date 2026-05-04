@@ -1,5 +1,5 @@
-import { fetchIssueList } from '@/src/services/issueService'
-import { useEffect, useState } from 'react'
+import {fetchIssueList} from '@/src/services/issueService'
+import {useEffect, useState} from 'react'
 
 export function useIssueList() {
   const [issues, setIssues] = useState<any[]>([])

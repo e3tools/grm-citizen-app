@@ -1,7 +1,7 @@
-import { Feather } from '@expo/vector-icons'
+import {Feather} from '@expo/vector-icons'
 import React from 'react'
-import { ActivityIndicator, Text, TouchableOpacity } from 'react-native'
-import { colors } from '../utils/colors'
+import {ActivityIndicator, Text, TouchableOpacity} from 'react-native'
+import {colors} from '../utils/colors'
 
 const CustomButton = ({
   label,
@@ -41,7 +41,8 @@ const CustomButton = ({
       disabled={disabled}
       style={buttonStyle}
       onPress={onPress}
-      activeOpacity={0.8}>
+      activeOpacity={0.8}
+    >
       {loading ? (
         <ActivityIndicator size={'large'}></ActivityIndicator>
       ) : (
