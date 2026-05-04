@@ -1,7 +1,7 @@
-import {i18n} from '@/src/translations/i18n'
-import {Feather} from '@expo/vector-icons'
-import {useNavigation, useRoute} from '@react-navigation/native'
-import React, {useEffect, useMemo, useState} from 'react'
+import { i18n } from '@/src/translations/i18n'
+import { Feather } from '@expo/vector-icons'
+import { useNavigation, useRoute } from '@react-navigation/native'
+import React, { useEffect, useMemo, useState } from 'react'
 import {
   Modal,
   Pressable,
@@ -18,7 +18,7 @@ import {
   listIssueComments,
   updateIssue,
 } from '../../../services/issueService'
-import {colors} from '../../../utils/colors'
+import { colors } from '../../../utils/colors'
 import styles from './ExistingCaseDetails.style'
 
 export default function ExistingCaseDetails() {
@@ -176,27 +176,25 @@ export default function ExistingCaseDetails() {
             backgroundColor: 'rgba(0,0,0,0.2)',
             justifyContent: 'center',
             alignItems: 'center',
-          }}
-        >
+          }}>
           <Text style={{color: '#111827'}}>{i18n.t('loading')}</Text>
         </View>
       )}
       <ScrollView
         contentContainerStyle={s.scrollContent}
-        showsVerticalScrollIndicator={false}
-      >
+        showsVerticalScrollIndicator={false}>
         <View style={s.card}>
           <View style={s.cardHeaderRow}>
             <View style={s.statusPill}>
               <Text style={s.statusPillText}>{data.status?.name ?? ''}</Text>
             </View>
-            <Pressable hitSlop={12} style={s.moreIconBtn}>
+            {/* <Pressable hitSlop={12} style={s.moreIconBtn}>
               <Feather
                 name="more-vertical"
                 size={18}
                 color={colors.secondary}
               />
-            </Pressable>
+            </Pressable> */}
           </View>
 
           <View style={s.titleRow}>
@@ -246,8 +244,7 @@ export default function ExistingCaseDetails() {
                       style={[
                         s.timelineDot,
                         item.active && s.timelineDotActive,
-                      ]}
-                    >
+                      ]}>
                       <Feather
                         name={item.icon as any}
                         size={14}
@@ -282,8 +279,7 @@ export default function ExistingCaseDetails() {
                 try {
                   navigation.navigate('All issue attachments', {id: issueId})
                 } catch {}
-              }}
-            >
+              }}>
               <Text style={s.viewAllLink}>{i18n.t('view_all')}</Text>
             </Pressable>
           </View>
@@ -291,8 +287,7 @@ export default function ExistingCaseDetails() {
           <ScrollView
             horizontal
             showsHorizontalScrollIndicator={false}
-            contentContainerStyle={s.attachmentsRow}
-          >
+            contentContainerStyle={s.attachmentsRow}>
             {(attachments || []).slice(0, 6).map((a, idx) => (
               <View key={a?.id ?? idx} style={s.attachmentThumb}>
                 <View style={s.attachmentThumbInner}>
@@ -314,8 +309,7 @@ export default function ExistingCaseDetails() {
               return (
                 <View
                   key={msg.key}
-                  style={[s.chatRow, isRight ? s.chatRowRight : s.chatRowLeft]}
-                >
+                  style={[s.chatRow, isRight ? s.chatRowRight : s.chatRowLeft]}>
                   {!isRight && (
                     <View style={s.avatar}>
                       <Feather name="shield" size={16} color={colors.primary} />
@@ -326,20 +320,17 @@ export default function ExistingCaseDetails() {
                     style={[
                       s.chatBubble,
                       isRight ? s.chatBubbleRight : s.chatBubbleLeft,
-                    ]}
-                  >
+                    ]}>
                     <View
                       style={[
                         s.chatMetaRow,
                         isRight ? {flexDirection: 'row-reverse'} : {},
-                      ]}
-                    >
+                      ]}>
                       <Text
                         style={[
                           s.chatAuthor,
                           isRight ? {color: colors.primary} : {},
-                        ]}
-                      >
+                        ]}>
                         {msg.author}
                       </Text>
                       <Text style={s.chatWhen}>{msg.when}</Text>
@@ -377,8 +368,7 @@ export default function ExistingCaseDetails() {
         {/* Rate Button */}
         <Pressable
           onPress={() => setRateModalVisible(true)}
-          style={[s.bottomBtn, s.bottomBtnPrimary]}
-        >
+          style={[s.bottomBtn, s.bottomBtnPrimary]}>
           <Feather name="star" size={18} color={colors.white} />
           <Text style={[s.bottomBtnText, s.bottomBtnTextPrimary]}>
             {i18n.t('rate')}
@@ -387,8 +377,7 @@ export default function ExistingCaseDetails() {
         {/* Appeal Button */}
         <Pressable
           onPress={() => setAppealModalVisible(true)}
-          style={[s.bottomBtn, s.bottomBtnDangerOutline]}
-        >
+          style={[s.bottomBtn, s.bottomBtnDangerOutline]}>
           <Feather name="flag" size={18} color={'#9d3224'} />
           <Text style={[s.bottomBtnText, s.bottomBtnTextDanger]}>
             {i18n.t('appeal')}
@@ -401,8 +390,7 @@ export default function ExistingCaseDetails() {
           visible={rateModalVisible}
           animationType="fade"
           onRequestClose={() => setRateModalVisible(false)}
-          style={{backgroundColor: 'rgba(0,0,0,0.4)'}}
-        >
+          style={{backgroundColor: 'rgba(0,0,0,0.4)'}}>
           <View style={s.modalBackdrop}>
             <View style={s.modalContent}>
               <Text style={[s.modalTitle, {fontSize: 18, fontWeight: 'bold'}]}>
@@ -414,8 +402,7 @@ export default function ExistingCaseDetails() {
                   <Pressable
                     key={val}
                     onPress={() => setRate(val)}
-                    style={{marginRight: 8}}
-                  >
+                    style={{marginRight: 8}}>
                     <Feather
                       name={rate >= val ? 'star' : 'star'}
                       size={32}
@@ -429,8 +416,7 @@ export default function ExistingCaseDetails() {
               <View style={s.modalButtonsContainer}>
                 <Pressable
                   onPress={() => setRateModalVisible(false)}
-                  style={s.modalCancelBtn}
-                >
+                  style={s.modalCancelBtn}>
                   <Text style={[s.modalCancelText, {color: '#666666'}]}>
                     {i18n.t('cancel')}
                   </Text>
@@ -451,8 +437,7 @@ export default function ExistingCaseDetails() {
                       borderRadius: 8,
                     },
                   ]}
-                  disabled={!rate}
-                >
+                  disabled={!rate}>
                   <Text style={[s.modalConfirmText, {color: '#ffffff'}]}>
                     {i18n.t('confirm')}
                   </Text>
@@ -468,8 +453,7 @@ export default function ExistingCaseDetails() {
           visible={appealModalVisible}
           animationType="fade"
           onRequestClose={() => setAppealModalVisible(false)}
-          style={{backgroundColor: 'rgba(0,0,0,0.4)'}}
-        >
+          style={{backgroundColor: 'rgba(0,0,0,0.4)'}}>
           <View style={[s.modalBackdrop]}>
             <View style={s.modalContent}>
               <Text style={s.modalTitle}>{i18n.t('appeal_confirmation')}</Text>
@@ -479,16 +463,14 @@ export default function ExistingCaseDetails() {
                     color: colors.error,
                     textAlign: 'center',
                     marginTop: 5,
-                  }}
-                >
+                  }}>
                   {appealError}
                 </Text>
               )}
               <View style={s.modalButtonsContainer}>
                 <Pressable
                   onPress={() => setAppealModalVisible(false)}
-                  style={s.modalCancelBtn}
-                >
+                  style={s.modalCancelBtn}>
                   <Text style={s.modalCancelText}>{i18n.t('cancel')}</Text>
                 </Pressable>
                 <Pressable
@@ -505,8 +487,7 @@ export default function ExistingCaseDetails() {
                       )
                     }
                   }}
-                  style={s.modalConfirmBtn}
-                >
+                  style={s.modalConfirmBtn}>
                   <Text style={s.modalConfirmText}>{i18n.t('confirm')}</Text>
                 </Pressable>
               </View>
