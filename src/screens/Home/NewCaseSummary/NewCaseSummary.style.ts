@@ -1,5 +1,5 @@
-import {StyleSheet} from 'react-native'
-import {colors} from '../../../utils/colors'
+import { StyleSheet } from 'react-native'
+import { colors } from '../../../utils/colors'
 
 export default StyleSheet.create({
   screen: {
@@ -7,18 +7,25 @@ export default StyleSheet.create({
     backgroundColor: '#f6f7f8',
   },
   scrollContent: {
-    padding: 16,
+    paddingTop: 5,
+    paddingLeft: 16,
+    paddingRight: 16,
     paddingBottom: 40,
   },
-  stepKicker: {
-    textAlign: 'center',
-    fontSize: 11,
-    letterSpacing: 1,
-    fontWeight: '800',
-    color: '#6b7280',
-    marginBottom: 14,
+  //
+  // stepTitle: {
+  //   textAlign: 'center',
+  //   fontSize: 11,
+  //   letterSpacing: 1,
+  //   fontWeight: '800',
+  //   color: '#5b9882',
+  //   marginBottom: 14,
+  // },
+  stepTitle: {
+    fontSize: 25,
+    fontWeight: 'bold',
+    marginBottom: 20,
   },
-
   card: {
     backgroundColor: colors.white,
     borderRadius: 14,
@@ -38,7 +45,7 @@ export default StyleSheet.create({
     fontSize: 10,
     fontWeight: '900',
     letterSpacing: 0.6,
-    color: '#9ca3af',
+    color: '#5b9882',
   },
   editLink: {
     fontSize: 11,
@@ -71,7 +78,7 @@ export default StyleSheet.create({
   },
   securitySubtitle: {
     fontSize: 12,
-    color: '#6b7280',
+    color: '#5b9882',
     lineHeight: 16,
   },
 
@@ -92,7 +99,7 @@ export default StyleSheet.create({
     fontSize: 10,
     fontWeight: '900',
     letterSpacing: 0.6,
-    color: '#9ca3af',
+    color: '#5b988299',
     marginBottom: 6,
   },
   tableValue: {
@@ -128,7 +135,7 @@ export default StyleSheet.create({
     fontSize: 10,
     fontWeight: '900',
     letterSpacing: 0.6,
-    color: '#9ca3af',
+    color: '#5b9882',
     marginBottom: 6,
   },
   bodyText: {

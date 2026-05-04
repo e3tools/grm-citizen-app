@@ -1,9 +1,11 @@
+import Stepper from '@/src/components/Stepper'
 import { addIssueAttachment, createIssue } from '@/src/services/issueService'
 import { i18n } from '@/src/translations/i18n'
 import { Feather } from '@expo/vector-icons'
 import { useNavigation, useRoute } from '@react-navigation/native'
 import React, { useMemo, useState } from 'react'
 import {
+  Image,
   Modal,
   Pressable,
   SafeAreaView,
@@ -97,7 +99,7 @@ export default function NewCaseSummary() {
       ''
 
     const date = formatFallbackDate(caseDetails.case_occurrence_date)
-    const dateTime = date ? `${date} · 14:30` : ''
+    const dateTime = date ? `${date}` : ''
 
     const description = caseDetails.case_description || ''
 
@@ -244,7 +246,8 @@ export default function NewCaseSummary() {
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.scrollContent}>
-        <Text style={styles.stepKicker}>{i18n.t('step_4_case_summary')}</Text>
+        <Stepper currentStep={4} numberOfSteps={4} />
+        <Text style={styles.stepTitle}> {i18n.t('step_4_case_summary')}</Text>
 
         <View style={styles.card}>
           <View style={styles.cardHeaderRow}>
@@ -313,7 +316,14 @@ export default function NewCaseSummary() {
             <View style={styles.attachmentsRow}>
               {viewModel.attachments.slice(0, 2).map((a, idx) => (
                 <View key={`${a.path}-${idx}`} style={styles.attachmentThumb}>
-                  <Feather name="image" size={18} color="#9ca3af" />
+                  {guessMimeType(a.path).startsWith('image') ? (
+                    <Image
+                      style={{height: 40, width: 40}}
+                      source={{uri: a.path}}
+                    />
+                  ) : (
+                    <Feather name="mic" size={18} color="#9ca3af" />
+                  )}
                 </View>
               ))}
               {viewModel.attachments.length === 0 && (
