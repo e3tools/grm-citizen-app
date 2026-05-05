@@ -36,6 +36,11 @@ export default function ExistingCaseDetails() {
   const [appealError, setAppealError] = useState()
   const [rateModalVisible, setRateModalVisible] = useState(false)
   const [rate, setRate] = useState(5)
+  const submittedRating: number | null = issue?.rating ?? null
+
+  useEffect(() => {
+    if (submittedRating) setRate(submittedRating)
+  }, [submittedRating])
 
   const data = useMemo(
     () => ({
@@ -156,6 +161,7 @@ export default function ExistingCaseDetails() {
     if (!issueId) return
     try {
       await updateIssue(issueId, payload)
+      if (rate) setIssue((prev: any) => ({...(prev ?? {}), rating: rate}))
     } catch (error) {
       console.error('Error updating issue', error.message)
       throw error
@@ -224,6 +230,16 @@ export default function ExistingCaseDetails() {
             {i18n.t('description').toLocaleUpperCase()}
           </Text>
           <Text style={s.description}>{data.description}</Text>
+
+          {issue?.research_result ? (
+            <>
+              <View style={s.divider} />
+              <Text style={s.sectionLabel}>
+                {i18n.t('resolution').toLocaleUpperCase()}
+              </Text>
+              <Text style={s.description}>{issue.research_result}</Text>
+            </>
+          ) : null}
         </View>
 
         <View style={s.card}>
@@ -375,15 +391,34 @@ export default function ExistingCaseDetails() {
 
       <View style={s.bottomBar}>
         {/* Rate Button */}
-        <Pressable
-          onPress={() => setRateModalVisible(true)}
-          style={[s.bottomBtn, s.bottomBtnPrimary]}
-        >
-          <Feather name="star" size={18} color={colors.white} />
-          <Text style={[s.bottomBtnText, s.bottomBtnTextPrimary]}>
-            {i18n.t('rate')}
-          </Text>
-        </Pressable>
+        {submittedRating ? (
+          <View style={[s.bottomBtn, s.bottomBtnRated]}>
+            <View style={{flexDirection: 'row'}}>
+              {[1, 2, 3, 4, 5].map(val => (
+                <Feather
+                  key={val}
+                  name="star"
+                  size={16}
+                  color={val <= submittedRating ? colors.primary : '#cbd5e1'}
+                  style={{marginHorizontal: 1}}
+                />
+              ))}
+            </View>
+            <Text style={[s.bottomBtnText, {color: colors.primary}]}>
+              {i18n.t('rated')}
+            </Text>
+          </View>
+        ) : (
+          <Pressable
+            onPress={() => setRateModalVisible(true)}
+            style={[s.bottomBtn, s.bottomBtnPrimary]}
+          >
+            <Feather name="star" size={18} color={colors.white} />
+            <Text style={[s.bottomBtnText, s.bottomBtnTextPrimary]}>
+              {i18n.t('rate')}
+            </Text>
+          </Pressable>
+        )}
         {/* Appeal Button */}
         <Pressable
           onPress={() => setAppealModalVisible(true)}

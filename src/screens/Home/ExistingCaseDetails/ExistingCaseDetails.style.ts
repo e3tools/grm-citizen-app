@@ -394,6 +394,12 @@ export default StyleSheet.create({
     borderWidth: 1,
     borderColor: colors.primary,
   },
+  bottomBtnRated: {
+    backgroundColor: '#dff4ea',
+    borderWidth: 1,
+    borderColor: '#bfead7',
+    gap: 6,
+  },
   bottomBtnDangerOutline: {
     backgroundColor: '#ffe7e4',
     borderWidth: 1,

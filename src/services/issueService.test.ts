@@ -42,7 +42,7 @@ describe('issueService', () => {
       const data = await issueService.fetchIssueList()
       expect(request.default).toHaveBeenCalledWith(
         expect.objectContaining({
-          url: 'https://api.test.com/issues/reporter?page=1&page_size=10',
+          url: 'https://api.test.com/issues/reporter/?page=1&page_size=10',
           method: 'GET',
         }),
       )
