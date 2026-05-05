@@ -1,24 +1,23 @@
-import { useNavigation } from '@react-navigation/native'
-import React, { useState } from 'react'
-import { Controller, useForm } from 'react-hook-form'
-import { Modal, ScrollView, Text, View } from 'react-native'
-import
-  {
-    useBlurOnFulfill,
-    useClearByFocusCell,
-  } from 'react-native-confirmation-code-field'
-import { ActivityIndicator, Provider, TextInput } from 'react-native-paper'
-import { useDispatch } from 'react-redux'
-import { default as BigCheck } from '../../../../assets/big-check.svg'
+import {useNavigation} from '@react-navigation/native'
+import React, {useState} from 'react'
+import {Controller, useForm} from 'react-hook-form'
+import {Modal, ScrollView, Text, View} from 'react-native'
+import {
+  useBlurOnFulfill,
+  useClearByFocusCell,
+} from 'react-native-confirmation-code-field'
+import {ActivityIndicator, Provider, TextInput} from 'react-native-paper'
+import {useDispatch} from 'react-redux'
+import {default as BigCheck} from '../../../../assets/big-check.svg'
 import EADLLogo from '../../../../assets/eadl-logo.svg'
-import { default as SuccessLogo } from '../../../../assets/success_logo.svg'
+import {default as SuccessLogo} from '../../../../assets/success_logo.svg'
 import CustomButton from '../../../components/CustomButton'
-import { fetchAuthCredentials } from '../../../services/authService'
-import { login } from '../../../store/ducks/authentication.duck'
-import { i18n } from '../../../translations/i18n'
-import { colors } from '../../../utils/colors'
+import {fetchAuthCredentials} from '../../../services/authService'
+import {login} from '../../../store/ducks/authentication.duck'
+import {i18n} from '../../../translations/i18n'
+import {colors} from '../../../utils/colors'
 import MESSAGES from '../../../utils/formErrorMessages'
-import { passwordRegex } from '../../../utils/formUtils'
+import {passwordRegex} from '../../../utils/formUtils'
 import styles from './Login.style'
 
 const CELL_COUNT = 6
@@ -77,7 +76,8 @@ function Login({route}) {
             backgroundColor: 'rgba(0,0,0,0.6)',
             justifyContent: 'center',
             alignItems: 'center',
-          }}>
+          }}
+        >
           <ActivityIndicator color={colors.primary} />
         </View>
       )}
@@ -87,7 +87,8 @@ function Login({route}) {
             flex: 1,
             alignItems: 'center',
             justifyContent: 'space-evenly',
-          }}>
+          }}
+        >
           <BigCheck height={82} width={82} />
           <SuccessLogo />
           <Text
@@ -100,7 +101,8 @@ function Login({route}) {
               letterSpacing: 0,
               textAlign: 'center',
               color: '#707070',
-            }}>
+            }}
+          >
             {i18n.t('account_create_success')}
           </Text>
         </View>
@@ -114,7 +116,8 @@ function Login({route}) {
           paddingHorizontal: 30,
         }}
         contentContainerStyle={{flexGrow: 1, paddingTop: 20}}
-        keyboardShouldPersistTaps="handled">
+        keyboardShouldPersistTaps="handled"
+      >
         <View style={{marginBottom: 50, marginTop: 70, alignItems: 'center'}}>
           <EADLLogo height={90} width={180} />
           <Text
@@ -128,7 +131,8 @@ function Login({route}) {
               letterSpacing: 0,
               textAlign: 'center',
               color: '#707070',
-            }}>
+            }}
+          >
             {i18n.t('welcome_login')}
           </Text>
         </View>
@@ -266,7 +270,8 @@ function Login({route}) {
             {i18n.t('dont_have_account')}
             <Text
               style={styles.loginLink}
-              onPress={() => navigation.navigate('AuthStack')}>
+              onPress={() => navigation.navigate('AuthStack')}
+            >
               {` ${i18n.t('create_account')}`}
             </Text>
           </Text>

@@ -1,4 +1,8 @@
-import {fetchAuthCredentials, register} from './authService'
+import type * as AuthServiceModule from './authService'
+
+const TEST_API_AUTH_BASE_URL = 'https://api.test.com'
+
+let authService: typeof AuthServiceModule
 
 // Mock config
 jest.mock('../../config', () => ({
@@ -9,12 +13,27 @@ jest.mock('../../config', () => ({
 }))
 
 describe('authService', () => {
+  const previousApiAuthBaseUrl = process.env.EXPO_PUBLIC_API_AUTH_BASE_URL
+
   beforeEach(() => {
     global.fetch = jest.fn()
   })
 
   afterEach(() => {
     jest.clearAllMocks()
+  })
+
+  beforeAll(() => {
+    process.env.EXPO_PUBLIC_API_AUTH_BASE_URL = TEST_API_AUTH_BASE_URL
+    authService = require('./authService') as typeof AuthServiceModule
+  })
+
+  afterAll(() => {
+    if (previousApiAuthBaseUrl === undefined) {
+      delete process.env.EXPO_PUBLIC_API_AUTH_BASE_URL
+    } else {
+      process.env.EXPO_PUBLIC_API_AUTH_BASE_URL = previousApiAuthBaseUrl
+    }
   })
 
   describe('register', () => {
@@ -25,11 +44,13 @@ describe('authService', () => {
       })
 
       const data = {email: 'test@example.com', password: 'password123'}
-      const result = await register(data)
+      const result = await authService.register(data)
 
       expect(global.fetch).toHaveBeenCalledTimes(1)
       const fetchCall = global.fetch.mock.calls[0]
-      expect(fetchCall[0]).toBe('https://api.test.com/authentication/register/')
+      expect(fetchCall[0]).toBe(
+        `${TEST_API_AUTH_BASE_URL}/authentication/register/`,
+      )
       expect(fetchCall[1].method).toBe('POST')
       expect(fetchCall[1].body).toBe(JSON.stringify(data))
       expect(fetchCall[1].headers).toBeDefined()
@@ -43,7 +64,7 @@ describe('authService', () => {
       })
 
       const data = {email: 'existing@example.com', password: 'password123'}
-      const result = await register(data)
+      const result = await authService.register(data)
 
       expect(result).toEqual(mockError)
     })
@@ -61,11 +82,13 @@ describe('authService', () => {
       })
 
       const data = {email: 'test@example.com', password: 'password123'}
-      const result = await fetchAuthCredentials(data)
+      const result = await authService.fetchAuthCredentials(data)
 
       expect(global.fetch).toHaveBeenCalledTimes(1)
       const fetchCall = global.fetch.mock.calls[0]
-      expect(fetchCall[0]).toBe('https://api.test.com/authentication/login/')
+      expect(fetchCall[0]).toBe(
+        `${TEST_API_AUTH_BASE_URL}/authentication/login/`,
+      )
       expect(fetchCall[1].method).toBe('POST')
       expect(fetchCall[1].body).toBe(JSON.stringify(data))
       // Headers is a Headers object, check it exists
@@ -78,7 +101,9 @@ describe('authService', () => {
 
       const data = {email: 'test@example.com', password: 'wrong'}
 
-      await expect(fetchAuthCredentials(data)).rejects.toThrow('Network error')
+      await expect(authService.fetchAuthCredentials(data)).rejects.toThrow(
+        'Network error',
+      )
     })
   })
 })

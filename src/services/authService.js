@@ -1,11 +1,11 @@
-import { Platform } from 'react-native'
+import {Platform} from 'react-native'
 
 const baseURL =
   Platform.OS === 'ios'
     ? process.env.EXPO_PUBLIC_API_AUTH_BASE_URL
     : process.env.EXPO_PUBLIC_API_AUTH_BASE_URL
 
-export { baseURL }
+export {baseURL}
 
 function handleErrors(response) {
   if (response.non_field_errors) {

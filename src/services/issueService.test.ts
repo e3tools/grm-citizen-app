@@ -1,13 +1,9 @@
 import * as request from '../utils/request'
-import * as issueService from './issueService'
+import type * as IssueServiceModule from './issueService'
 
-// Mock config
-jest.mock('../../config', () => ({
-  __esModule: true,
-  default: {
-    API_AUTH_BASE_URL: 'https://api.test.com',
-  },
-}))
+const TEST_API_AUTH_BASE_URL = 'https://api.test.com'
+
+let issueService: typeof IssueServiceModule
 
 jest.mock('../store/ducks/authentication.duck', () => {
   const originalModule = jest.requireActual(
@@ -31,6 +27,21 @@ jest.mock('../utils/request', () => {
 })
 
 describe('issueService', () => {
+  const previousApiAuthBaseUrl = process.env.EXPO_PUBLIC_API_AUTH_BASE_URL
+
+  beforeAll(() => {
+    process.env.EXPO_PUBLIC_API_AUTH_BASE_URL = TEST_API_AUTH_BASE_URL
+    issueService = require('./issueService') as typeof IssueServiceModule
+  })
+
+  afterAll(() => {
+    if (previousApiAuthBaseUrl === undefined) {
+      delete process.env.EXPO_PUBLIC_API_AUTH_BASE_URL
+    } else {
+      process.env.EXPO_PUBLIC_API_AUTH_BASE_URL = previousApiAuthBaseUrl
+    }
+  })
+
   afterEach(() => {
     jest.clearAllMocks()
   })
@@ -42,7 +53,7 @@ describe('issueService', () => {
       const data = await issueService.fetchIssueList()
       expect(request.default).toHaveBeenCalledWith(
         expect.objectContaining({
-          url: 'https://api.test.com/issues/reporter/?page=1&page_size=10',
+          url: `${TEST_API_AUTH_BASE_URL}/issues/reporter/?page=1&page_size=10`,
           method: 'GET',
         }),
       )
@@ -54,7 +65,7 @@ describe('issueService', () => {
     it('should fetch issues with pagination', async () => {
       const mockResponse = {data: [{id: 1, title: 'Issue A'}]}
       require('../utils/request').default.mockResolvedValue(mockResponse)
-      const pageUrl = 'https://api.test.com/issues/reporter?page=2&page_size=10'
+      const pageUrl = `${TEST_API_AUTH_BASE_URL}/issues/reporter?page=2&page_size=10`
       const data = await issueService.getIssues(pageUrl)
       expect(request.default).toHaveBeenCalledWith(
         expect.objectContaining({
@@ -73,7 +84,7 @@ describe('issueService', () => {
       const data = await issueService.getIssueDetail(1)
       expect(request.default).toHaveBeenCalledWith(
         expect.objectContaining({
-          url: 'https://api.test.com/issues/1/',
+          url: `${TEST_API_AUTH_BASE_URL}/issues/1/`,
           method: 'GET',
         }),
       )
@@ -89,7 +100,7 @@ describe('issueService', () => {
       const data = await issueService.createIssue(payload)
       expect(request.default).toHaveBeenCalledWith(
         expect.objectContaining({
-          url: 'https://api.test.com/issues/create/',
+          url: `${TEST_API_AUTH_BASE_URL}/issues/create/`,
           method: 'POST',
           data: JSON.stringify(payload),
           headers: {'Content-Type': 'application/json'},
@@ -107,7 +118,7 @@ describe('issueService', () => {
       const data = await issueService.addIssueAttachment(1, formData)
       expect(request.default).toHaveBeenCalledWith(
         expect.objectContaining({
-          url: 'https://api.test.com/issues/1/add-attachment',
+          url: `${TEST_API_AUTH_BASE_URL}/issues/1/add-attachment`,
           method: 'POST',
           data: formData,
           headers: {'Content-Type': 'multipart/form-data'},
@@ -125,7 +136,7 @@ describe('issueService', () => {
       const data = await issueService.addIssueComment(1, payload)
       expect(request.default).toHaveBeenCalledWith(
         expect.objectContaining({
-          url: 'https://api.test.com/issues/1/add-comment',
+          url: `${TEST_API_AUTH_BASE_URL}/issues/1/add-comment`,
           method: 'POST',
           data: JSON.stringify(payload),
           headers: {'Content-Type': 'application/json'},
@@ -142,7 +153,7 @@ describe('issueService', () => {
       const data = await issueService.listIssueComments(1)
       expect(request.default).toHaveBeenCalledWith(
         expect.objectContaining({
-          url: 'https://api.test.com/issues/1/comments/',
+          url: `${TEST_API_AUTH_BASE_URL}/issues/1/comments/`,
           method: 'GET',
           params: {page: '1', page_size: '10'},
         }),
@@ -158,7 +169,7 @@ describe('issueService', () => {
       const data = await issueService.getIssueComments(1)
       expect(request.default).toHaveBeenCalledWith(
         expect.objectContaining({
-          url: 'https://api.test.com/issues/1/comments/',
+          url: `${TEST_API_AUTH_BASE_URL}/issues/1/comments/`,
           method: 'GET',
           params: {page: '1', page_size: '10'},
         }),
@@ -174,7 +185,7 @@ describe('issueService', () => {
       const data = await issueService.listIssueAttachments(1)
       expect(request.default).toHaveBeenCalledWith(
         expect.objectContaining({
-          url: 'https://api.test.com/issues/1/attachments/',
+          url: `${TEST_API_AUTH_BASE_URL}/issues/1/attachments/`,
           method: 'GET',
           params: {page: '1', page_size: '10'},
         }),
@@ -190,7 +201,7 @@ describe('issueService', () => {
       const data = await issueService.getIssueAttachments(1)
       expect(request.default).toHaveBeenCalledWith(
         expect.objectContaining({
-          url: 'https://api.test.com/issues/1/attachments/',
+          url: `${TEST_API_AUTH_BASE_URL}/issues/1/attachments/`,
           method: 'GET',
           params: {page: '1', page_size: '10'},
         }),
@@ -207,7 +218,7 @@ describe('issueService', () => {
       const data = await issueService.updateIssue(9, payload)
       expect(request.default).toHaveBeenCalledWith(
         expect.objectContaining({
-          url: 'https://api.test.com/issues/9/update/',
+          url: `${TEST_API_AUTH_BASE_URL}/issues/9/update/`,
           method: 'PATCH',
           data: JSON.stringify(payload),
           headers: {'Content-Type': 'application/json'},
