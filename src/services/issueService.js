@@ -26,7 +26,7 @@ export async function fetchIssueList(nextPage) {
 export async function getIssues(nextPage) {
   const session = await getSessionData()
   addTokenToHttpClient(session)
-  const url = nextPage ?? `${baseURL}/issues/reporter?page=1&page_size=10`
+  const url = nextPage ?? `${baseURL}/issues/reporter/?page=1&page_size=10`
   const requestOptions = {
     url,
     method: 'GET',
