@@ -24,9 +24,6 @@ grm-citizen-app/
 │       └── build.yml          # GitHub Actions CI/CD
 ├── assets/                     # Images, icons, and static assets
 ├── components/                 # Expo template components
-├── config.dev/                # Development configuration (gitignored)
-├── config.prod/               # Production configuration (gitignored)
-├── config.ts                  # Config loader (dev/prod switcher)
 ├── scripts/
 │   ├── build-android.js       # Cross-platform Android build script
 │   └── reset-project.js       # Project reset utility
@@ -52,6 +49,9 @@ grm-citizen-app/
 ├── App.js                     # Root component
 ├── app.json                   # Expo configuration
 ├── babel.config.js            # Babel configuration
+├── .env                       # General environment variables (if containing any non-public secrets).
+├── .env.development.local     # Development override configuration if it contains secret keys.
+├── .env.production.local      # Production override configuration if it contains secret keys.
 ├── jest.config.js             # Jest test configuration
 ├── jest.setup.js              # Jest setup and mocks
 ├── metro.config.js            # Metro bundler configuration
@@ -89,8 +89,10 @@ grm-citizen-app/
 
    ```bash
    # Copy example config
-   cp -r config.dev.example config.dev
-   # Edit config.dev/index.js with your local API URLs
+   cp -r .env.example .env
+   cp -r .env.example .env.development.local
+   cp -r .env.example .env.production.local
+   # Edit .env.development.local, .env.production.local and .env with your local API URLs
    ```
 
 4. Initialize Husky (for pre-commit hooks):

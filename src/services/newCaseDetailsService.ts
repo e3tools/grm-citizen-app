@@ -1,7 +1,6 @@
-import config from '../../config'
 import request from '../utils/request'
 
-const baseURL = config.API_AUTH_BASE_URL
+const baseURL = process.env.EXPO_PUBLIC_API_AUTH_BASE_URL
 
 type BaseListResponseType = {
   count: number

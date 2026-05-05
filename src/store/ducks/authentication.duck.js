@@ -1,12 +1,12 @@
-import {Map} from 'immutable'
-import {createActions, handleActions} from 'redux-actions'
-import config from '../../../config'
-import {client} from '../../utils/request'
-import {
-  getEncryptedData,
-  removeEncryptedValue,
-  storeEncryptedData,
-} from '../../utils/storageManager'
+import { Map } from 'immutable'
+import { createActions, handleActions } from 'redux-actions'
+import { client } from '../../utils/request'
+import
+  {
+    getEncryptedData,
+    removeEncryptedValue,
+    storeEncryptedData,
+  } from '../../utils/storageManager'
 
 const defaultState = Map({
   session: null,
@@ -14,16 +14,21 @@ const defaultState = Map({
 })
 
 function storeSessionData(sessionObject) {
-  storeEncryptedData(config.USER_SESSION_KEY, JSON.stringify(sessionObject))
+  storeEncryptedData(
+    process.env.EXPO_PUBLIC_USER_SESSION_KEY,
+    JSON.stringify(sessionObject),
+  )
 }
 
 export async function getSessionData() {
-  const sessionData = await getEncryptedData(config.USER_SESSION_KEY)
+  const sessionData = await getEncryptedData(
+    process.env.EXPO_PUBLIC_USER_SESSION_KEY,
+  )
   return sessionData ? JSON.parse(sessionData) : null
 }
 
 export async function removeSessionData() {
-  await removeEncryptedValue(config.USER_SESSION_KEY)
+  await removeEncryptedValue(process.env.EXPO_PUBLIC_USER_SESSION_KEY)
   removeTokenFromHttpClient()
 }
 

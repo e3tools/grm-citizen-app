@@ -1,11 +1,17 @@
-import config from '../../config'
-import {
-  addTokenToHttpClient,
-  getSessionData,
-} from '../store/ducks/authentication.duck'
+import { Platform } from 'react-native'
+import
+  {
+    addTokenToHttpClient,
+    getSessionData,
+  } from '../store/ducks/authentication.duck'
 import request from '../utils/request'
 
-export const baseURL = config.API_AUTH_BASE_URL
+const baseURL =
+  Platform.OS === 'ios'
+    ? process.env.EXPO_PUBLIC_API_AUTH_BASE_URL
+    : process.env.EXPO_PUBLIC_API_AUTH_BASE_URL
+
+export { baseURL }
 
 function handleErrors(response) {
   if (response.non_field_errors) {

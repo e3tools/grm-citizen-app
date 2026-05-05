@@ -1,7 +1,8 @@
 import axios from 'axios'
-import config from '../../config'
 
-export const client = axios.create({baseURL: config.API_AUTH_BASE_URL})
+export const client = axios.create({
+  baseURL: process.env.EXPO_PUBLIC_API_AUTH_BASE_URL,
+})
 
 const request = ({...options}) => {
   const onSuccess = response => response
