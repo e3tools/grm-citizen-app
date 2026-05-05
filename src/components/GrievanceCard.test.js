@@ -40,7 +40,7 @@ describe('GrievanceCard (Option 2: Component Test)', () => {
     const card = getByText('GRM-001').parent.parent
 
     fireEvent.press(card)
-    expect(mockNavigate).toHaveBeenCalledWith('Issue detail', {id: 1})
+    expect(mockNavigate).toHaveBeenCalledWith('existing_case_details', {id: 1})
   })
 
   it('should display issue type', () => {

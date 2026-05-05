@@ -1,5 +1,3 @@
-import {useNewCaseDetails} from '@/src/hooks/useNewCaseDetails'
-import {File} from 'expo-file-system'
 import {IconSymbol} from '@/components/ui/icon-symbol'
 import {Colors} from '@/constants/theme'
 import CheckboxCard from '@/src/components/CheckboxCard'
@@ -7,6 +5,7 @@ import Dropdown from '@/src/components/Dropdown'
 import RecordingCard from '@/src/components/RecordingCard'
 import Stepper from '@/src/components/Stepper'
 import {useColorScheme} from '@/src/hooks/use-color-scheme'
+import {useNewCaseDetails} from '@/src/hooks/useNewCaseDetails'
 import {
   isAudioFormat,
   isImageFormat,
@@ -25,6 +24,7 @@ import {
 } from 'expo-audio'
 import {CameraCapturedPicture} from 'expo-camera'
 import * as DocumentPicker from 'expo-document-picker'
+import {File} from 'expo-file-system'
 import React, {useEffect, useRef, useState} from 'react'
 import {Controller, useForm} from 'react-hook-form'
 import {
@@ -59,7 +59,11 @@ type Attachment = {
   isAudio: boolean
 }
 
-function NewCaseDetails({route}) {
+type NewCaseDetailsRouteParams = {
+  securityLevelDetails?: Record<string, any>
+}
+
+function NewCaseDetails({route}: {route?: any}) {
   const theme = useColorScheme() ?? 'light'
   const dispatch = useDispatch()
   const navigation = useNavigation()
@@ -91,7 +95,6 @@ function NewCaseDetails({route}) {
 
   function onTakeCameraMedia(media: CameraCapturedPicture): void {
     addToAttachments(media)
-    console.log('media outside', media)
     setAttachments([
       ...attachments,
       {
@@ -570,7 +573,32 @@ function NewCaseDetails({route}) {
 
   const onSubmit = e => {
     console.log('Successfully captured data: ', e)
-    navigation.navigate('location_details')
+    const payload = {}
+    payload.case_description = e.case_description
+    payload.case_occurrence_frequency = e.case_occurrence_frequency
+    payload.case_occurrence_date = e.case_occurrence_date
+
+    payload.case_category = data?.categories.results.find(
+      i => i.id == e.case_category,
+    )
+    payload.case_component = data?.components.results.find(
+      i => i.id == e.case_component,
+    )
+    payload.case_sub_component = data?.subcomponents.results.find(
+      i => i.id == e.case_sub_component,
+    )
+    payload.case_sub_type = data?.subtypes.results.find(
+      i => i.id == e.case_sub_type,
+    )
+    payload.case_type = data?.types.results.find(i => i.id == e.case_type)
+
+    navigation.navigate('new_location_details', {
+      securityLevelDetails: route?.params?.securityLevelDetails ?? {},
+      caseDetails: {
+        ...payload,
+        attachments,
+      },
+    })
   }
 
   const onInvalid = e => {

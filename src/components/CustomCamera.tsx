@@ -1,13 +1,13 @@
 import {IconSymbol} from '@/components/ui/icon-symbol'
 import {
-  CameraView,
-  CameraType,
-  useCameraPermissions,
-  CameraMode,
   CameraCapturedPicture,
+  CameraMode,
+  CameraType,
+  CameraView,
+  useCameraPermissions,
 } from 'expo-camera'
 import React, {PropsWithChildren, useRef, useState} from 'react'
-import {View, Text, Button, TouchableOpacity, StyleSheet} from 'react-native'
+import {Button, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 import {colors} from '../utils/colors'
 
 type Props = PropsWithChildren<{
@@ -82,7 +82,6 @@ export default function CustomCamera({
     setIsRecording(true)
     try {
       const video = await cameraRef.current.recordAsync({maxDuration: 3})
-      console.log(video)
     } catch (e) {
       console.error(e)
     }

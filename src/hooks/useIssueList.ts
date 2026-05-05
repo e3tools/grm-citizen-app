@@ -5,7 +5,7 @@ export function useIssueList() {
   const [issues, setIssues] = useState<any[]>([])
   const [loadingIssues, setLoadingIssues] = useState(true)
   const [loadingMore, setLoadingMore] = useState(false)
-  const [currentPage, setCurrentPage] = useState(1)
+  const [nextPage, setNextPage] = useState(null)
   const [hasNextPage, setHasNextPage] = useState(true)
 
   useEffect(() => {
@@ -15,9 +15,11 @@ export function useIssueList() {
   const getIssueList = async () => {
     setLoadingIssues(true)
     try {
-      const issuesList = await fetchIssueList(1)
+      const issuesList = await fetchIssueList()
+
       setIssues(issuesList.results || issuesList)
       setHasNextPage(!!issuesList.next)
+      setNextPage(issuesList.next)
     } catch (error) {
       console.error('Error loading issues:', error)
     } finally {
@@ -30,11 +32,15 @@ export function useIssueList() {
 
     setLoadingMore(true)
     try {
-      const nextPage = currentPage + 1
-      const issuesList = await fetchIssueList(nextPage)
-      setIssues(prev => [...prev, ...(issuesList.results || issuesList)])
-      setCurrentPage(nextPage)
-      setHasNextPage(!!issuesList.next)
+      if (!nextPage) {
+        setHasNextPage(false)
+        setLoadingMore(false)
+        return
+      }
+      const response = await fetchIssueList(nextPage)
+      setIssues(prev => [...prev, ...(response.results || response)])
+      setHasNextPage(!!response.next)
+      setNextPage(response.next)
     } catch (error) {
       console.error('Error loading more issues:', error)
     } finally {
@@ -44,7 +50,7 @@ export function useIssueList() {
 
   const refreshIssues = async () => {
     setLoadingIssues(true)
-    setCurrentPage(1)
+    setNextPage(null)
     setHasNextPage(true)
     try {
       const issuesList = await fetchIssueList(1)

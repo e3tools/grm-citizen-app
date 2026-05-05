@@ -30,19 +30,6 @@ export const getIssueComponents = async () => {
       ...requestOptions,
     })
 
-    // {
-    //   "count": 1,
-    //     "next": null,
-    //     "previous": null,
-    //     "results": [{
-    //       "id": 1,
-    //       "name": "sample component",
-    //       "description": "sample description component",
-    //       "created_date": "2025-09-09T14:47:33.898748Z",
-    //       "updated_date": "2025-09-09T14:47:33.901478Z"
-    //     }]
-    // }
-
     return response?.data ?? undefined
   } catch (error) {
     console.error('Error Fetching Issue Components', error.message)

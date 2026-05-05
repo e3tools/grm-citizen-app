@@ -1,14 +1,13 @@
 import {Feather} from '@expo/vector-icons'
-import React from 'react'
+import {useNavigation} from '@react-navigation/native'
 import {ActivityIndicator, SafeAreaView, Text, View} from 'react-native'
 import posed from 'react-native-pose'
 import Button from '../../../../components/CustomButton'
 import {useIssueList} from '../../../../hooks/useIssueList'
 import {i18n} from '../../../../translations/i18n'
 import {colors} from '../../../../utils/colors'
-import {styles} from '../GRM.style'
 import IssueList from '../../components/IssueList'
-import {useNavigation} from '@react-navigation/native'
+import {styles} from '../GRM.style'
 
 const iconConfig = {
   focused: {
@@ -79,6 +78,7 @@ const Home = () => {
             {i18n.t('no_grievances')}
           </Text>
           <Button
+            style={{paddingHorizontal: 10}}
             backgroundColor="#24c38b"
             textColor="white"
             color="white"
@@ -101,12 +101,13 @@ const Home = () => {
             {i18n.t('welcome')}
           </Text>
           <Button
+            style={{paddingHorizontal: 10}}
             backgroundColor="#24c38b"
             textColor="white"
             color="white"
             label={i18n.t('report_new_grievance')}
             iconName="plus-circle"
-            onPress={() => navigation.navigate('Issue create')}
+            onPress={() => navigation.navigate('issue_create')}
           />
           <View style={{flex: 1, marginTop: 30, paddingHorizontal: 16}}>
             <View
@@ -145,7 +146,8 @@ const Home = () => {
               issues={issues}
               hasNextPage={hasNextPage}
               loadMoreIssues={loadMoreIssues}
-            ></IssueList>
+              disablePagination={true}
+            />
           </View>
         </View>
       )}

@@ -33,7 +33,7 @@ const GrievanceCard = ({issue}) => {
   return (
     <TouchableOpacity
       onPress={() => {
-        navigation.navigate('Issue detail', {id: issue.id})
+        navigation.navigate('existing_case_details', {id: issue.id})
       }}
       style={styles.card}
     >

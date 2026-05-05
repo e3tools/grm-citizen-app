@@ -1,8 +1,12 @@
 import {Map} from 'immutable'
 import {createActions, handleActions} from 'redux-actions'
-import {getEncryptedData, storeEncryptedData} from '../../utils/storageManager'
-import {client} from '../../utils/request'
 import config from '../../../config'
+import {client} from '../../utils/request'
+import {
+  getEncryptedData,
+  removeEncryptedValue,
+  storeEncryptedData,
+} from '../../utils/storageManager'
 
 const defaultState = Map({
   session: null,
@@ -18,11 +22,21 @@ export async function getSessionData() {
   return sessionData ? JSON.parse(sessionData) : null
 }
 
+export async function removeSessionData() {
+  await removeEncryptedValue(config.USER_SESSION_KEY)
+  removeTokenFromHttpClient()
+}
+
 export function addTokenToHttpClient(sessionObject) {
   client.defaults.headers.common['Authorization'] =
     `Token ${sessionObject.token}`
 }
-export const {signUp, login} = createActions({
+
+export function removeTokenFromHttpClient() {
+  client.defaults.headers.common['Authorization'] = undefined
+}
+
+export const {signUp, login, logout, storeProfile} = createActions({
   LOGIN: session => {
     addTokenToHttpClient(session)
     storeSessionData(session)
@@ -30,6 +44,18 @@ export const {signUp, login} = createActions({
       session,
     }
   },
+
+  LOGOUT: () => {
+    removeSessionData()
+    return
+  },
+
+  STORE_PROFILE: profile => {
+    return {
+      profile,
+    }
+  },
+
   SIGN_UP: () => {},
 })
 
@@ -38,6 +64,16 @@ const authentication = handleActions(
     [login]: (draft, {payload: {session}}) => {
       return draft.withMutations(state => {
         state.set('session', session)
+      })
+    },
+    [logout]: draft => {
+      return draft.withMutations(state => {
+        state.set('session', null)
+      })
+    },
+    [storeProfile]: (draft, {payload: {profile}}) => {
+      return draft.withMutations(state => {
+        state.set('profile', profile)
       })
     },
     [signUp]: () => {},

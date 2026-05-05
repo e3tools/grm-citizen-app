@@ -26,7 +26,6 @@ export function useLocationDetails() {
 
   const fetchDistricts = async () => {
     const result: any[] | undefined = await getDistricts()
-    console.log(result)
 
     setAreDistrictsLoading(false)
     if (!result) {

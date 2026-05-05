@@ -9,7 +9,13 @@ import {DefaultTheme, NavigationContainer} from '@react-navigation/native'
 import * as SplashScreen from 'expo-splash-screen'
 import React, {useEffect, useRef, useState} from 'react'
 import {AppState, View} from 'react-native'
-import {shallowEqual, useSelector} from 'react-redux'
+import {shallowEqual, useDispatch, useSelector} from 'react-redux'
+import {fetchUserProfile} from '../services/profileService'
+import {
+  getSessionData,
+  login,
+  storeProfile,
+} from '../store/ducks/authentication.duck'
 import PrivateRoutes from './privateRoutes'
 import PublicRoutes from './publicRoutes'
 
@@ -17,6 +23,7 @@ SplashScreen.preventAutoHideAsync()
 
 const Router = ({theme}) => {
   const [loading, setLoading] = useState(true)
+  const dispatch = useDispatch()
   // const rootNavigationState = useRootNavigationState(); // Removed
 
   const appState = useRef(AppState.currentState)
@@ -48,10 +55,24 @@ const Router = ({theme}) => {
       handleAppStateChange,
     )
 
+    getSessionData().then(session => {
+      if (session) dispatch(login(session))
+    })
+
     return () => {
       subscription.remove()
     }
   }, [])
+
+  useEffect(() => {
+    if (session) {
+      const fetchInitialData = async () => {
+        const profileData = await fetchUserProfile()
+        dispatch(storeProfile(profileData))
+      }
+      fetchInitialData()
+    }
+  }, [session])
 
   let [fontsLoaded] = useFonts({
     Poppins_400Regular,

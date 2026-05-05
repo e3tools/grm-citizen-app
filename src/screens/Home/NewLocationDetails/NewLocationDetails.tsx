@@ -6,6 +6,7 @@ import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import React, {useEffect, useRef} from 'react'
 import {Controller, useForm} from 'react-hook-form'
 import {
+  ActivityIndicator,
   KeyboardAvoidingView,
   Platform,
   ScrollView,
@@ -26,7 +27,7 @@ import {
   removeEncryptedValue,
   storeEncryptedData,
 } from '../../../utils/storageManager'
-import styles from '../LocationDetails/LocationDetails.style'
+import styles from '../NewLocationDetails/NewLocationDetails.style'
 
 type LocationDetailsFormValues = {
   case_district: string
@@ -34,10 +35,10 @@ type LocationDetailsFormValues = {
   [field: string]: any
 }
 
-function LocationDetails({route}: {route?: any}) {
+function NewLocationDetails({route}: {route?: any}) {
   const theme = useColorScheme() ?? 'light'
   const dispatch = useDispatch()
-  const navigation = useNavigation()
+  const navigation = useNavigation<any>()
   const scrollViewRef = useRef<ScrollView | null>(null)
   const {
     areDistrictsLoading,
@@ -123,14 +124,18 @@ function LocationDetails({route}: {route?: any}) {
     return () => subscription.unsubscribe()
   }, [watch])
 
-  const Dropdowns = () => (
-    <>
-      <LocationDistrictDropdown />
-      {wardLevels.map((options, index) => (
-        <LocationWardDropdown key={index} level={index} options={options} />
-      ))}
-    </>
-  )
+  const Dropdowns = () => {
+    return (
+      <>
+        <LocationDistrictDropdown />
+        {wardLevels[0] &&
+          wardLevels[0].length > 0 &&
+          wardLevels.map((options, index) => (
+            <LocationWardDropdown key={index} level={index} options={options} />
+          ))}
+      </>
+    )
+  }
 
   const LocationDistrictDropdown = () => {
     return (
@@ -149,7 +154,6 @@ function LocationDetails({route}: {route?: any}) {
               customOptionLabel={'hierarchical_name'}
               value={value}
               onSelect={(e: any) => {
-                console.log(e)
                 onChange(e)
                 clearWardFieldsAfter(-1)
                 fetchWards(e)
@@ -272,9 +276,39 @@ function LocationDetails({route}: {route?: any}) {
   const Separator = () => <View style={styles.lineSeparator} />
 
   const onSubmit = (capturedData: LocationDetailsFormValues) => {
-    console.log('Successfully captured data: ', capturedData)
     removeEncryptedValue('locationFormData')
-    // navigation.navigate('summary', capturedData + previous data)
+
+    // Transform id-based fields in capturedData into corresponding object references for payload
+    const payload = {...capturedData}
+    // Replace case_district with the actual district object
+    if (payload.case_district && Array.isArray(districts)) {
+      payload.case_district =
+        districts.find((d: any) => d.id === capturedData.case_district) ??
+        capturedData.case_district
+    }
+
+    // Replace all case_ward_x keys with their actual ward object
+    Object.keys(payload).forEach(key => {
+      if (key.startsWith('case_ward_') && Array.isArray(districts)) {
+        payload[`_id_${key}`] = capturedData[key]
+        payload[key] =
+          districts.find((w: any) => {
+            // for (const element of w) {
+            //   console.log(element.name)
+            return w.id === capturedData[key]
+            // }
+          }) ?? capturedData[key]
+      }
+    })
+
+    payload.detailed_location_description =
+      capturedData.detailed_location_description
+
+    navigation.navigate('new_case_summary', {
+      caseDetails: route?.params?.caseDetails ?? {},
+      securityLevelDetails: route?.params?.securityLevelDetails ?? {},
+      locationDetails: payload,
+    })
   }
 
   const onInvalid = (e: any) => {
@@ -363,8 +397,6 @@ function LocationDetails({route}: {route?: any}) {
     )
   }
 
-  console.log(error)
-
   return (
     <Provider>
       {error && <ErrorView message={error.message} />}
@@ -385,6 +417,13 @@ function LocationDetails({route}: {route?: any}) {
                 <View style={styles.formContainer}>
                   <View>
                     <Stepper currentStep={3} numberOfSteps={4} />
+                    {areDistrictsLoading && (
+                      <ActivityIndicator
+                        size={'large'}
+                        color={colors.primary}
+                        style={{marginBottom: 10}}
+                      />
+                    )}
                     <View style={{paddingBottom: 30}}>
                       <Text style={styles.stepTitle}>
                         {i18n.t('case_details_step_3_title')}
@@ -406,4 +445,4 @@ function LocationDetails({route}: {route?: any}) {
   )
 }
 
-export default LocationDetails
+export default NewLocationDetails

@@ -3,6 +3,7 @@ import React, {useEffect, useState} from 'react'
 import {Controller, useForm} from 'react-hook-form'
 import {ActivityIndicator, ScrollView, Text, View} from 'react-native'
 import {Provider, TextInput} from 'react-native-paper'
+import {useDispatch} from 'react-redux'
 import CustomButton from '../../../components/CustomButton'
 import Dropdown from '../../../components/Dropdown'
 import {
@@ -11,11 +12,12 @@ import {
   fetchUserProfile,
   updateUserProfile,
 } from '../../../services/profileService'
+import {logout, storeProfile} from '../../../store/ducks/authentication.duck'
 import {i18n} from '../../../translations/i18n'
 import {colors} from '../../../utils/colors'
-import styles from './Profile.style'
 import MESSAGES from '../../../utils/formErrorMessages'
 import {emailRegex} from '../../../utils/formUtils'
+import styles from './Profile.style'
 
 const GENDER_OPTIONS = [
   {id: 'male', name: i18n.t('male')},
@@ -30,6 +32,7 @@ function Profile() {
   const [ageGroups, setAgeGroups] = useState([])
   const [citizenGroups, setCitizenGroups] = useState([])
   const [citizenGroupsByType, setCitizenGroupsByType] = useState({})
+  const dispatch = useDispatch()
 
   const {
     control,
@@ -97,6 +100,7 @@ function Profile() {
           group_id: profile.group?.id || null,
           group_2_id: profile.group_2?.id || null,
         })
+        dispatch(storeProfile(profile))
       }
     } catch (error) {
       console.error('Error loading profile data:', error)
@@ -111,6 +115,10 @@ function Profile() {
       index: 0,
       routes: [{name: 'Main'}],
     })
+  }
+
+  const onLogout = () => {
+    dispatch(logout())
   }
 
   const onSubmit = async data => {
@@ -384,7 +392,6 @@ function Profile() {
             }}
             defaultValue=""
           />
-
           <Controller
             control={control}
             name="age_group_id"
@@ -471,6 +478,12 @@ function Profile() {
               label={saving ? i18n.t('saving') : i18n.t('save_and_continue')}
               onPress={handleSubmit(onSubmit)}
               disabled={saving}
+            />
+            <CustomButton
+              backgroundColor={colors.error}
+              textColor="white"
+              label={saving ? i18n.t('logout') : i18n.t('logout')}
+              onPress={onLogout}
             />
           </View>
         </View>
