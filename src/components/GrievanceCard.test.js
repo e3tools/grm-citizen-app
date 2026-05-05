@@ -46,6 +46,6 @@ describe('GrievanceCard (Option 2: Component Test)', () => {
   it('should display issue type', () => {
     const {getByText} = render(<GrievanceCard issue={mockIssue} />)
     // i18n.t will return the key if translation not found
-    expect(getByText('grievance')).toBeTruthy()
+    expect(getByText('Grievance')).toBeTruthy()
   })
 })
