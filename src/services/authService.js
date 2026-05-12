@@ -36,9 +36,6 @@ export async function register(data) {
 
 export async function fetchAuthCredentials(data) {
   const myHeaders = new Headers()
-  console.log('baseURL')
-
-  console.log(baseURL)
 
   myHeaders.append('Content-Type', 'application/json')
   const requestOptions = {
