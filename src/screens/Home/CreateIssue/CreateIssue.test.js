@@ -45,6 +45,15 @@ describe('CreateIssue flow', () => {
     expect(getByText('create_issue_step_1')).toBeTruthy()
     fireEvent.press(getByText('save_and_continue'))
 
-    expect(mockNavigate).toHaveBeenCalledWith('new_case_details')
+    expect(mockNavigate).toHaveBeenCalledWith('new_case_details', {
+      securityLevelDetails: {
+        age: true,
+        citizen_group_1: true,
+        citizen_group_2: true,
+        gender: true,
+        name: true,
+        type: 'on_behalf_of_someone',
+      },
+    })
   })
 })

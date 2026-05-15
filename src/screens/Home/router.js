@@ -59,6 +59,25 @@ const customHeaderOptions = label => ({
     color: '#373737',
   },
 })
+
+const customHeaderRightIcon = ({navigation}) => ({
+  headerRight: () => (
+    <View style={styles.iconContainer}>
+      <Pressable
+        onPress={() => {
+          navigation.navigate('SearchBarGrm')
+        }}
+      >
+        <Icon
+          type="ionicon"
+          color={colors.primary}
+          size={35}
+          name={Platform.OS === 'ios' ? 'ios-search' : 'search'}
+        />
+      </Pressable>
+    </View>
+  ),
+})
 const customHeaderLeftIcon = ({navigation, pageToNavigate}) => ({
   headerLeft: () => (
     <View style={styles.iconContainer}>
@@ -113,6 +132,7 @@ function DashboardStackScreen() {
         component={HomeRouter}
         options={({navigation, route}) => ({
           ...customHeaderOptions(i18n.t('my_grievances')),
+          ...customHeaderRightIcon({navigation, route}),
         })}
       />
       <HomeStack.Screen
