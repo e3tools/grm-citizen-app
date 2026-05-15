@@ -74,6 +74,7 @@
   "case_detail": "Détails de l'affaire",
   "attachments": "Pièces jointes",
   "case_timeline": "Chronologie de l'affaire",
+  "no_description": "Aucune description n'est fournie",
   "no_comments": "Vous n'avez signalé aucun commentaire. Commençons.",
   "no_comments_yet": "Aucun commentaire pour l'instant.",
   "no_comments_to_load": "Plus aucun commentaire à charger",
@@ -149,5 +150,9 @@
   "submit_case": "Soumettre le cas",
   "case_created_successfully": "Cas créé avec succès!",
   "tracking_code": "Code de suivi",
-  "ok": "Ok"
+  "ok": "Ok",
+  "retry": "Réessayer",
+  "error_generic_message": "Oups, une erreur s'est produite.",
+  "error_code": "Code d'erreur",
+  "go_back": "Retour"
 }

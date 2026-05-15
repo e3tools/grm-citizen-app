@@ -78,7 +78,6 @@ const customHeaderRightIcon = ({navigation}) => ({
     </View>
   ),
 })
-
 const customHeaderLeftIcon = ({navigation, pageToNavigate}) => ({
   headerLeft: () => (
     <View style={styles.iconContainer}>
@@ -152,7 +151,6 @@ function DashboardStackScreen() {
           ...customHeaderLeftIcon({
             navigation,
             route,
-            pageToNavigate: 'All issues',
           }),
         })}
       />

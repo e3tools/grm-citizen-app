@@ -19,6 +19,7 @@ export default StyleSheet.create({
     width: '46%',
     justifyContent: 'center',
     alignItems: 'center',
+    textAlign: 'center',
   },
   addMediaContainer: {
     flexDirection: 'row',
