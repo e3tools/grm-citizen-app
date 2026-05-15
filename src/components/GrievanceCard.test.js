@@ -40,12 +40,12 @@ describe('GrievanceCard (Option 2: Component Test)', () => {
     const card = getByText('GRM-001').parent.parent
 
     fireEvent.press(card)
-    expect(mockNavigate).toHaveBeenCalledWith('Issue detail', {id: 1})
+    expect(mockNavigate).toHaveBeenCalledWith('existing_case_details', {id: 1})
   })
 
   it('should display issue type', () => {
     const {getByText} = render(<GrievanceCard issue={mockIssue} />)
     // i18n.t will return the key if translation not found
-    expect(getByText('grievance')).toBeTruthy()
+    expect(getByText('Grievance')).toBeTruthy()
   })
 })

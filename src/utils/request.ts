@@ -1,7 +1,8 @@
 import axios from 'axios'
-import config from '../../config'
 
-export const client = axios.create({baseURL: config.API_AUTH_BASE_URL})
+export const client = axios.create({
+  baseURL: process.env.EXPO_PUBLIC_API_AUTH_BASE_URL,
+})
 
 const request = ({...options}) => {
   const onSuccess = response => response
@@ -15,6 +16,7 @@ const request = ({...options}) => {
       console.log(error.response.headers)
       return Promise.reject({
         message: `${error.status} Error - ${error.response.data}`,
+        error: error.response,
       })
       // Reject the promise to handle it in the calling code
     } else if (error.request) {

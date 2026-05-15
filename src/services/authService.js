@@ -1,6 +1,10 @@
-import config from '../../config'
+import {Platform} from 'react-native'
 
-const baseURL = config.API_AUTH_BASE_URL || ''
+const baseURL =
+  Platform.OS === 'ios'
+    ? process.env.EXPO_PUBLIC_API_AUTH_BASE_URL
+    : process.env.EXPO_PUBLIC_API_AUTH_BASE_URL
+
 export {baseURL}
 
 function handleErrors(response) {
@@ -32,6 +36,7 @@ export async function register(data) {
 
 export async function fetchAuthCredentials(data) {
   const myHeaders = new Headers()
+
   myHeaders.append('Content-Type', 'application/json')
   const requestOptions = {
     method: 'POST',

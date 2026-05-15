@@ -1,16 +1,15 @@
 import {Feather} from '@expo/vector-icons'
-import React from 'react'
+import {useNavigation, useRoute} from '@react-navigation/native'
 import {ActivityIndicator, SafeAreaView, Text, View} from 'react-native'
 import posed from 'react-native-pose'
+import {useIssue} from '../../../../hooks/useIssue'
 import {i18n} from '../../../../translations/i18n'
 import {colors} from '../../../../utils/colors'
-import {useNavigation, useRoute} from '@react-navigation/native'
-import {useIssue} from '../../../../hooks/useIssue'
 import {formatDate} from '../../../../utils/date'
 import {getStatusInfo} from '../../../../utils/issue'
-import {styles} from '../GRM.style'
-import IssueComments from '../../components/issueComments'
 import IssueAttachments from '../../components/issueAttachments'
+import IssueComments from '../../components/issueComments'
+import {styles} from '../GRM.style'
 
 const iconConfig = {
   focused: {

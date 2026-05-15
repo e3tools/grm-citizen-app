@@ -7,13 +7,16 @@ import posed from 'react-native-pose'
 import {version} from '../../../package.json'
 import {i18n} from '../../translations/i18n'
 import {colors} from '../../utils/colors'
-import Home from './GRM/screens/Home'
-import Profile from './Profile'
-import AllIssues from './GRM/screens/AllIssues'
-import IssueDetail from './GRM/screens/IssueDetail'
-import AllIssueAttachments from './GRM/screens/AllIssueAttachments'
 import CreateIssue from './CreateIssue'
+import ExistingCaseDetails from './ExistingCaseDetails'
+import AllIssueAttachments from './GRM/screens/AllIssueAttachments'
+import AllIssues from './GRM/screens/AllIssues'
+import Home from './GRM/screens/Home'
+import IssueDetail from './GRM/screens/IssueDetail'
 import NewCaseDetails from './NewCaseDetails/NewCaseDetails'
+import NewCaseSummary from './NewCaseSummary'
+import NewLocationDetails from './NewLocationDetails/NewLocationDetails'
+import Profile from './Profile'
 
 const iconConfig = {
   focused: {
@@ -154,8 +157,41 @@ function DashboardStackScreen() {
         })}
       />
       <HomeStack.Screen
+        name="existing_case_details"
+        component={ExistingCaseDetails}
+        options={({navigation, route}) => ({
+          ...customHeaderOptions(i18n.t('existing_case_details')),
+          ...customHeaderLeftIcon({
+            navigation,
+            route,
+          }),
+        })}
+      />
+      <HomeStack.Screen
         name={'new_case_details'}
         component={NewCaseDetails}
+        options={({navigation, route}) => ({
+          ...customHeaderOptions(i18n.t('create_issue')),
+          ...customHeaderLeftIcon({
+            navigation,
+            route,
+          }),
+        })}
+      />
+      <HomeStack.Screen
+        name={'new_location_details'}
+        component={NewLocationDetails}
+        options={({navigation, route}) => ({
+          ...customHeaderOptions(i18n.t('create_issue')),
+          ...customHeaderLeftIcon({
+            navigation,
+            route,
+          }),
+        })}
+      />
+      <HomeStack.Screen
+        name={'new_case_summary'}
+        component={NewCaseSummary}
         options={({navigation, route}) => ({
           ...customHeaderOptions(i18n.t('create_issue')),
           ...customHeaderLeftIcon({
@@ -170,16 +206,12 @@ function DashboardStackScreen() {
 
 function HomeRouter() {
   return (
-    <Tab.Navigator
-      tabBarOptions={{
-        activeTintColor: colors.primary,
-        inactiveTintColor: 'gray',
-      }}
-    >
+    <Tab.Navigator>
       <Tab.Screen
         name="Home"
         options={{
           headerShown: false,
+          tabBarActiveTintColor: colors.primary,
           tabBarIcon: ({focused, color, size}) => (
             <AnimatedFeatherIcon
               pose={focused ? 'focused' : 'unfocused'}
@@ -195,6 +227,7 @@ function HomeRouter() {
         name="Profile"
         options={{
           headerShown: false,
+          tabBarActiveTintColor: colors.primary,
           tabBarIcon: ({focused, color, size}) => (
             <AnimatedFeatherIcon
               pose={focused ? 'focused' : 'unfocused'}

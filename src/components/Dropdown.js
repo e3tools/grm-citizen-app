@@ -1,15 +1,17 @@
+import {IconSymbol} from '@/components/ui/icon-symbol'
 import React, {useState} from 'react'
 import {
-  View,
-  Text,
-  TouchableOpacity,
-  Modal,
+  ActivityIndicator,
   FlatList,
+  Modal,
   StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
 } from 'react-native'
-import {colors} from '../utils/colors'
 import {i18n} from '../translations/i18n'
-import {IconSymbol} from '@/components/ui/icon-symbol'
+import {colors} from '../utils/colors'
 
 const Dropdown = ({
   label,
@@ -19,8 +21,12 @@ const Dropdown = ({
   placeholder = 'Select an option',
   error,
   optional,
+  customOptionLabel = 'name',
+  enableSearch = true,
+  loading = false,
 }) => {
   const [isVisible, setIsVisible] = useState(false)
+  const [searchText, setSearchText] = useState('')
 
   const selectedOption = options.find(option => {
     if (typeof option === 'object' && option.id) {
@@ -35,11 +41,21 @@ const Dropdown = ({
       : selectedOption
     : ''
 
+  const filteredOptions = !loading
+    ? enableSearch
+      ? options.filter(option => {
+          const label = typeof option === 'object' ? option.name : option
+          return label.toLowerCase().includes(searchText.toLowerCase())
+        })
+      : options
+    : []
+
   const handleSelect = option => {
     const optionValue =
       typeof option === 'object' && option.id ? option.id : option
     onSelect(optionValue)
     setIsVisible(false)
+    setSearchText('')
   }
 
   return (
@@ -60,7 +76,10 @@ const Dropdown = ({
       </View>
       <TouchableOpacity
         style={[styles.dropdown, error && styles.dropdownError]}
-        onPress={() => setIsVisible(true)}
+        onPress={() => {
+          setIsVisible(true)
+          setSearchText('')
+        }}
       >
         <View style={styles.inputLabel}>
           <Text
@@ -89,39 +108,63 @@ const Dropdown = ({
           activeOpacity={1}
           onPress={() => setIsVisible(false)}
         >
-          <View style={styles.modalContent}>
-            <FlatList
-              data={options}
-              keyExtractor={(item, index) => {
-                if (typeof item === 'object' && item.id) {
-                  return item.id.toString()
-                }
-                return index.toString()
-              }}
-              renderItem={({item}) => {
-                const itemValue =
-                  typeof item === 'object' && item.id ? item.id : item
-                const itemLabel = typeof item === 'object' ? item.name : item
-                const isSelected = itemValue === value
+          <View
+            style={[styles.modalContent, {marginBottom: 0, paddingVertical: 0}]}
+          >
+            {enableSearch && (
+              <TextInput
+                style={styles.searchInput}
+                placeholder="Search..."
+                value={searchText}
+                onChangeText={setSearchText}
+                autoCapitalize="none"
+                autoCorrect={false}
+              />
+            )}
+            {loading ? (
+              <View style={styles.loadingContainer}>
+                <ActivityIndicator color={colors.primary} size="large" />
+              </View>
+            ) : (
+              <FlatList
+                data={filteredOptions}
+                keyExtractor={(item, index) => {
+                  if (typeof item === 'object' && item.id) {
+                    return item.id.toString()
+                  }
+                  return index.toString()
+                }}
+                renderItem={({item}) => {
+                  const itemValue =
+                    typeof item === 'object' && item.id ? item.id : item
+                  const itemLabel =
+                    typeof item === 'object'
+                      ? (item[customOptionLabel] ?? item.name)
+                      : item
+                  const isSelected = itemValue === value
 
-                return (
-                  <TouchableOpacity
-                    style={[styles.option, isSelected && styles.selectedOption]}
-                    onPress={() => handleSelect(item)}
-                  >
-                    <Text
+                  return (
+                    <TouchableOpacity
                       style={[
-                        styles.optionText,
-                        isSelected && styles.selectedOptionText,
+                        styles.option,
+                        isSelected && styles.selectedOption,
                       ]}
+                      onPress={() => handleSelect(item)}
                     >
-                      {itemLabel}
-                    </Text>
-                    {isSelected && <Text style={styles.checkmark}>✓</Text>}
-                  </TouchableOpacity>
-                )
-              }}
-            />
+                      <Text
+                        style={[
+                          styles.optionText,
+                          isSelected && styles.selectedOptionText,
+                        ]}
+                      >
+                        {itemLabel}
+                      </Text>
+                      {isSelected && <Text style={styles.checkmark}>✓</Text>}
+                    </TouchableOpacity>
+                  )
+                }}
+              />
+            )}
           </View>
         </TouchableOpacity>
       </Modal>
@@ -184,6 +227,27 @@ const styles = StyleSheet.create({
     width: '80%',
     maxHeight: '70%',
     paddingVertical: 8,
+  },
+  loadingContainer: {
+    minHeight: 200,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  searchInput: {
+    borderColor: colors.primary,
+    borderTopEndRadius: 8,
+    borderTopRightRadius: 6,
+    borderTopLeftRadius: 6,
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    marginBottom: 8,
+    fontSize: 16,
+    backgroundColor: '#F9F9F9',
+    marginBottom: 0,
+    borderWidth: 3,
+    marginHorizontal: 0,
+    marginVertical: 0,
+    padding: 0,
   },
   option: {
     flexDirection: 'row',

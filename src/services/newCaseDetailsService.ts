@@ -1,7 +1,6 @@
-import config from '../../config'
 import request from '../utils/request'
 
-const baseURL = config.API_AUTH_BASE_URL
+const baseURL = process.env.EXPO_PUBLIC_API_AUTH_BASE_URL
 
 type BaseListResponseType = {
   count: number
@@ -29,19 +28,6 @@ export const getIssueComponents = async () => {
     const response = await request({
       ...requestOptions,
     })
-
-    // {
-    //   "count": 1,
-    //     "next": null,
-    //     "previous": null,
-    //     "results": [{
-    //       "id": 1,
-    //       "name": "sample component",
-    //       "description": "sample description component",
-    //       "created_date": "2025-09-09T14:47:33.898748Z",
-    //       "updated_date": "2025-09-09T14:47:33.901478Z"
-    //     }]
-    // }
 
     return response?.data ?? undefined
   } catch (error) {

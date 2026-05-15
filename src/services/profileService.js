@@ -1,11 +1,16 @@
-import config from '../../config'
-import request from '../utils/request'
+import {Platform} from 'react-native'
 import {
   addTokenToHttpClient,
   getSessionData,
 } from '../store/ducks/authentication.duck'
+import request from '../utils/request'
 
-export const baseURL = config.API_AUTH_BASE_URL
+const baseURL =
+  Platform.OS === 'ios'
+    ? process.env.EXPO_PUBLIC_API_AUTH_BASE_URL
+    : process.env.EXPO_PUBLIC_API_AUTH_BASE_URL
+
+export {baseURL}
 
 export async function fetchCitizenAgeGroups() {
   try {
@@ -39,7 +44,7 @@ export async function fetchUserProfile(data) {
   try {
     const session = await getSessionData()
     addTokenToHttpClient(session)
-    const url = `${baseURL}/authentication/citizen-detail/`
+    const url = `${baseURL}/authentication/citizen-detail`
     const response = await request({
       url,
       method: 'GET',

@@ -1,19 +1,10 @@
 import * as request from '../utils/request'
-import {
-  getIssueCategories,
-  getIssueComponents,
-  getIssueSubcomponents,
-  getIssueSubTypes,
-  getIssueTypes,
-} from './newCaseDetailsService'
 
-// Mock config
-jest.mock('../../config', () => ({
-  __esModule: true,
-  default: {
-    API_AUTH_BASE_URL: 'https://api.test.com',
-  },
-}))
+import type * as NewCaseDetailsServiceModule from './newCaseDetailsService'
+
+const TEST_API_AUTH_BASE_URL = 'https://api.test.com'
+
+let newCaseDetailsService: typeof NewCaseDetailsServiceModule
 
 jest.mock('../utils/request', () => {
   const originalModule = jest.requireActual('../utils/request')
@@ -26,6 +17,22 @@ jest.mock('../utils/request', () => {
 })
 
 describe('newCaseDetailsService', () => {
+  const previousApiAuthBaseUrl = process.env.EXPO_PUBLIC_API_AUTH_BASE_URL
+
+  beforeAll(() => {
+    process.env.EXPO_PUBLIC_API_AUTH_BASE_URL = TEST_API_AUTH_BASE_URL
+    newCaseDetailsService =
+      require('./newCaseDetailsService') as typeof NewCaseDetailsServiceModule
+  })
+
+  afterAll(() => {
+    if (previousApiAuthBaseUrl === undefined) {
+      delete process.env.EXPO_PUBLIC_API_AUTH_BASE_URL
+    } else {
+      process.env.EXPO_PUBLIC_API_AUTH_BASE_URL = previousApiAuthBaseUrl
+    }
+  })
+
   afterEach(() => {
     jest.clearAllMocks()
   })
@@ -34,10 +41,10 @@ describe('newCaseDetailsService', () => {
     it('should fetch issue categories', async () => {
       const mockResponse = {data: [{id: 1, name: 'Category 1'}]}
       require('../utils/request').default.mockResolvedValue(mockResponse)
-      const data = await getIssueCategories()
+      const data = await newCaseDetailsService.getIssueCategories()
       expect(request.default).toHaveBeenCalledWith(
         expect.objectContaining({
-          url: 'https://api.test.com/issues/issue-categories/',
+          url: `${TEST_API_AUTH_BASE_URL}/issues/issue-categories/`,
           method: 'GET',
         }),
       )
@@ -50,10 +57,10 @@ describe('newCaseDetailsService', () => {
     it('should fetch issue types', async () => {
       const mockResponse = {data: [{id: 1, name: 'Type 1'}]}
       require('../utils/request').default.mockResolvedValue(mockResponse)
-      const data = await getIssueTypes()
+      const data = await newCaseDetailsService.getIssueTypes()
       expect(request.default).toHaveBeenCalledWith(
         expect.objectContaining({
-          url: 'https://api.test.com/issues/issue-types/',
+          url: `${TEST_API_AUTH_BASE_URL}/issues/issue-types/`,
           method: 'GET',
         }),
       )
@@ -66,10 +73,10 @@ describe('newCaseDetailsService', () => {
     it('should fetch issue components', async () => {
       const mockResponse = {data: [{id: 1, name: 'Components 1'}]}
       require('../utils/request').default.mockResolvedValue(mockResponse)
-      const data = await getIssueComponents()
+      const data = await newCaseDetailsService.getIssueComponents()
       expect(request.default).toHaveBeenCalledWith(
         expect.objectContaining({
-          url: 'https://api.test.com/issues/components/',
+          url: `${TEST_API_AUTH_BASE_URL}/issues/components/`,
           method: 'GET',
         }),
       )
@@ -82,10 +89,10 @@ describe('newCaseDetailsService', () => {
     it('should fetch issue sub-components', async () => {
       const mockResponse = {data: [{id: 1, name: 'Subcomponent 1'}]}
       require('../utils/request').default.mockResolvedValue(mockResponse)
-      const data = await getIssueSubcomponents()
+      const data = await newCaseDetailsService.getIssueSubcomponents()
       expect(request.default).toHaveBeenCalledWith(
         expect.objectContaining({
-          url: 'https://api.test.com/issues/subcomponents/',
+          url: `${TEST_API_AUTH_BASE_URL}/issues/subcomponents/`,
           method: 'GET',
         }),
       )
@@ -95,13 +102,13 @@ describe('newCaseDetailsService', () => {
   })
 
   describe('Get Issue Sub Types  ', () => {
-    it('should fetch issue sub-components', async () => {
+    it('should fetch issue sub-types', async () => {
       const mockResponse = {data: [{id: 1, name: 'Subtype 1'}]}
       require('../utils/request').default.mockResolvedValue(mockResponse)
-      const data = await getIssueSubTypes()
+      const data = await newCaseDetailsService.getIssueSubTypes()
       expect(request.default).toHaveBeenCalledWith(
         expect.objectContaining({
-          url: 'https://api.test.com/issues/issue-subtypes/',
+          url: `${TEST_API_AUTH_BASE_URL}/issues/issue-subtypes/`,
           method: 'GET',
         }),
       )

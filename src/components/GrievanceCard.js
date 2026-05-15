@@ -2,7 +2,6 @@ import {Feather} from '@expo/vector-icons'
 import {useNavigation} from '@react-navigation/native'
 import React from 'react'
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
-import {i18n} from '../translations/i18n'
 import {colors} from '../utils/colors'
 import {formatDate} from '../utils/date'
 import {getStatusInfo} from '../utils/issue'
@@ -33,7 +32,7 @@ const GrievanceCard = ({issue}) => {
   return (
     <TouchableOpacity
       onPress={() => {
-        navigation.navigate('Issue detail', {id: issue.id})
+        navigation.navigate('existing_case_details', {id: issue.id})
       }}
       style={styles.card}
     >
@@ -55,9 +54,7 @@ const GrievanceCard = ({issue}) => {
             <Text style={styles.title} numberOfLines={2}>
               {issue.tracking_code || 'Untitled Issue'}
             </Text>
-            <Text style={styles.subtitle}>
-              {i18n.t(issue.issue_type.name.toLowerCase())}
-            </Text>
+            <Text style={styles.subtitle}>{issue.issue_type.name}</Text>
             <Text style={styles.date}>{formatDate(issue.intake_date)}</Text>
           </View>
         </View>

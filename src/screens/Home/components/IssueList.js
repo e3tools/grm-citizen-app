@@ -1,14 +1,21 @@
-import GrievanceCard from '../../../components/GrievanceCard'
-import {ActivityIndicator, ScrollView, Text, View} from 'react-native'
-import {colors} from '../../../utils/colors'
-import {i18n} from '../../../translations/i18n'
 import React, {useCallback} from 'react'
+import {ActivityIndicator, ScrollView, Text, View} from 'react-native'
+import GrievanceCard from '../../../components/GrievanceCard'
+import {i18n} from '../../../translations/i18n'
+import {colors} from '../../../utils/colors'
 
-const IssueList = ({issues, hasNextPage, loadingMore, loadMoreIssues}) => {
+const IssueList = ({
+  issues,
+  hasNextPage,
+  loadingMore,
+  loadMoreIssues,
+  disablePagination = false,
+}) => {
   const handleScroll = useCallback(
     ({nativeEvent}) => {
       const {layoutMeasurement, contentOffset, contentSize} = nativeEvent
-      const paddingToBottom = 20
+
+      const paddingToBottom = 1
       const isCloseToBottom =
         layoutMeasurement.height + contentOffset.y >=
         contentSize.height - paddingToBottom
@@ -20,6 +27,7 @@ const IssueList = ({issues, hasNextPage, loadingMore, loadMoreIssues}) => {
   )
   return (
     <ScrollView
+      onMomentumScrollBegin={!disablePagination && handleScroll}
       showsVerticalScrollIndicator={false}
       scrollEventThrottle={16}
       contentContainerStyle={{paddingBottom: 20}}
@@ -28,7 +36,6 @@ const IssueList = ({issues, hasNextPage, loadingMore, loadMoreIssues}) => {
         issues.map((issue, index) => (
           <GrievanceCard key={issue.id || index} issue={issue} />
         ))}
-
       {loadingMore && (
         <View style={{padding: 20, alignItems: 'center'}}>
           <ActivityIndicator size="small" color={colors.primary} />
