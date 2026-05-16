@@ -65,7 +65,7 @@ const customHeaderRightIcon = ({navigation}) => ({
     <View style={styles.iconContainer}>
       <Pressable
         onPress={() => {
-          navigation.navigate('SearchBarGrm')
+          navigation.navigate('All issues')
         }}
       >
         <Icon

@@ -6,6 +6,7 @@ export const colors = {
   darkGrey: '#4A4A4A',
   disabled: '#eeeeee',
   disabled200: '#dbe3e1',
+  disabled100: '#d9dbda',
   inProgress: '#f5ba74',
   lightgray: '#dedede',
   error: '#ef6a78',
