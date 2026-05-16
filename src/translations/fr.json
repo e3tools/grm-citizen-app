@@ -154,5 +154,6 @@
   "retry": "Réessayer",
   "error_generic_message": "Oups, une erreur s'est produite.",
   "error_code": "Code d'erreur",
-  "go_back": "Retour"
+  "go_back": "Retour",
+  "search": "Recherche"
 }

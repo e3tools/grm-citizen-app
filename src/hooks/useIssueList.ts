@@ -9,14 +9,13 @@ export function useIssueList() {
   const [hasNextPage, setHasNextPage] = useState(true)
 
   useEffect(() => {
-    getIssueList()
+    getIssueList(null)
   }, [])
 
-  const getIssueList = async () => {
+  const getIssueList = async (searchTerm: string | null) => {
     setLoadingIssues(true)
     try {
-      const issuesList = await fetchIssueList()
-
+      const issuesList = await fetchIssueList(1, searchTerm)
       setIssues(issuesList.results || issuesList)
       setHasNextPage(!!issuesList.next)
       setNextPage(issuesList.next)
@@ -68,6 +67,7 @@ export function useIssueList() {
     loadingIssues,
     loadingMore,
     hasNextPage,
+    getIssueList,
     loadMoreIssues,
     refreshIssues,
   }
