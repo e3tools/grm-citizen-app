@@ -155,5 +155,6 @@
   "retry": "Retry",
   "error_generic_message": "Oops, something went wrong.",
   "error_code": "Error Code",
-  "go_back": "Go back"
+  "go_back": "Go back",
+  "search": "Search"
 }

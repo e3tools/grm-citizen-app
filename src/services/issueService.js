@@ -20,23 +20,23 @@ function handleErrors(response) {
   return response
 }
 
-export async function fetchIssueList(nextPage) {
+export async function fetchIssueList(nextPage, searchTerm) {
   try {
-    return await getIssues(nextPage)
+    return await getIssues(nextPage, searchTerm)
   } catch (error) {
     console.error('Error syncing issues:', error)
   }
 }
 
-export async function getIssues(nextPage) {
+export async function getIssues(nextPage, searchTerm) {
   const session = await getSessionData()
   addTokenToHttpClient(session)
-  const url = nextPage ?? `${baseURL}/issues/reporter/?page=1&page_size=10`
+  let url = `${baseURL}/issues/reporter/?page=${nextPage}&page_size=10`
+  if (searchTerm) url = `${url}&code=${searchTerm}`
   const requestOptions = {
     url,
     method: 'GET',
   }
-
   try {
     const response = await request({
       ...requestOptions,
