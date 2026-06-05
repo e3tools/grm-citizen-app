@@ -89,6 +89,7 @@
   "case_detail": "Case detail",
   "attachments": "Attachments",
   "case_timeline": "Case timeline",
+  "no_description": "There is no description provided",
   "no_comments": "You haven't reported any comments. Let's get started",
   "no_comments_yet": "No comments yet",
   "no_comments_to_load": "No more comments to load",
@@ -150,5 +151,9 @@
   "submit_case": "Submit Case",
   "case_created_successfully": "Case Created Successfully!",
   "tracking_code": "Tracking Code",
-  "ok": "Ok"
+  "ok": "Ok",
+  "retry": "Retry",
+  "error_generic_message": "Oops, something went wrong.",
+  "error_code": "Error Code",
+  "go_back": "Go back"
 }

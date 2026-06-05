@@ -19,7 +19,9 @@ const Stepper = ({currentStep, numberOfSteps}) => {
               backgroundColor:
                 stepNumber === currentStep
                   ? colors.primary
-                  : colors.disabled200,
+                  : stepNumber < currentStep
+                    ? colors.primary300
+                    : colors.disabled200,
               marginHorizontal: 5,
               borderRadius: 8,
               marginTop: 15,

@@ -146,7 +146,10 @@ const IssueDetail = () => {
           <Text style={{marginTop: 20, fontSize: 18, fontWeight: 'bold'}}>
             {i18n.t('description')}
           </Text>
-          <Text style={{marginTop: 10, fontSize: 18}}>{issue.description}</Text>
+
+          <Text style={{marginTop: 10, fontSize: 16}}>
+            {issue.description ? issue.description : i18n.t('no_description')}
+          </Text>
 
           <SafeAreaView style={customStyles.container}>
             <View
