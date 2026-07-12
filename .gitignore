@@ -31,6 +31,7 @@ yarn-error.*
 *.pem
 
 # local env files
+.env
 .env*.local
 
 # typescript
@@ -42,6 +43,12 @@ coverage/
 *.lcov
 
 app-example
+CREDENTIALS_SETUP.md
+JEST_FIX_SUMMARY.md
+JEST_TROUBLESHOOTING.md
+TESTING_PROPOSAL.md
+TESTING_SETUP.md
+TEST_TYPES_EXPLAINED.md
 
 # generated native folders
 /ios
