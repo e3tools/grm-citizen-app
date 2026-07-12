@@ -26,7 +26,7 @@
     ]
   },
   "dependencies": {
-    "grm-learning-materials": "file:../e3-mobile-learning-materials/e3-mobile-learning-materials-0.3.0.tgz",
+    "grm-learning-materials": "file:vendor/grm-learning-materials-0.1.0.tgz",
     "@expo-google-fonts/poppins": "^0.4.1",
     "@expo/metro-runtime": "~6.1.2",
     "@expo/vector-icons": "^15.0.3",

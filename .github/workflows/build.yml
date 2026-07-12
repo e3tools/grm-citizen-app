@@ -20,17 +20,13 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
-          cache: 'npm'
+          node-version: '22'
+          cache: 'yarn'
 
-      # - name: Install Dependencies
-      #   run: npm ci --legacy-peer-deps
       - name: Install Dependencies
         uses: borales/actions-yarn@v4
         with:
           cmd: install # will run `yarn install` command
-        # env:
-        #   NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }} # if needed
 
       - name: Apply Patches
         run: npx patch-package || echo "No patches to apply"
@@ -48,11 +44,8 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '22'
           cache: 'yarn'
-
-      # - name: Install Dependencies
-      #   run: npm ci --legacy-peer-deps
 
       - name: Install Dependencies
         uses: borales/actions-yarn@v4
@@ -83,11 +76,8 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
-          cache: 'npm'
-
-      # - name: Install Dependencies
-      #   run: npm ci --legacy-peer-deps
+          node-version: '22'
+          cache: 'yarn'
 
       - name: Install Dependencies
         uses: borales/actions-yarn@v4
