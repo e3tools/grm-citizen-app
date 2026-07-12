@@ -67,7 +67,7 @@ const customHeaderRightIcon = ({navigation}) => ({
     <View style={styles.iconContainer}>
       <Pressable
         onPress={() => {
-          navigation.navigate('SearchBarGrm')
+          navigation.navigate('All issues')
         }}
       >
         <Icon
@@ -80,7 +80,6 @@ const customHeaderRightIcon = ({navigation}) => ({
     </View>
   ),
 })
-
 const customHeaderLeftIcon = ({navigation, pageToNavigate}) => ({
   headerLeft: () => (
     <View style={styles.iconContainer}>
@@ -154,7 +153,6 @@ function DashboardStackScreen() {
           ...customHeaderLeftIcon({
             navigation,
             route,
-            pageToNavigate: 'All issues',
           }),
         })}
       />

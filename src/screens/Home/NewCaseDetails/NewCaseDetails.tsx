@@ -417,7 +417,7 @@ function NewCaseDetails({route}: {route?: any}) {
             size={30}
             color={!isRecording ? colors.primary : colors.error}
           />
-          <Text style={{color: colors.primary}}>
+          <Text style={{color: colors.primary, textAlign: 'center'}}>
             {!isRecording ? i18n.t('record_audio') : i18n.t('press_to_stop')}
           </Text>
         </TouchableOpacity>
@@ -689,7 +689,7 @@ function NewCaseDetails({route}: {route?: any}) {
               fontSize: 18,
             }}
           >
-            Retry
+            {i18n.t('Retry')}
           </Text>
         </TouchableOpacity>
       </View>
@@ -709,9 +709,11 @@ function NewCaseDetails({route}: {route?: any}) {
       >
         <View style={{alignItems: 'center', marginBottom: 50}}>
           <Text style={{color: colors.secondary}}>
-            Oops, something went wrong.
+            {i18n.t('error_generic_message')}
           </Text>
-          <Text style={{color: colors.secondary}}>Error Code: {message}</Text>
+          <Text style={{color: colors.secondary}}>
+            {i18n.t('error_code')}: {message}
+          </Text>
         </View>
         <TouchableOpacity
           onPress={() => {
@@ -725,7 +727,7 @@ function NewCaseDetails({route}: {route?: any}) {
               fontSize: 18,
             }}
           >
-            Go back
+            {i18n.t('go_back')}
           </Text>
         </TouchableOpacity>
       </View>
