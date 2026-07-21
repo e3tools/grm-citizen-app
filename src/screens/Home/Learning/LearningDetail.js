@@ -1,4 +1,4 @@
-import {LearningMaterialDetailScreen} from 'grm-learning-materials'
+import {LearningMaterialDetailScreen} from '@e3tools/e3-mobile-learning-materials'
 
 const LearningDetail = () => {
   return <LearningMaterialDetailScreen />

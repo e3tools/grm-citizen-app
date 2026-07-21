@@ -3,7 +3,7 @@ import {Provider as ReduxProvider} from 'react-redux'
 import {
   configureLearningMaterialsApi,
   configureLearningMaterialsTranslations,
-} from 'grm-learning-materials'
+} from '@e3tools/e3-mobile-learning-materials'
 import Router from './src/router'
 import store from './src/store'
 import {client} from './src/utils/request'
