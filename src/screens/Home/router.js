@@ -13,6 +13,8 @@ import AllIssueAttachments from './GRM/screens/AllIssueAttachments'
 import AllIssues from './GRM/screens/AllIssues'
 import Home from './GRM/screens/Home'
 import IssueDetail from './GRM/screens/IssueDetail'
+import Learning from './Learning/Learning'
+import LearningDetail from './Learning/LearningDetail'
 import NewCaseDetails from './NewCaseDetails/NewCaseDetails'
 import NewCaseSummary from './NewCaseSummary'
 import NewLocationDetails from './NewLocationDetails/NewLocationDetails'
@@ -220,6 +222,13 @@ function DashboardStackScreen() {
           }),
         })}
       />
+      <HomeStack.Screen
+        name="LearningMaterialDetail"
+        component={LearningDetail}
+        options={{
+          headerShown: false,
+        }}
+      />
     </HomeStack.Navigator>
   )
 }
@@ -242,6 +251,22 @@ function HomeRouter() {
           ),
         }}
         component={Home}
+      />
+      <Tab.Screen
+        name="Learning"
+        options={{
+          headerShown: false,
+          tabBarActiveTintColor: colors.primary,
+          tabBarIcon: ({focused, color, size}) => (
+            <AnimatedFeatherIcon
+              pose={focused ? 'focused' : 'unfocused'}
+              name="book-open"
+              size={size}
+              color={color}
+            />
+          ),
+        }}
+        component={Learning}
       />
       <Tab.Screen
         name="Profile"

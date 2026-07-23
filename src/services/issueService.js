@@ -31,7 +31,13 @@ export async function fetchIssueList(nextPage, searchTerm) {
 export async function getIssues(nextPage, searchTerm) {
   const session = await getSessionData()
   addTokenToHttpClient(session)
-  let url = `${baseURL}/issues/reporter/?page=${nextPage}&page_size=10`
+  let url
+  if (nextPage && nextPage.startsWith('http')) {
+    url = nextPage
+  } else {
+    const page = nextPage || 1
+    url = `${baseURL}/issues/reporter/?page=${page}&page_size=10`
+  }
   if (searchTerm) url = `${url}&code=${searchTerm}`
   const requestOptions = {
     url,
